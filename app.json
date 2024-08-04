@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Sahara",
+    "slug": "Sahara",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/app-icon-light.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/my-splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/my-adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.beelol.saharamedical"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiYmlsbHUtd2hvIiwiYSI6ImNsemZlbWF5bjB3bnMybHFzZ2J1dGlrazAifQ.RnVNxj80wfy5Pg4BHauPpg",
+          "RNMapboxMapsVersion": "11.0.0"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show current location on map.",
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
