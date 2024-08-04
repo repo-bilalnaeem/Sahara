@@ -10,6 +10,7 @@ import { View, Text } from "react-native";
 import HospitalMarkers from "@/components/HospitalMarkers";
 import LineRoute from "@/components/LineRoute";
 import { useHospital } from "@/providers/HospitalProvider";
+import SelectedScooterSheet from "@/components/SelectedHospitalSheet";
 
 Mapbox.setAccessToken(
   "pk.eyJ1IjoiYmlsbHUtd2hvIiwiYSI6ImNseGhpbDFseTFjYXgya3Iycmo0anIwdWMifQ.8sWurwteOb0WWeMffiUsTA"
@@ -33,54 +34,27 @@ const Emergency = () => {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
+
+      // console.log(location);
     })();
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* {errorMsg ? (
-        <Text>{errorMsg}</Text>
-      ) : (
-        <MapView style={{ flex: 1 }}>
-          {location && (
-            <>
-              <Camera
-                zoomLevel={14}
-                centerCoordinate={[67.066957, 24.817763]}
-              />
-              <MarkerView
-                id="currentLocationMarker"
-                coordinate={[67.066957, 24.817763]}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    backgroundColor: "#0957DE",
-                    borderRadius: 10,
-                    borderColor: "white",
-                    borderWidth: 3,
-                  }}
-                />
-              </MarkerView>
-            </>
-          )}
-        </MapView>
-      )} */}
-
-      <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
-        <Camera followZoomLevel={14} followUserLocation />
-        {location && (
+    <>
+      <View style={{ flex: 1 }}>
+        <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
+          <Camera followZoomLevel={14} followUserLocation />
+          {/* {location && (
             <>
               <Camera
                 zoomLevel={18}
                 centerCoordinate={[67.066957, 24.817763]}
               />
-              <MarkerView
-                id="currentLocationMarker"
-                coordinate={[67.066957, 24.817763]}
-              >
-                <View
+              {/* <MarkerView */}
+          {/* id="currentLocationMarker" */}
+          {/* coordinate={[67.066957, 24.817763]} */}
+          {/* > */}
+          {/* <View
                   style={{
                     height: 20,
                     width: 20,
@@ -89,17 +63,28 @@ const Emergency = () => {
                     borderColor: "white",
                     borderWidth: 3,
                   }}
-                />
-              </MarkerView>
-            </>
-          )}
-        <HospitalMarkers />
+                /> */}
+          {/* </MarkerView> */}
+          {/* </> */}
+          {/* )} */}
+          <LocationPuck
+            visible={true}
+            puckBearingEnabled
+            puckBearing="heading"
+            pulsing={{ isEnabled: true }}
+          />
+          <HospitalMarkers
+            longitude={location?.coords.longitude}
+            latitude={location?.coords.latitude}
+          />
 
-        {directionCoordinates && (
-          <LineRoute coordinates={directionCoordinates} />
-        )}
-      </MapView>
-    </View>
+          {directionCoordinates && (
+            <LineRoute coordinates={directionCoordinates} />
+          )}
+        </MapView>
+      </View>
+      <SelectedScooterSheet></SelectedScooterSheet>
+    </>
   );
 };
 
