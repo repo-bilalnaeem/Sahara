@@ -10,7 +10,7 @@ npm-debug.*
 *.orig.*
 web-build/
 android/
-assets/
+ios/
 # macOS
 .DS_Store
 .env
