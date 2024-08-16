@@ -4,7 +4,7 @@
     "slug": "Sahara",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/app-icon-light.png",
+    "icon": "./assets/images/my-adaptive-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {

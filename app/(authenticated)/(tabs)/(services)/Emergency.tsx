@@ -34,7 +34,6 @@ const Emergency = () => {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
-
       // console.log(location);
     })();
   }, []);
@@ -44,17 +43,17 @@ const Emergency = () => {
       <View style={{ flex: 1 }}>
         <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
           <Camera followZoomLevel={14} followUserLocation />
-          {/* {location && (
+          {location && (
             <>
               <Camera
                 zoomLevel={18}
                 centerCoordinate={[67.066957, 24.817763]}
               />
-              {/* <MarkerView */}
-          {/* id="currentLocationMarker" */}
-          {/* coordinate={[67.066957, 24.817763]} */}
-          {/* > */}
-          {/* <View
+              <MarkerView
+                id="currentLocationMarker"
+                coordinate={[67.066957, 24.817763]}
+              >
+                <View
                   style={{
                     height: 20,
                     width: 20,
@@ -63,19 +62,25 @@ const Emergency = () => {
                     borderColor: "white",
                     borderWidth: 3,
                   }}
-                /> */}
-          {/* </MarkerView> */}
-          {/* </> */}
-          {/* )} */}
-          <LocationPuck
+                />
+              </MarkerView>
+            </>
+          )}
+          {/* <LocationPuck
             visible={true}
             puckBearingEnabled
             puckBearing="heading"
             pulsing={{ isEnabled: true }}
-          />
+          /> */}
           <HospitalMarkers
-            longitude={location?.coords.longitude}
-            latitude={location?.coords.latitude}
+            longitude={
+              67.066957
+              // ||location?.coords.longitude
+            }
+            latitude={
+              24.817763
+              // location?.coords.latitude
+            }
           />
 
           {directionCoordinates && (

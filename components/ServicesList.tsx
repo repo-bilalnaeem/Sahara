@@ -27,13 +27,13 @@ const data = [
     key: "3",
     imageSource: require("@/assets/images/Medicine-PNG.png"),
     text: "Pharmacy",
-    Screen: "/Pharmacy",
+    screen: "/Pharmacy",
   },
   {
     key: "4",
     imageSource: require("@/assets/images/Needle-PNG.png"),
     text: "Laboratory",
-    Screen: "/Laboratory",
+    screen: "/Laboratory",
   },
 ];
 
