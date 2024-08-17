@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   useColorScheme,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import LoginHook from "@/hooks/LoginHook";
@@ -17,12 +18,16 @@ import { CheckBox } from "react-native-elements";
 import LoginButton from "@/components/LoginButton";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
+import { useAuth } from "@/context/AuthContext";
 
 const signin = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { onLogin, onRegister } = useAuth();
 
   const isDarkMode = useColorScheme() === "dark";
 
@@ -44,6 +49,20 @@ const signin = () => {
 
   const handleLogin = () => {
     router.navigate("/(tabs)");
+  };
+
+  // Sign in with email and password
+  const onSignInPress = async () => {
+    setLoading(true);
+
+    try {
+      const result = await onLogin!(email, password);
+      router.navigate("/(tabs)");
+    } catch (e) {
+      Alert.alert("Error", "Could not log in");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <View style={styles.lightScreen}>
@@ -114,7 +133,7 @@ const signin = () => {
 
           <View style={styles.loginButton}>
             <LoginButton
-              onPress={handleLogin}
+              onPress={onSignInPress}
               text="Sign in with email address"
             ></LoginButton>
           </View>
