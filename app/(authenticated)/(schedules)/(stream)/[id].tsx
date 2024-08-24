@@ -17,12 +17,9 @@ import {
   StreamVideoEvent,
   useStreamVideoClient,
 } from "@stream-io/video-react-native-sdk";
-import Toast from "react-native-toast-message";
 
-import CustomTopView from "@/components/CustomTopView";
-import { Ionicons } from "@expo/vector-icons";
-import CustomBottomSheet from "@/components/CustomBottomSheet";
-import ChatView from "@/components/ChatView";
+import CustomCallControls from "@/components/CustomCallControls";
+
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -41,6 +38,7 @@ const Page = () => {
     const joinCall = async () => {
       const call = client!.call("default", id);
       await call.join({ create: true });
+
       setCall(call);
     };
 
@@ -52,22 +50,18 @@ const Page = () => {
     router.back();
   };
 
-  // Share the meeting link
-  const shareMeeting = async () => {
-    Share.share({
-      message: `Join my meeting: myapp://(inside)/(room)/${id}`,
-    });
-  };
-
-  if (!call) return ;
+  if (!call) return;
 
   return (
     <View style={{ flex: 1 }}>
       <Spinner visible={!call} />
 
       <StreamCall call={call}>
-     
-        <RingingCallContent />
+        <CallContent
+          onHangupCallHandler={goToHomeScreen}
+          layout="grid"
+          CallControls={CustomCallControls}
+        />
       </StreamCall>
     </View>
   );
@@ -94,3 +88,6 @@ const styles = StyleSheet.create({
 });
 
 export default Page;
+function unsubscribe() {
+  throw new Error("Function not implemented.");
+}

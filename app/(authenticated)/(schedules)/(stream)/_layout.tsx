@@ -4,7 +4,9 @@ import { Stack } from "expo-router";
 
 const Layout = () => {
   return (
-    <Stack>
+    <Stack screenOptions={{
+      navigationBarColor:"gray"
+    }}>
       <Stack.Screen name="[id]" options={{ headerShown: false }} />
     </Stack>
   );
