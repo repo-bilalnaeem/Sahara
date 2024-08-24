@@ -178,6 +178,7 @@ const InitialLayout = () => {
     </>
   );
 };
+
 const RootLayoutNav = () => {
   return (
     <AuthProvider>

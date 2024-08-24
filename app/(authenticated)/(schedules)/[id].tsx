@@ -318,7 +318,7 @@ const Page = () => {
       const currentHours = currentTime.getHours();
       const currentMinutes = currentTime.getMinutes();
 
-      if (currentHours === 12 && currentMinutes >= 0) {
+      if (currentHours >= 0 && currentMinutes >= 0) {
         setIsTimeToJoinCall(true);
       }
     }, 2000);
@@ -329,7 +329,7 @@ const Page = () => {
 
   // Inside your component
   const onJoinCall = () => {
-    const randomId = Math.floor(Math.random() * 1000000000).toString();
+    const randomId = Math.floor(Math.random() * 100).toString();
     // Explicitly cast the route to `Href` type
     router.push(`/(authenticated)/(schedules)/(stream)/${randomId}` as Href<`/(authenticated)/(schedules)/(stream)/${string}`>);
   };
