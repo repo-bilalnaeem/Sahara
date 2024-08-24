@@ -1,14 +1,23 @@
-
-import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
-import { Slot, Stack, useRouter, useSegments } from 'expo-router';
-import { StreamVideo, StreamVideoClient, User } from '@stream-io/video-react-native-sdk';
+import "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
+import { Slot, Stack, useRouter, useSegments } from "expo-router";
+import {
+  StreamVideo,
+  StreamVideoClient,
+  User,
+} from "@stream-io/video-react-native-sdk";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { OverlayProvider } from 'stream-chat-expo';
-import Toast from 'react-native-toast-message';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import {
+  GestureHandlerRootView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
+import { OverlayProvider } from "stream-chat-expo";
+import Toast from "react-native-toast-message";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { Ionicons } from "@expo/vector-icons";
+import { SQLiteProvider } from "expo-sqlite";
+import { migrateDbIfNeeded } from "@/utils/Database";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,11 +39,11 @@ const InitialLayout = () => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
-  
+
     if (!initialized) return;
-  
+
     const inAuthGroup = segments[0] === "(authenticated)";
-  
+
     if (authState?.authenticated && !inAuthGroup) {
       router.replace("/(authenticated)");
     } else if (!authState?.authenticated && inAuthGroup) {
@@ -42,11 +51,11 @@ const InitialLayout = () => {
       router.replace("/signin"); // Ensure this redirects to the correct sign-in route
     }
   }, [loaded, initialized, authState, segments, router, client]);
-  
+
   useEffect(() => {
     if (authState?.authenticated && authState.token) {
       const user: User = { id: authState.user_id! };
-  
+
       try {
         const client = new StreamVideoClient({
           apiKey: STREAM_KEY!,
@@ -56,13 +65,15 @@ const InitialLayout = () => {
         setClient(client);
       } catch (e) {
         console.log("Error creating client: ", e);
-        Toast.show({ type: "error", text1: "Failed to initialize video client" });
+        Toast.show({
+          type: "error",
+          text1: "Failed to initialize video client",
+        });
       }
     } else {
       setClient(null); // Clear the client if the user is not authenticated
     }
   }, [authState]);
-  
 
   return (
     <>
@@ -72,9 +83,36 @@ const InitialLayout = () => {
           <Stack.Screen name="signin" options={{ headerShown: false }} />
           <Stack.Screen name="signup" options={{ headerShown: false }} />
           <Stack.Screen name="resetPassword" options={{ headerShown: false }} />
-          <Stack.Screen name="forgotPassword" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="forgotPassword"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="verification" options={{ headerShown: false }} />
-          <Stack.Screen name="(modals)/modal" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(modals)/modal"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(modals)/settings"
+            options={{
+              headerTitle: "Settings",
+              presentation: "modal",
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: "#F7F2F9" },
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  style={{
+                    backgroundColor: "#B8B3BA",
+                    borderRadius: 20,
+                    padding: 4,
+                  }}
+                >
+                  <Ionicons name="close-outline" size={16} color="#242026" />
+                </TouchableOpacity>
+              ),
+            }}
+          />
         </Stack>
       ) : (
         <StreamVideo client={client}>
@@ -91,9 +129,11 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <AuthProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <InitialLayout />
-      </GestureHandlerRootView>
+      <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </SQLiteProvider>
     </AuthProvider>
   );
 };

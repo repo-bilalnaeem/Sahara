@@ -18,7 +18,7 @@ const Layout = () => {
               headerBackVisible: true,
             }}
           />
-          <Stack.Screen name="Consultation" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="Consultation" options={{ headerShown: false }} /> */}
           <Stack.Screen name="Pharmacy" options={{ headerShown: false }} />
           <Stack.Screen name="Laboratory" />
         </Stack>

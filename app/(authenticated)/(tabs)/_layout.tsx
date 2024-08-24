@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { BlurView } from "expo-blur";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 const Layout = () => {
   return (
     <Tabs
@@ -48,6 +48,20 @@ const Layout = () => {
           ),
           headerTransparent: true,
           tabBarShowLabel: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="(chat)"
+        options={{
+          title: "Messages",
+          headerShown: false,
+          tabBarStyle: { display: "none" },
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="chatbubbles-outline" size={size} color={color} />
+            // <MessageIconLight />
+          ),
+          headerTransparent: true,
         }}
       />
     </Tabs>
