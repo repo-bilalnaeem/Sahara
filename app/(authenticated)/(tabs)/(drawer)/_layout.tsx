@@ -284,25 +284,22 @@ const Layout = () => {
             display: "none",
           },
           headerRight: () => (
-            <Link
-              href={"/(chat)/new"}
-              // href={
-              //   "/(authenticated)/(tabs)/(chat)/new" as Href<"/(authenticated)/(tabs)/(chat)/new">
-              // }
-              push
-              asChild
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                // gap: 16,
+              }}
             >
-              <TouchableOpacity>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color="#242026"
-                  style={{ marginRight: 16 }}
-                />
+              <TouchableOpacity
+                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
+                style={{ marginRight: 20 }}
+              >
+                <FontAwesome6 name="grip-lines" size={20} color={"#242026"} />
               </TouchableOpacity>
-            </Link>
+            </View>
           ),
-          // headerLeft: () => <GoBack title={undefined} />,
         }}
       />
 

@@ -10,14 +10,24 @@ const Layout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <HospitalProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack
+          screenOptions={
+            {
+              // navigationBarHidden: true,
+              // navigationBarColor:'transparent'
+            }
+          }
+        >
+          {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
 
           <Stack.Screen
             name="Emergency"
             options={{
-              header: () => <GoBack title={undefined} />,
-              headerBackVisible: true,
+              headerShadowVisible: false,
+              headerShown: false,
+              // header: () => <GoBack title={undefined} />,
+              // headerBackVisible: true,
+              navigationBarHidden: true,
             }}
           />
 

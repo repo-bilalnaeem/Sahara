@@ -3,10 +3,19 @@ import { Stack } from "expo-router";
 
 const Layout = () => {
   return (
-    <Stack screenOptions={{ navigationBarColor: "#fff" }}>
+    <Stack
+ 
+    >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="userProfile" options={{ headerShown: false }} />
       <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
+
+      <Stack.Screen
+        name="(services)"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };
