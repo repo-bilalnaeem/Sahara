@@ -92,27 +92,6 @@ const InitialLayout = () => {
             name="(modals)/modal"
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="(modals)/settings"
-            options={{
-              headerTitle: "Settings",
-              presentation: "modal",
-              headerShadowVisible: false,
-              headerStyle: { backgroundColor: "#F7F2F9" },
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => router.back()}
-                  style={{
-                    backgroundColor: "#B8B3BA",
-                    borderRadius: 20,
-                    padding: 4,
-                  }}
-                >
-                  <Ionicons name="close-outline" size={16} color="#242026" />
-                </TouchableOpacity>
-              ),
-            }}
-          />
         </Stack>
       ) : (
         <StreamVideo client={client}>

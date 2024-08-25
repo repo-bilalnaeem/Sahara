@@ -16,6 +16,7 @@ import {
   TextInput,
   Alert,
   Keyboard,
+  useColorScheme,
 } from "react-native";
 import { useSQLiteContext } from "expo-sqlite/next";
 import { useEffect, useState } from "react";
@@ -26,6 +27,8 @@ import { getChats, renameChat } from "@/utils/Database";
 import React from "react";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
+import GoBack from "@/components/GoBack";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 export const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
@@ -106,20 +109,21 @@ export const CustomDrawerContent = (props: any) => {
                 label={chat.title}
                 onPress={() =>
                   router.push(
-                    `/(authenticated)/(tabs)/(chat)/${chat.id}` as Href
+                    // `/(authenticated)/(tabs)/(chat)/${chat.id}`
+                    `/(chat)/${chat.id}`
                   )
                 }
                 inactiveTintColor="#000"
               />
             </ContextMenu.Trigger>
             <ContextMenu.Content
-                loop={false} // Example: required by the ContextMenu.Content component
-                // align="start" // Example: add necessary alignment or other required props
-                alignOffset={0} // Example: adjust alignment offset as needed
-                avoidCollisions={true} // Example: handle collisions
-                collisionPadding={10} // Example: padding for collision detection
-                // side="bottom" // Example: side of the context menu
-                // sideOffset={5} // Example: offset from the side
+              loop={false} // Example: required by the ContextMenu.Content component
+              // align="start" // Example: add necessary alignment or other required props
+              alignOffset={0} // Example: adjust alignment offset as needed
+              avoidCollisions={true} // Example: handle collisions
+              collisionPadding={10} // Example: padding for collision detection
+              // side="bottom" // Example: side of the context menu
+              // sideOffset={5} // Example: offset from the side
             >
               <ContextMenu.Preview>
                 {() => (
@@ -173,9 +177,10 @@ export const CustomDrawerContent = (props: any) => {
         }}
       >
         <Link
-          href={
-            "/(authenticated)/(modals)/settings" as Href<"/(authenticated)/(modals)/settings">
-          }
+          href="/"
+          // href={
+          //   "/(authenticated)/(modals)/settings" as Href<"/(authenticated)/(modals)/settings">
+          // }
           asChild
         >
           <TouchableOpacity style={styles.footer}>
@@ -197,18 +202,34 @@ const Layout = () => {
   const dimensions = useWindowDimensions();
   //   const { user } = useRevenueCat();
   const router = useRouter();
+  const isDarkMode = useColorScheme() === "dark";
+  const { top } = useSafeAreaInsets();
+
+  const headerHeight = useHeaderHeight();
 
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
         headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
-            style={{ marginLeft: 16 }}
-          >
-            <FontAwesome6 name="grip-lines" size={20} color={"#242026"} />
-          </TouchableOpacity>
+          <View style={{ display: "flex", flexDirection: "row" }}>
+            <TouchableOpacity
+              onPress={router.back}
+              style={[
+                { marginHorizontal: 13 },
+                isDarkMode ? styles.lightBackButton : styles.darkBackButton,
+              ]}
+            >
+              <Image
+                style={[
+                  { width: 20 },
+                  { height: 20 },
+                  isDarkMode ? null : { tintColor: "#fff" },
+                ]}
+                source={require("@/assets/images/arrow.png")}
+              />
+            </TouchableOpacity>
+          </View>
         ),
         headerStyle: {
           backgroundColor: "#FFFCFF",
@@ -237,23 +258,23 @@ const Layout = () => {
             </View>
           ),
           headerRight: () => (
-            <Link
-              href={
-                "/(authenticated)/(tabs)/(chat)/new" as Href<"/(authenticated)/(tabs)/(chat)/new">
-              }
-              push
-              asChild
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                // gap: 16,
+              }}
             >
-              <TouchableOpacity>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color="#242026"
-                  style={{ marginRight: 16 }}
-                />
+              <TouchableOpacity
+                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
+                style={{ marginRight: 20 }}
+              >
+                <FontAwesome6 name="grip-lines" size={20} color={"#242026"} />
               </TouchableOpacity>
-            </Link>
+            </View>
           ),
+          // headerLeft: () => <GoBack title={undefined} />,
         }}
       />
       <Drawer.Screen
@@ -264,9 +285,10 @@ const Layout = () => {
           },
           headerRight: () => (
             <Link
-              href={
-                "/(authenticated)/(tabs)/(chat)/new" as Href<"/(authenticated)/(tabs)/(chat)/new">
-              }
+              href={"/(chat)/new"}
+              // href={
+              //   "/(authenticated)/(tabs)/(chat)/new" as Href<"/(authenticated)/(tabs)/(chat)/new">
+              // }
               push
               asChild
             >
@@ -280,6 +302,7 @@ const Layout = () => {
               </TouchableOpacity>
             </Link>
           ),
+          // headerLeft: () => <GoBack title={undefined} />,
         }}
       />
 
@@ -363,6 +386,26 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     resizeMode: "cover",
+  },
+
+  lightBackButton: {
+    borderRadius: 24,
+    width: 42,
+    height: 42,
+    backgroundColor: "#D9D9D9",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
+  },
+
+  darkBackButton: {
+    borderRadius: 24,
+    width: 42,
+    height: 42,
+    backgroundColor: "#1E1F22",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
   },
 });
 

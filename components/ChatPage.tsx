@@ -1,7 +1,7 @@
 import HeaderDropDown from "@/components/HeaderDropDown";
 import MessageInput from "@/components/MessageInput";
 import { keyStorage, storage } from "@/utils/Storage";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { Link, Redirect, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useMMKVString } from "react-native-mmkv";
 import OpenAI from "react-native-openai";
@@ -20,6 +21,7 @@ import MessageIdeas from "@/components/MessageIdeas";
 import { addChat, addMessage, getMessages } from "@/utils/Database";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const ChatPage = () => {
   const [gptVersion, setGptVersion] = useMMKVString("gptVersion", storage);
@@ -30,9 +32,9 @@ const ChatPage = () => {
   const db = useSQLiteContext();
   let { id } = useLocalSearchParams<{ id: string }>();
 
-  if (!key || key === "" || !organization || organization === "") {
-    return <Redirect href={"/(authenticated)/(modals)/settings"} />;
-  }
+  // if (!key || key === "" || !organization || organization === "") {
+  //   return <Redirect href={"/(modals)/settings"} />;
+  // }
 
   const [chatId, _setChatId] = useState(id);
   const chatIdRef = useRef(chatId);
@@ -53,8 +55,8 @@ const ChatPage = () => {
   const openAI = useMemo(
     () =>
       new OpenAI({
-        apiKey: key,
-        organization,
+        apiKey: "",
+        organization: "",
       }),
     []
   );
@@ -126,15 +128,41 @@ const ChatPage = () => {
       <Stack.Screen
         options={{
           headerTitle: () => (
-            <HeaderDropDown
-              title="ChatGPT"
-              items={[
-                { key: "3.5", title: "GPT-3.5", icon: "bolt" },
-                { key: "4", title: "GPT-4", icon: "sparkles" },
-              ]}
-              onSelect={onGptVersionChange}
-              selected={gptVersion}
-            />
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 18,
+              }}
+            >
+              <HeaderDropDown
+                title="ChatGPT"
+                items={[
+                  { key: "3.5", title: "GPT-3.5", icon: "bolt" },
+                  { key: "4", title: "GPT-4", icon: "sparkles" },
+                ]}
+                onSelect={onGptVersionChange}
+                selected={gptVersion}
+              />
+              <Link
+                href={"/(chat)/new"}
+                // href={
+                //   "/(authenticated)/(tabs)/(chat)/new" as Href<"/(authenticated)/(tabs)/(chat)/new">
+                // }
+                push
+                asChild
+              >
+                <TouchableOpacity>
+                  <Ionicons
+                    name="create-outline"
+                    size={24}
+                    color="#242026"
+                    style={{ marginRight: 16 }}
+                  />
+                </TouchableOpacity>
+              </Link>
+            </View>
           ),
         }}
       />

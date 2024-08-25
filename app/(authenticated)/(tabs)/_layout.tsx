@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { Feather, Ionicons } from "@expo/vector-icons";
+
 const Layout = () => {
   return (
     <Tabs
@@ -21,7 +22,7 @@ const Layout = () => {
         tabBarStyle: {
           backgroundColor: "transparent",
           position: "absolute",
-          bottom: 25,
+          bottom: 0,
           left: 0,
           right: 0,
           elevation: 0,
@@ -52,7 +53,7 @@ const Layout = () => {
       />
 
       <Tabs.Screen
-        name="(chat)"
+        name="(drawer)"
         options={{
           title: "Messages",
           headerShown: false,

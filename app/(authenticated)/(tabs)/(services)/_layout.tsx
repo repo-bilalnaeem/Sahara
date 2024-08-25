@@ -1,8 +1,10 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import GoBack from "@/components/GoBack";
 import HospitalProvider from "@/providers/HospitalProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const Layout = () => {
   return (
@@ -18,7 +20,7 @@ const Layout = () => {
               headerBackVisible: true,
             }}
           />
-          {/* <Stack.Screen name="Consultation" options={{ headerShown: false }} /> */}
+
           <Stack.Screen name="Pharmacy" options={{ headerShown: false }} />
           <Stack.Screen name="Laboratory" />
         </Stack>
@@ -26,5 +28,17 @@ const Layout = () => {
     </GestureHandlerRootView>
   );
 };
+
+const styles = StyleSheet.create({
+  item: {
+    borderRadius: 15,
+    overflow: "hidden",
+  },
+  btnImage: {
+    margin: 6,
+    width: 16,
+    height: 16,
+  },
+});
 
 export default Layout;
