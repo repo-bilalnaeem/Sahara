@@ -88,6 +88,4 @@ const styles = StyleSheet.create({
 });
 
 export default Page;
-function unsubscribe() {
-  throw new Error("Function not implemented.");
-}
+
