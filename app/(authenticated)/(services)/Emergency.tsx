@@ -42,6 +42,8 @@ const Emergency = () => {
     })();
   }, []);
 
+  // console.log(directionCoordinates);
+
   return (
     <>
       <View
@@ -65,7 +67,6 @@ const Emergency = () => {
           scaleBarPosition={{ left: 8, bottom: top }}
           compassEnabled={true}
           compassFadeWhenNorth
-          
           // compassViewMargins={{ x: 0, y: 0 }}
           compassPosition={{ top: top, right: 8 }}
           logoEnabled={false}
@@ -77,11 +78,17 @@ const Emergency = () => {
             <>
               <Camera
                 zoomLevel={18}
-                centerCoordinate={[67.066957, 24.817763]}
+                centerCoordinate={[
+                  location?.coords.longitude,
+                  location?.coords.latitude,
+                ]}
               />
               <MarkerView
                 id="currentLocationMarker"
-                coordinate={[67.066957, 24.817763]}
+                coordinate={[
+                  location?.coords.longitude,
+                  location?.coords.latitude,
+                ]}
               >
                 <View
                   style={{
@@ -96,15 +103,15 @@ const Emergency = () => {
               </MarkerView>
             </>
           )}
-       
+
           <HospitalMarkers
             longitude={
-              67.066957
-              // ||location?.coords.longitude
+              // 67.066957
+              location?.coords.longitude
             }
             latitude={
-              24.817763
-              // location?.coords.latitude
+              // 24.817763
+              location?.coords.latitude
             }
           />
 

@@ -36,14 +36,14 @@ const Page = () => {
   const onCopyPrompt = () => {
     Clipboard.setStringAsync(prompt!);
 
-    Toast.show('Prompt copied to clipboard', {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.BOTTOM,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-    });
+    // Toast.show('Prompt copied to clipboard', {
+    //   duration: Toast.durations.SHORT,
+    //   position: Toast.positions.BOTTOM,
+    //   shadow: true,
+    //   animation: true,
+    //   hideOnPress: true,
+    //   delay: 0,
+    // });
   };
 
   return (

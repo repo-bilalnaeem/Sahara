@@ -1,77 +1,115 @@
-
-import { View, Text, Image } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
+import { View, Text, Image, Button } from "react-native";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useHospital } from "@/providers/HospitalProvider";
-import scooterImage from "@/assets/scooter.png";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Button } from "./Button";
+import scooterImage from "../assets/scooter.png"; // Ensure correct path
 import * as Speech from "expo-speech";
 import * as Location from "expo-location";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 const SelectedHospitalSheet = () => {
   const {
     selectedHospital,
     duration,
     distance,
-    directionCoordinates,
-    isNearby,
-    direction, // Assuming direction is provided by the useHospital hook or context
+    direction,
+    journeyStarted,
+    startJourney,
   } = useHospital();
-  const BottomSheetRef = useRef<BottomSheet>(null);
-  const [currentDirectionIndex, setCurrentDirectionIndex] = useState(0);
-  const [directionQueue, setDirectionQueue] = useState<{ instruction: string }[]>([]);
-  const [navigationStarted, setNavigationStarted] = useState(false);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     if (selectedHospital) {
-      BottomSheetRef.current?.expand();
+      bottomSheetRef.current?.expand();
     }
   }, [selectedHospital]);
 
   useEffect(() => {
-    if (direction && navigationStarted) {
-      // Update direction queue when direction data changes and navigation has started
+    if (journeyStarted && direction) {
       const routeSteps = direction.routes[0]?.legs[0]?.steps || [];
-      const newDirectionQueue = routeSteps.map(step => ({
-        instruction: step.maneuver.instruction || "Continue on the road.",
-      }));
-      setDirectionQueue(newDirectionQueue);
-      setCurrentDirectionIndex(0);
+      handleNextDirection(routeSteps);
     }
-  }, [direction, navigationStarted]);
+  }, [direction, journeyStarted]);
 
-  useEffect(() => {
-    if (navigationStarted && currentDirectionIndex < directionQueue.length) {
-      // Speak the current direction instruction
-      const currentDirection = directionQueue[currentDirectionIndex];
-      Speech.speak(currentDirection.instruction, {
+  const handleNextDirection = (routeSteps: any[]) => {
+    if (currentStepIndex < routeSteps.length && !isSpeaking) {
+      const currentStep = routeSteps[currentStepIndex];
+      const instruction =
+        currentStep.maneuver.instruction || "Continue on the road.";
+      setIsSpeaking(true);
+      Speech.speak(instruction, {
         onDone: () => {
-          // Move to the next instruction when the current one is finished
-          setCurrentDirectionIndex(prevIndex => prevIndex + 1);
+          setIsSpeaking(false);
+          setCurrentStepIndex((prevIndex) => prevIndex + 1);
+          monitorUserLocation(routeSteps); // Continue monitoring location
         },
       });
-    } else if (navigationStarted && isNearby) {
-      // If the user is near the hospital, give a final direction
-      Speech.speak("You have arrived at your destination.");
     }
-  }, [currentDirectionIndex, directionQueue, isNearby, navigationStarted]);
-
-  const startNavigation = async () => {
-    // Request foreground location permissions
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-      return;
-    }
-
-    // Mark navigation as started
-    setNavigationStarted(true);
   };
 
+  const monitorUserLocation = async (routeSteps: any[]) => {
+    const locationSubscription = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 1000,
+        distanceInterval: 1,
+      },
+      (location) => {
+        const currentStep = routeSteps[currentStepIndex];
+        const { latitude, longitude } = location.coords;
+        const [stepLon, stepLat] = currentStep.maneuver.location;
+
+        if (isCloseToNextStep(latitude, longitude, stepLat, stepLon)) {
+          locationSubscription.remove(); // Stop watching location
+          handleNextDirection(routeSteps); // Move to the next direction
+        }
+      }
+    );
+  };
+
+  const isCloseToNextStep = (
+    currentLat: number,
+    currentLon: number,
+    stepLat: number,
+    stepLon: number,
+    threshold: number = 50
+  ) => {
+    const distance = Math.sqrt(
+      Math.pow(currentLat - stepLat, 2) + Math.pow(currentLon - stepLon, 2)
+    );
+    return distance <= threshold / 100000; // Adjust threshold as needed
+  };
+
+  const handleStartJourney = () => {
+    setCurrentStepIndex(0);
+    startJourney();
+  };
+  const BottomSheetRef = useRef<BottomSheet>(null);
+
   return (
+    // <BottomSheet ref={bottomSheetRef} snapPoints={['25%', '50%', '100%']}>
+    //   <View>
+    //     {selectedHospital && (
+    //       <View>
+    //         {/* <Text>{`Heading to ${selectedHospital.name}`}</Text> */}
+    //         <Text>{`Estimated Time: ${duration} mins`}</Text>
+    //         <Text>{`Distance: ${distance} km`}</Text>
+    //         <Image source={scooterImage} style={{ width: 100, height: 100 }} />
+    //         <Button title="Start Journey" onPress={handleStartJourney} />
+    //       </View>
+    //     )}
+    //     {!selectedHospital && (
+    //       <View>
+    //         <Text>No hospital selected</Text>
+    //       </View>
+    //     )}
+    //   </View>
+    // </BottomSheet>
     <BottomSheet
-      ref={BottomSheetRef}
+      ref={bottomSheetRef}
       index={-1}
       snapPoints={[200]}
       backgroundStyle={{ backgroundColor: "#414442" }}
@@ -82,6 +120,9 @@ const SelectedHospitalSheet = () => {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Image source={scooterImage} style={{ width: 60, height: 60 }} />
             <View style={{ flex: 1 }}>
+              <Text style={{ color: "white", fontSize: 16, fontWeight: "400" }}>
+                Lime - S
+              </Text>
               <Text style={{ color: "gray", fontSize: 14 }}>
                 id-{selectedHospital.id} · Madison Avenue
               </Text>
@@ -120,11 +161,7 @@ const SelectedHospitalSheet = () => {
             </View>
           </View>
           <View>
-            <Button
-              title="Start journey"
-              onPress={startNavigation}
-              disabled={isNearby}
-            />
+            <Button title="Start journey" onPress={handleStartJourney} />
           </View>
         </BottomSheetView>
       )}
