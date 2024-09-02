@@ -7,52 +7,57 @@ import { router } from "expo-router";
 
 const UpcomingSchedule = () => {
   return (
-    <Pressable onPress={() => router.push("/(authenticated)(schedules)[id]")}>
-      <SeeMore heading={"My Checkup Schedule"} />
-      <View style={styles.container}>
-        <LinearGradient
-          colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          locations={[0.0527, 0.9575]}
-          style={styles.linearGradient}
-        >
-          <View style={styles.flex_items}>
-            <View style={styles.img_container}>
-              <Image
-                source={require("@/assets/images/doctor.jpg")}
-                style={styles.doctor_img}
-              />
+    <View>
+      {/* <SeeMore heading={"My Checkup Schedule"} /> */}
+      
+      <Pressable onPress={() => router.push("/(authenticated)(schedules)[id]")}>
+        <View style={styles.container}>
+          <LinearGradient
+            colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0.0527, 0.9575]}
+            style={styles.linearGradient}
+          >
+            <View style={styles.flex_items}>
+              <View style={styles.img_container}>
+                <Image
+                  source={require("@/assets/images/doctor.jpg")}
+                  style={styles.doctor_img}
+                />
+              </View>
+              <View>
+                <Text style={styles.doctor_name}>Doctor Mathew Lewis</Text>
+                <Text style={styles.occupation}>Heart Specialist</Text>
+              </View>
+              <View style={styles.camera_holder}>
+                <Image
+                  source={require("@/assets/images/camera-icon.png")}
+                  style={styles.camera_icon}
+                />
+              </View>
             </View>
-            <View>
-              <Text style={styles.doctor_name}>Doctor Mathew Lewis</Text>
-              <Text style={styles.occupation}>Heart Specialist</Text>
-            </View>
-            <View style={styles.camera_holder}>
-              <Image
-                source={require("@/assets/images/camera-icon.png")}
-                style={styles.camera_icon}
-              />
-            </View>
-          </View>
 
-          <View style={styles.schedule}>
-            <LinearGradient
-              colors={[
-                "#35445F",
-                "rgba(11, 17, 26, 0.62)",
-                "rgba(11, 16, 26, 0.61)",
-              ]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.innerGradient}
-            >
-              <Text style={styles.time}>Sun, Jun 10, 08:00 am - 10:00 am</Text>
-            </LinearGradient>
-          </View>
-        </LinearGradient>
-      </View>
-    </Pressable>
+            <View style={styles.schedule}>
+              <LinearGradient
+                colors={[
+                  "#35445F",
+                  "rgba(11, 17, 26, 0.62)",
+                  "rgba(11, 16, 26, 0.61)",
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.innerGradient}
+              >
+                <Text style={styles.time}>
+                  Sun, Jun 10, 08:00 am - 10:00 am
+                </Text>
+              </LinearGradient>
+            </View>
+          </LinearGradient>
+        </View>
+      </Pressable>
+    </View>
   );
 };
 

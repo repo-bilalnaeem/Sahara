@@ -1,11 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Stack } from "expo-router";
-
 const Layout = () => {
   return (
-    <Stack
-    
-    >
+    <Stack>
       <Stack.Screen name="[id]" options={{ headerShown: false }} />
       <Stack.Screen name="(stream)" options={{ headerShown: false }} />
     </Stack>

@@ -1,4 +1,4 @@
-export { default } from '@/components/ChatPage';
+export { default } from "@/components/ChatPage";
 
 // import { View, Text } from 'react-native'
 // import React from 'react'

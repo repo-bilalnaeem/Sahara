@@ -13,6 +13,7 @@ const Layout = () => {
         <Stack
           screenOptions={
             {
+              
               // navigationBarHidden: true,
               // navigationBarColor:'transparent'
             }

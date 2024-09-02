@@ -31,16 +31,10 @@ const HospitalMarkers = ({ longitude, latitude }: HospitalMarkersProps) => {
     longitude: number | undefined,
     latitude: number | undefined
   ): Promise<Hospital[]> => {
-    if (longitude === undefined || latitude === undefined) {
-      // console.error("Longitude or latitude is undefined");
-      return [];
-    }
-    
-    const radius = 7500; // 7.5 km radius
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity=${longitude},${latitude}&access_token=${ACCESS_TOKEN}`;
+    const radius = 7500; // 5 km radius
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity=${longitude},${latitude}&radius=${radius}&access_token=${ACCESS_TOKEN}`;
     try {
       const response = await axios.get(url);
-      // console.log(response);
       const features = response.data.features;
       return features.map(
         (feature: { geometry: { coordinates: number[] }; text: string }) => ({
@@ -54,15 +48,15 @@ const HospitalMarkers = ({ longitude, latitude }: HospitalMarkersProps) => {
       return [];
     }
   };
-  
+
   // Fetch hospitals when component mounts or location changes
   useEffect(() => {
-    // console.log("Longitude:", longitude, "Latitude:", latitude);
     const getHospitals = async () => {
       const data = await fetchNearbyHospitals(longitude, latitude);
+      // console.log(data)
       setHospitals(data);
     };
-  
+
     getHospitals();
   }, [longitude, latitude]);
 

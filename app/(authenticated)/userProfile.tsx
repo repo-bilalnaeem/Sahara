@@ -84,7 +84,7 @@ const userProfile = () => {
   };
 
   const completeProfile = () => {
-    router.navigate("/(modals)/modal");
+    router.navigate("/modal");
   };
 
   return (
