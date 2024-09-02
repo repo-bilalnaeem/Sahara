@@ -20,17 +20,27 @@ const SelectedHospitalSheet = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [locationSubscription, setLocationSubscription] = useState<Location.LocationSubscription | null>(null);
 
   useEffect(() => {
     if (selectedHospital) {
       bottomSheetRef.current?.expand();
+      // if (direction) {
+      //   // Update duration and distance when a hospital is selected
+      //   console.log('Distance:', (distance! / 1000).toFixed(1), 'km');
+      //   console.log('Duration:', (duration! / 60).toFixed(1), 'min');
+      // }
     }
-  }, [selectedHospital]);
+  }, [selectedHospital, direction]);
 
   useEffect(() => {
     if (journeyStarted && direction) {
       const routeSteps = direction.routes[0]?.legs[0]?.steps || [];
       handleNextDirection(routeSteps);
+    } else {
+      // Clean up location subscription if journey is not started
+      locationSubscription?.remove();
+      setLocationSubscription(null);
     }
   }, [direction, journeyStarted]);
 
@@ -51,7 +61,7 @@ const SelectedHospitalSheet = () => {
   };
 
   const monitorUserLocation = async (routeSteps: any[]) => {
-    const locationSubscription = await Location.watchPositionAsync(
+    const subscription = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
         timeInterval: 1000,
@@ -63,11 +73,12 @@ const SelectedHospitalSheet = () => {
         const [stepLon, stepLat] = currentStep.maneuver.location;
 
         if (isCloseToNextStep(latitude, longitude, stepLat, stepLon)) {
-          locationSubscription.remove(); // Stop watching location
+          subscription.remove(); // Stop watching location
           handleNextDirection(routeSteps); // Move to the next direction
         }
       }
     );
+    setLocationSubscription(subscription);
   };
 
   const isCloseToNextStep = (
@@ -87,27 +98,8 @@ const SelectedHospitalSheet = () => {
     setCurrentStepIndex(0);
     startJourney();
   };
-  const BottomSheetRef = useRef<BottomSheet>(null);
 
   return (
-    // <BottomSheet ref={bottomSheetRef} snapPoints={['25%', '50%', '100%']}>
-    //   <View>
-    //     {selectedHospital && (
-    //       <View>
-    //         {/* <Text>{`Heading to ${selectedHospital.name}`}</Text> */}
-    //         <Text>{`Estimated Time: ${duration} mins`}</Text>
-    //         <Text>{`Distance: ${distance} km`}</Text>
-    //         <Image source={scooterImage} style={{ width: 100, height: 100 }} />
-    //         <Button title="Start Journey" onPress={handleStartJourney} />
-    //       </View>
-    //     )}
-    //     {!selectedHospital && (
-    //       <View>
-    //         <Text>No hospital selected</Text>
-    //       </View>
-    //     )}
-    //   </View>
-    // </BottomSheet>
     <BottomSheet
       ref={bottomSheetRef}
       index={-1}
