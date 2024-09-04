@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react';
+import { View, Text, SafeAreaView } from 'react-native';
 
 const Convinence = () => {
+
   return (
-    <View>
+    <SafeAreaView>
       <Text>Convinence</Text>
-    </View>
-  )
+    </SafeAreaView>
+  );
 }
 
-export default Convinence
+export default Convinence;

@@ -35,7 +35,7 @@ const Layout = () => {
             options={{ header: () => <PharmacyHeader /> }}
           />
           <Stack.Screen name="Laboratory" />
-          <Stack.Screen name="(shops)" />
+          <Stack.Screen name="(shops)" options={{ headerShown: false }} />
         </Stack>
       </HospitalProvider>
     </GestureHandlerRootView>

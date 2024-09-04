@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { Feather, Ionicons } from "@expo/vector-icons";
-
+import { Platform } from "react-native";
 import {
   BottomSheetProvider,
   useBottomSheet,
@@ -22,7 +22,7 @@ const Container = () => {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#fff",
-        
+        headerShown: false,
         tabBarBackground: () => (
           <BlurView
             intensity={100}
@@ -36,7 +36,7 @@ const Container = () => {
         tabBarStyle: {
           backgroundColor: "transparent",
           position: "absolute",
-          bottom: 0,
+          bottom: Platform.OS === "android" ? 0 : 25,
           left: 0,
           right: 0,
           elevation: 0,

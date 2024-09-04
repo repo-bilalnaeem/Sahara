@@ -29,6 +29,7 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import Animated, {
   interpolate,
@@ -301,6 +302,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
+    bottom: Platform.OS ==="android" ? 0: 25,
   },
 
   cancel_txt: {

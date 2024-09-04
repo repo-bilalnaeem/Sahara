@@ -17,6 +17,7 @@ import { router } from "expo-router";
 import PharmacyFeatures from "@/components/PharmacyFeatures";
 import SeeMore from "@/components/SeeMore";
 import { Ionicons } from "@expo/vector-icons";
+import PharmacySponserAd from "@/components/PharmacySponserAd";
 
 const data = [
   {
@@ -182,8 +183,9 @@ const Pharmacy = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         <PharmacyFeatures />
+
         <View style={{ paddingVertical: 38 }}>
           <Text
             style={[
@@ -204,6 +206,8 @@ const Pharmacy = () => {
           />
           {/* </Pressable> */}
         </View>
+        <PharmacySponserAd />
+
         <View>
           <SeeMore
             heading="Recommended for you"
@@ -248,14 +252,14 @@ const Pharmacy = () => {
 const styles = StyleSheet.create({
   darkHeading: {
     color: "#000",
-    fontSize: 18,
+    fontSize: 16,
     fontStyle: "normal",
     fontWeight: "500",
     lineHeight: 22,
   },
   lightHeading: {
     color: "#FFF",
-    fontSize: 18,
+    fontSize: 16,
     fontStyle: "normal",
     fontWeight: "500",
     lineHeight: 22,

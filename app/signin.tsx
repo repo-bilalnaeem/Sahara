@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   useColorScheme,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import LoginHook from "@/hooks/LoginHook";
 import { CheckBox } from "react-native-elements";
 import LoginButton from "@/components/LoginButton";
@@ -43,7 +43,7 @@ const signin = () => {
   };
 
   const handleLogin = () => {
-    router.navigate("/(tabs)");
+    router.navigate("/(authenticated)/(tabs)" as Href);
   };
   return (
     <View style={styles.lightScreen}>
