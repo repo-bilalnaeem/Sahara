@@ -77,10 +77,43 @@ const medical_data = [
     price: 102.4,
   },
 ];
+const popular_data = [
+  {
+    key: "1",
+    imageSource: require("@/assets/images/medicine_images/img6.jpeg"),
+    title: "Ensure Milk Powder Chocolate 400g",
+    price: 2945.0,
+  },
+  {
+    key: "2",
+    imageSource: require("@/assets/images/medicine_images/img7.jpeg"),
+    title: "Cerelac 3 Fruits & Wheat 350g",
+    price: 47.5,
+  },
+  {
+    key: "3",
+    imageSource: require("@/assets/images/medicine_images/img8.png"),
+    title: "Cerealc Rice 175g",
+    price: 95.0,
+  },
+  {
+    key: "4",
+    imageSource: require("@/assets/images/medicine_images/img9.jpeg"),
+    title: "Cerelac Nature Roa 175 Grams",
+    price: 601.0,
+  },
+  {
+    key: "5",
+    imageSource: require("@/assets/images/medicine_images/img10.jpeg"),
+    title:
+      "Nestle Cerelac Natures Selection Multigrain, Pomegranate, Cherries & Apples 350G",
+    price: 1220.0,
+  },
+];
 
-function formatTitle(title: string, maxLength = 30) {
+function formatTitle(title: string, maxLength = 25) {
   if (title.length > maxLength) {
-    return title.substring(0, maxLength) + ' ...';
+    return title.substring(0, maxLength) + " ...";
   }
   return title;
 }
@@ -182,6 +215,24 @@ const Pharmacy = () => {
             <FlatList
               horizontal
               data={medical_data}
+              renderItem={renderProductTile}
+              keyExtractor={(item) => item.key}
+              showsHorizontalScrollIndicator={false}
+              // scrollEnabled={isBottomSheetOpen === false}
+            />
+          </Pressable>
+        </View>
+        <View style={{ marginTop: 38 }}>
+          <SeeMore
+            heading="Popular products"
+            onSeeMorePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+          <Pressable>
+            <FlatList
+              horizontal
+              data={popular_data}
               renderItem={renderProductTile}
               keyExtractor={(item) => item.key}
               showsHorizontalScrollIndicator={false}
