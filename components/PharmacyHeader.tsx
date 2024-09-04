@@ -31,11 +31,19 @@ const PharmacyHeader = () => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          paddingHorizontal: 28,
+          paddingHorizontal: 14,
           alignItems: "center",
+          paddingTop: 10,
         }}
       >
-        <View style={{ display: "flex", flexDirection: "row", gap: 24 }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 24,
+            alignItems: "center",
+          }}
+        >
           <TouchableOpacity
             onPress={router.back}
             style={[
@@ -62,8 +70,8 @@ const PharmacyHeader = () => {
         </View>
 
         <View style={{ flexDirection: "row", gap: 20 }}>
-          <Ionicons name="heart-outline" size={24} color={"#fff"} />
-          <Ionicons name="bag-outline" size={24} color={"#fff"} />
+          <Ionicons name="heart-outline" size={20} color={"#fff"} />
+          <Ionicons name="bag-outline" size={20} color={"#fff"} />
         </View>
       </View>
       <View style={styles.container}>
@@ -94,9 +102,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 16,
-    height: 80,
+    // height: 80,
     backgroundColor: "transparent",
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
+    marginVertical: 10,
   },
 
   addressSection: {
@@ -115,6 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 16,
     paddingHorizontal: 20,
+    paddingVertical: 4,
   },
 
   input: {

@@ -8,24 +8,17 @@ import {
 } from "react-native";
 import React from "react";
 
-const data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/Needle-PNG.png"),
-    text: "Neurologist",
-    screen: "Neurologists",
-  },
-];
+
 
 const RenderItems = () => {
   return (
     <View
       style={{
-        paddingHorizontal: 16,
+        paddingHorizontal: 10,
         paddingVertical: 20,
         flexDirection: "row",
-        justifyContent: "space-between",
-        gap: 10,
+        // justifyContent: "space-between",
+        gap: 5,
       }}
     >
       <View
@@ -67,7 +60,8 @@ const RenderItems = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 10,
+          gap: 5,
+          width:'48.5%'
         }}
       >
         <View

@@ -4,9 +4,9 @@ import { View, Text, SafeAreaView } from 'react-native';
 const Convinence = () => {
 
   return (
-    <SafeAreaView>
+    <View>
       <Text>Convinence</Text>
-    </SafeAreaView>
+    </View>
   );
 }
 

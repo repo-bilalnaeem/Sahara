@@ -78,6 +78,7 @@ const medical_data = [
     price: 102.4,
   },
 ];
+
 const popular_data = [
   {
     key: "1",
@@ -111,6 +112,77 @@ const popular_data = [
     price: 1220.0,
   },
 ];
+
+const categoryData = [
+  {
+    key: "1",
+    imageSource: require("@/assets/images/general.png"),
+    text: "General",
+  },
+  {
+    key: "2",
+    imageSource: require("@/assets/images/blood.png"),
+    text: "Blood",
+  },
+  {
+    key: "3",
+    imageSource: require("@/assets/images/brain.png"),
+    text: "Brain",
+  },
+  {
+    key: "4",
+    imageSource: require("@/assets/images/chemo.png"),
+    text: "Chemotherapy",
+  },
+  { key: "5", imageSource: require("@/assets/images/cold.png"), text: "Cold" },
+  {
+    key: "6",
+    imageSource: require("@/assets/images/device.png"),
+    text: "Devices",
+  },
+  { key: "7", imageSource: require("@/assets/images/ear.png"), text: "Ear" },
+  { key: "8", imageSource: require("@/assets/images/eye.png"), text: "Eye" },
+];
+
+const general_data = [
+  {
+    key: "1",
+    imageSource: require("@/assets/images/medicine_images/img11.jpeg"),
+    title: "Peditral Powder Orange Sachet (1 Box = 25 sachets)",
+    price: 26.96,
+  },
+  {
+    key: "2",
+    imageSource: require("@/assets/images/medicine_images/img12.jpeg"),
+    title: "Nexum Capsules 20mg",
+    price: 188.0,
+  },
+  {
+    key: "3",
+    imageSource: require("@/assets/images/medicine_images/img13.jpeg"),
+    title: "Azomax 250 Capsules 250mg",
+    price: 694.51,
+  },
+  {
+    key: "4",
+    imageSource: require("@/assets/images/medicine_images/img14.jpeg"),
+    title: "Polyfax Skin Ointment 20g",
+    price: 170.0,
+  },
+  {
+    key: "5",
+    imageSource: require("@/assets/images/medicine_images/img15.jpeg"),
+    title: "Brufen Tablets 200mg (1 strip = 10 tablets)",
+    price: 39.67,
+  },
+];
+
+const category = categoryData.map((item) => ({
+  ...item,
+  get screen() {
+    return `/(shops)/${item.text}`;
+  },
+}));
 
 function formatTitle(title: string, maxLength = 25) {
   if (title.length > maxLength) {
@@ -183,10 +255,16 @@ const Pharmacy = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        style={{ flex: 1 }}
+        showsHorizontalScrollIndicator={false}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 60 }}
+      >
         <PharmacyFeatures />
 
-        <View style={{ paddingVertical: 38 }}>
+        <View style={{ paddingVertical: 38, paddingTop: 24 }}>
           <Text
             style={[
               styles.flex_headings,
@@ -226,6 +304,7 @@ const Pharmacy = () => {
             />
           </Pressable>
         </View>
+
         <View style={{ marginTop: 38 }}>
           <SeeMore
             heading="Popular products"
@@ -237,6 +316,64 @@ const Pharmacy = () => {
             <FlatList
               horizontal
               data={popular_data}
+              renderItem={renderProductTile}
+              keyExtractor={(item) => item.key}
+              showsHorizontalScrollIndicator={false}
+              // scrollEnabled={isBottomSheetOpen === false}
+            />
+          </Pressable>
+        </View>
+
+        <View style={{ paddingVertical: 38 }}>
+          <Text
+            style={[
+              styles.flex_headings,
+              isDarkMode ? styles.lightHeading : styles.darkHeading,
+            ]}
+          >
+            Category
+          </Text>
+
+          <FlatList
+            horizontal
+            data={category}
+            renderItem={renderServicesItem}
+            keyExtractor={(item) => item.key}
+            showsHorizontalScrollIndicator={false}
+            // scrollEnabled={isBottomSheetOpen === false}
+          />
+        </View>
+
+        <View style={{ marginTop: 24 }}>
+          <SeeMore
+            heading="General"
+            onSeeMorePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+          <Pressable>
+            <FlatList
+              horizontal
+              data={general_data}
+              renderItem={renderProductTile}
+              keyExtractor={(item) => item.key}
+              showsHorizontalScrollIndicator={false}
+              // scrollEnabled={isBottomSheetOpen === false}
+            />
+          </Pressable>
+        </View>
+
+        <View style={{ marginTop: 38 }}>
+          <SeeMore
+            heading="Blood"
+            onSeeMorePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+          <Pressable>
+            <FlatList
+              horizontal
+              data={general_data}
               renderItem={renderProductTile}
               keyExtractor={(item) => item.key}
               showsHorizontalScrollIndicator={false}

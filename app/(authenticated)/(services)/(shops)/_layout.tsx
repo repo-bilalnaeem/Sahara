@@ -9,6 +9,7 @@ const Layout = () => {
       <Stack.Screen name="Groceries" options={{ headerShown: false }} />
       <Stack.Screen name="Health&Wellbeing" options={{ headerShown: false }} />
       <Stack.Screen name="Household&Living" options={{ headerShown: false }} />
+      <Stack.Screen name="[category]" options={{ headerShown: false }} />
     </Stack>
   );
 };
