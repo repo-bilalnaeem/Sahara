@@ -72,7 +72,11 @@ export default function HospitalProvider({ children }: PropsWithChildren<{}>) {
     setJourneyStarted(true);
   };
 
-  console.log(direction?.routes[0]?.legs[0].duration);
+  // Extract duration and distance
+  const duration = direction?.routes[0]?.duration;
+  const distance = direction?.routes[0]?.distance;
+
+  // console.log(direction);
 
   return (
     <HospitalContext.Provider
@@ -83,8 +87,8 @@ export default function HospitalProvider({ children }: PropsWithChildren<{}>) {
         directionCoordinates: direction?.routes[0].geometry.coordinates,
         journeyStarted,
         startJourney,
-        duration: direction?.routes[0]?.legs[0].duration,
-        distance: direction?.routes[0]?.legs[0].distance,
+        distance,
+        duration,
       }}
     >
       {children}
