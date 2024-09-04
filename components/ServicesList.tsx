@@ -21,7 +21,7 @@ const data = [
     key: "2",
     imageSource: require("@/assets/images/Consultation-PNG.png"),
     text: "Consultation",
-    screen: "/(drawer)/(chat)/new",
+    screen: "/Consultation",
   },
   {
     key: "3",
@@ -37,10 +37,17 @@ const data = [
   },
 ];
 
-const ServicesList = () => {
+interface ServicesListProps {
+  isBottomSheetOpen: boolean; // Define the prop type
+}
+
+const ServicesList = ({ isBottomSheetOpen }: ServicesListProps) => {
   const router = useRouter();
   const renderServicesItem = ({ item, index }) => (
-    <Pressable onPress={() => router.navigate(item.screen)}>
+    <Pressable
+      onPress={() => router.navigate(item.screen)}
+      disabled={isBottomSheetOpen === true ? true : false}
+    >
       <View
         style={[
           styles.doctorServiceBtn,
@@ -64,7 +71,8 @@ const ServicesList = () => {
           data={data}
           renderItem={renderServicesItem}
           keyExtractor={(item) => item.key}
-          showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={isBottomSheetOpen === false}
         />
       </Pressable>
     </View>

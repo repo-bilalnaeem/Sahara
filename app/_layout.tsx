@@ -88,7 +88,7 @@ const InitialLayout = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="verification" options={{ headerShown: false }} />
-          <Stack.Screen name="/modal" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ headerShown: false }} />
         </Stack>
       ) : (
         <StreamVideo client={client}>

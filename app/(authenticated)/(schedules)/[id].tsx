@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
 
   actions: {
     position: "absolute",
-    bottom: 32,
+    bottom: 0,
     width: "100%",
     paddingHorizontal: 10,
     flexDirection: "row",

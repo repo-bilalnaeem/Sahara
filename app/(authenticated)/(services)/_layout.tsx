@@ -5,6 +5,7 @@ import HospitalProvider from "@/providers/HospitalProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import PharmacyHeader from "@/components/PharmacyHeader";
 
 const Layout = () => {
   return (
@@ -13,14 +14,11 @@ const Layout = () => {
         <Stack
           screenOptions={
             {
-              
               // navigationBarHidden: true,
               // navigationBarColor:'transparent'
             }
           }
         >
-          {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
-
           <Stack.Screen
             name="Emergency"
             options={{
@@ -32,8 +30,12 @@ const Layout = () => {
             }}
           />
 
-          <Stack.Screen name="Pharmacy" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="Pharmacy"
+            options={{ header: () => <PharmacyHeader /> }}
+          />
           <Stack.Screen name="Laboratory" />
+          <Stack.Screen name="(shops)" />
         </Stack>
       </HospitalProvider>
     </GestureHandlerRootView>
