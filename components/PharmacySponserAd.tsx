@@ -1,7 +1,23 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
 import React from "react";
 
-const PharmacySponserAd = () => {
+interface PharmacySponserAdProps {
+  imageSource: ImageSourcePropType;
+  height: number;
+  width: number;
+  title: string;
+  description: string;
+  sponsoredText?: string; // Optional prop
+}
+
+const PharmacySponserAd: React.FC<PharmacySponserAdProps> = ({
+  imageSource,
+  height,
+  width,
+  title,
+  description,
+  sponsoredText = "Sponsored", // Default value for sponsored text
+}) => {
   return (
     <View
       style={{
@@ -10,12 +26,12 @@ const PharmacySponserAd = () => {
         marginBottom: 38,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: "#a0a0a0",
-        height: 160,
+        height: height,
         borderRadius: 10,
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
       }}
     >
       <View
@@ -24,21 +40,22 @@ const PharmacySponserAd = () => {
           paddingVertical: 16,
           flexDirection: "column",
           justifyContent: "space-between",
+          flexGrow:1
         }}
       >
-        <Text style={{ color: "gray", fontSize: 12 }}>Sponsored</Text>
+        <Text style={{ color: "gray", fontSize: 12 }}>{sponsoredText}</Text>
         <View>
-          <Text style={{ fontWeight: "700", fontSize: 16, marginBottom: 4 }}>
-            Enjoy muft ka{"\n"}easyload!
+          <Text style={{ fontWeight: "700", fontSize: 16, marginBottom: 12 }}>
+            {title}
           </Text>
           <Text style={{ fontSize: 12, color: "#999999", marginBottom: 8 }}>
-            Easyload ab bilkul free
+            {description}
           </Text>
         </View>
       </View>
       <Image
-        source={require("@/assets/images/easypaisa_ad.jpg")}
-        style={{ height: 160, width: 160, resizeMode: "contain" }}
+        source={imageSource}
+        style={{ height: height, width: width, resizeMode: "cover" }}
       />
     </View>
   );

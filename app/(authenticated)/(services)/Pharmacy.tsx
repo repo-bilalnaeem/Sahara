@@ -129,11 +129,7 @@ const categoryData = [
     imageSource: require("@/assets/images/brain.png"),
     text: "Brain",
   },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/chemo.png"),
-    text: "Chemotherapy",
-  },
+
   { key: "5", imageSource: require("@/assets/images/cold.png"), text: "Cold" },
   {
     key: "6",
@@ -174,6 +170,72 @@ const general_data = [
     imageSource: require("@/assets/images/medicine_images/img15.jpeg"),
     title: "Brufen Tablets 200mg (1 strip = 10 tablets)",
     price: 39.67,
+  },
+];
+
+const blood_data = [
+  {
+    key: "1",
+    imageSource: require("@/assets/images/medicine_images/img16.jpeg"),
+    title: "Beurer bm 28 upper arm blood pressure monitor",
+    price: 8500.0,
+  },
+  {
+    key: "2",
+    imageSource: require("@/assets/images/medicine_images/img17.jpeg"),
+    title: "Boferin 500mg/10ml injection",
+    price: 3400.0,
+  },
+  {
+    key: "3",
+    imageSource: require("@/assets/images/medicine_images/img18.jpeg"),
+    title: "Beurer Upper Arm Blood Pressure Monitoring Device Bm 58",
+    price: 15500.0,
+  },
+  {
+    key: "4",
+    imageSource: require("@/assets/images/medicine_images/img19.jpeg"),
+    title: "Amlocard Tablets 5mg (1 Strip = 10 Tablets)",
+    price: 118.94,
+  },
+  {
+    key: "5",
+    imageSource: require("@/assets/images/medicine_images/img20.jpeg"),
+    title: "Dapa Tablets 10mg (1 strip = 14 Tablets)",
+    price: 535.0,
+  },
+];
+
+const brain_data = [
+  {
+    key: "1",
+    imageSource: require("@/assets/images/medicine_images/img21.jpeg"),
+    title: "Lalap tablets 50mg (1 strip = 7 tablets)",
+    price: 420.0,
+  },
+  {
+    key: "2",
+    imageSource: require("@/assets/images/medicine_images/img22.jpeg"),
+    title: "Risp oral 30ml solution 1mg/ml",
+    price: 547.0,
+  },
+  {
+    key: "3",
+    imageSource: require("@/assets/images/medicine_images/img23.jpeg"),
+    title: "Reteric capsules 75mg (1 strip = 7 capsules)",
+    price: 34.07,
+  },
+  {
+    key: "4",
+    imageSource: require("@/assets/images/medicine_images/img24.jpeg"),
+    title: "Zavget tablets 10mg (1 box = 1 strip)(1 strip = 14 tablets)",
+    price: 525.0,
+  },
+  {
+    key: "5",
+    imageSource: require("@/assets/images/medicine_images/img25.jpeg"),
+    title: "Zoloft tablets 50mg (1 box = 3 strips) (1 strip = 10 tablets)",
+    price: 3219.0,
   },
 ];
 
@@ -226,7 +288,7 @@ const Pharmacy = () => {
         <View style={styles.productTile}>
           <Image
             source={item.imageSource}
-            style={[{ resizeMode: "contain", width: 120, height: 120 }]}
+            style={[{ resizeMode: "contain", width: 140, height: 140 }]}
           />
           <TouchableWithoutFeedback>
             <View style={styles.add_button}>
@@ -284,7 +346,13 @@ const Pharmacy = () => {
           />
           {/* </Pressable> */}
         </View>
-        <PharmacySponserAd />
+        <PharmacySponserAd
+          height={160}
+          width={160}
+          title={`Enjoy muft ka${"\n"}easyload!`}
+          description={`Easyload ab bilkul free`}
+          imageSource={require("@/assets/images/easypaisa_ad.jpg")}
+        />
 
         <View>
           <SeeMore
@@ -373,7 +441,55 @@ const Pharmacy = () => {
           <Pressable>
             <FlatList
               horizontal
-              data={general_data}
+              data={blood_data}
+              renderItem={renderProductTile}
+              keyExtractor={(item) => item.key}
+              showsHorizontalScrollIndicator={false}
+              // scrollEnabled={isBottomSheetOpen === false}
+            />
+          </Pressable>
+        </View>
+
+        <View style={{ marginTop: 38 }}>
+          <SeeMore
+            heading="Brain"
+            onSeeMorePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+          <Pressable>
+            <FlatList
+              horizontal
+              data={brain_data}
+              renderItem={renderProductTile}
+              keyExtractor={(item) => item.key}
+              showsHorizontalScrollIndicator={false}
+              // scrollEnabled={isBottomSheetOpen === false}
+            />
+          </Pressable>
+        </View>
+
+        <View style={{ marginTop: 38 }}>
+          <PharmacySponserAd
+            height={180}
+            title={`Visa weekdays`}
+            description={`Use Visa30 on checkout${"\n"}and get 30% off!`}
+            imageSource={require("@/assets/images/Mastercard.jpg")}
+            width={150}
+          />
+        </View>
+
+        <View>
+          <SeeMore
+            heading="Cold"
+            onSeeMorePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+          <Pressable>
+            <FlatList
+              horizontal
+              data={brain_data}
               renderItem={renderProductTile}
               keyExtractor={(item) => item.key}
               showsHorizontalScrollIndicator={false}
@@ -435,11 +551,11 @@ const styles = StyleSheet.create({
   },
 
   productTile: {
-    width: 120,
+    width: 140,
     marginRight: 10,
     // justifyContent: "center",
     // alignItems: "center",
-    height: 120,
+    height: 140,
     borderRadius: 14,
     backgroundColor: "#F6F6F6",
     borderWidth: StyleSheet.hairlineWidth,

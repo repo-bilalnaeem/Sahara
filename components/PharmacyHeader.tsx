@@ -70,8 +70,18 @@ const PharmacyHeader = () => {
         </View>
 
         <View style={{ flexDirection: "row", gap: 20 }}>
-          <Ionicons name="heart-outline" size={20} color={"#fff"} />
-          <Ionicons name="bag-outline" size={20} color={"#fff"} />
+          <Ionicons
+            name="heart-outline"
+            size={22}
+            color={"#fff"}
+            style={{ marginBottom: 5 }}
+          />
+          <Ionicons
+            name="bag-outline"
+            size={22}
+            color={"#fff"}
+            style={{ marginBottom: 5 }}
+          />
         </View>
       </View>
       <View style={styles.container}>
