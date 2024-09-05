@@ -13,236 +13,47 @@ import {
 } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import PharmacyFeatures from "@/components/PharmacyFeatures";
 import SeeMore from "@/components/SeeMore";
 import { Ionicons } from "@expo/vector-icons";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 
-const data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/convinence.png"),
-    text: "Convenience",
-    screen: "/(shops)/Convinence",
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/groceries.png"),
-    text: "Groceries",
-    screen: "/(shops)/Groceries",
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/health.png"),
-    text: `Health &${"\n"}Wellbeing`,
-    screen: "/(shops)/Health&Wellbeing",
-  },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/household.png"),
-    text: `Household &${"\n"}Living`,
-    screen: "/(shops)/Household&Living",
-  },
-];
+import {
+  data,
+  medical_data,
+  popular_data,
+  categoryData,
+  blood_data,
+} from "@/assets/data/PharmacyPageData";
 
-const medical_data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/medicine_images/img1.jpeg"),
-    title: "Strepsils Honey & Lemon Lozenges",
-    price: 197.13,
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/medicine_images/img2.jpeg"),
-    title: "Panadol Extra Tablets",
-    price: 47.5,
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/medicine_images/img3.jpeg"),
-    title: "Softin Tablets 10mg",
-    price: 95.0,
-  },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/medicine_images/img4.jpeg"),
-    title: "Glucerna Milk Powder Vanilla 400g",
-    price: 3744.0,
-  },
-  {
-    key: "5",
-    imageSource: require("@/assets/images/medicine_images/img5.jpeg"),
-    title: "Evion Capsules 400gm",
-    price: 102.4,
-  },
-];
+interface ProductItem {
+  key: string;
+  imageSource: any;
+  price: number;
+  title: string;
+}
 
-const popular_data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/medicine_images/img6.jpeg"),
-    title: "Ensure Milk Powder Chocolate 400g",
-    price: 2945.0,
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/medicine_images/img7.jpeg"),
-    title: "Cerelac 3 Fruits & Wheat 350g",
-    price: 47.5,
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/medicine_images/img8.png"),
-    title: "Cerealc Rice 175g",
-    price: 95.0,
-  },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/medicine_images/img9.jpeg"),
-    title: "Cerelac Nature Roa 175 Grams",
-    price: 601.0,
-  },
-  {
-    key: "5",
-    imageSource: require("@/assets/images/medicine_images/img10.jpeg"),
-    title:
-      "Nestle Cerelac Natures Selection Multigrain, Pomegranate, Cherries & Apples 350G",
-    price: 1220.0,
-  },
-];
+interface RenderProductTileProps {
+  item: ProductItem;
+  index: number;
+}
 
-const categoryData = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/general.png"),
-    text: "General",
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/blood.png"),
-    text: "Blood",
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/brain.png"),
-    text: "Brain",
-  },
+interface ServiceItem {
+  screen: string;
+  imageSource: any;
+  text: string;
+}
 
-  { key: "5", imageSource: require("@/assets/images/cold.png"), text: "Cold" },
-  {
-    key: "6",
-    imageSource: require("@/assets/images/device.png"),
-    text: "Devices",
-  },
-  { key: "7", imageSource: require("@/assets/images/ear.png"), text: "Ear" },
-  { key: "8", imageSource: require("@/assets/images/eye.png"), text: "Eye" },
-];
-
-const general_data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/medicine_images/img11.jpeg"),
-    title: "Peditral Powder Orange Sachet (1 Box = 25 sachets)",
-    price: 26.96,
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/medicine_images/img12.jpeg"),
-    title: "Nexum Capsules 20mg",
-    price: 188.0,
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/medicine_images/img13.jpeg"),
-    title: "Azomax 250 Capsules 250mg",
-    price: 694.51,
-  },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/medicine_images/img14.jpeg"),
-    title: "Polyfax Skin Ointment 20g",
-    price: 170.0,
-  },
-  {
-    key: "5",
-    imageSource: require("@/assets/images/medicine_images/img15.jpeg"),
-    title: "Brufen Tablets 200mg (1 strip = 10 tablets)",
-    price: 39.67,
-  },
-];
-
-const blood_data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/medicine_images/img16.jpeg"),
-    title: "Beurer bm 28 upper arm blood pressure monitor",
-    price: 8500.0,
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/medicine_images/img17.jpeg"),
-    title: "Boferin 500mg/10ml injection",
-    price: 3400.0,
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/medicine_images/img18.jpeg"),
-    title: "Beurer Upper Arm Blood Pressure Monitoring Device Bm 58",
-    price: 15500.0,
-  },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/medicine_images/img19.jpeg"),
-    title: "Amlocard Tablets 5mg (1 Strip = 10 Tablets)",
-    price: 118.94,
-  },
-  {
-    key: "5",
-    imageSource: require("@/assets/images/medicine_images/img20.jpeg"),
-    title: "Dapa Tablets 10mg (1 strip = 14 Tablets)",
-    price: 535.0,
-  },
-];
-
-const brain_data = [
-  {
-    key: "1",
-    imageSource: require("@/assets/images/medicine_images/img21.jpeg"),
-    title: "Lalap tablets 50mg (1 strip = 7 tablets)",
-    price: 420.0,
-  },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/medicine_images/img22.jpeg"),
-    title: "Risp oral 30ml solution 1mg/ml",
-    price: 547.0,
-  },
-  {
-    key: "3",
-    imageSource: require("@/assets/images/medicine_images/img23.jpeg"),
-    title: "Reteric capsules 75mg (1 strip = 7 capsules)",
-    price: 34.07,
-  },
-  {
-    key: "4",
-    imageSource: require("@/assets/images/medicine_images/img24.jpeg"),
-    title: "Zavget tablets 10mg (1 box = 1 strip)(1 strip = 14 tablets)",
-    price: 525.0,
-  },
-  {
-    key: "5",
-    imageSource: require("@/assets/images/medicine_images/img25.jpeg"),
-    title: "Zoloft tablets 50mg (1 box = 3 strips) (1 strip = 10 tablets)",
-    price: 3219.0,
-  },
-];
+interface RenderServicesItemProps {
+  item: ServiceItem;
+  index: number;
+}
 
 const category = categoryData.map((item) => ({
   ...item,
   get screen() {
-    return `/(shops)/${item.text}`;
+    return `/(category)/${item.text}`;
   },
 }));
 
@@ -254,12 +65,11 @@ function formatTitle(title: string, maxLength = 25) {
 }
 
 const Pharmacy = () => {
-  const { top } = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === "dark";
 
-  const renderServicesItem = ({ item, index }) => (
+  const renderServicesItem = ({ item, index }: RenderServicesItemProps) => (
     <Pressable
-      onPress={() => router.navigate(item.screen)}
+      onPress={() => router.navigate(item.screen as Href)}
       style={{ alignItems: "center" }}
       key={index}
     >
@@ -282,13 +92,13 @@ const Pharmacy = () => {
     </Pressable>
   );
 
-  const renderProductTile = ({ item, index }) => (
-    <Pressable>
+  const renderProductTile = ({ item, index }: RenderProductTileProps) => (
+    <Pressable onPress={() => router.push(`/(product)/${item.key}` as Href)}>
       <View style={[index === 0 ? { marginLeft: 16 } : null]}>
         <View style={styles.productTile}>
           <Image
             source={item.imageSource}
-            style={[{ resizeMode: "contain", width: 140, height: 140 }]}
+            style={[{ resizeMode: "contain", width: 120, height: 120 }]}
           />
           <TouchableWithoutFeedback>
             <View style={styles.add_button}>
@@ -314,7 +124,6 @@ const Pharmacy = () => {
       </View>
     </Pressable>
   );
-
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView
@@ -322,7 +131,7 @@ const Pharmacy = () => {
         showsHorizontalScrollIndicator={false}
         bounces={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}
+        contentContainerStyle={{ paddingBottom: 16 }}
       >
         <PharmacyFeatures />
 
@@ -412,28 +221,9 @@ const Pharmacy = () => {
           />
         </View>
 
-        <View style={{ marginTop: 24 }}>
-          <SeeMore
-            heading="General"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
-          <Pressable>
-            <FlatList
-              horizontal
-              data={general_data}
-              renderItem={renderProductTile}
-              keyExtractor={(item) => item.key}
-              showsHorizontalScrollIndicator={false}
-              // scrollEnabled={isBottomSheetOpen === false}
-            />
-          </Pressable>
-        </View>
-
         <View style={{ marginTop: 38 }}>
           <SeeMore
-            heading="Blood"
+            heading="General"
             onSeeMorePress={function (): void {
               throw new Error("Function not implemented.");
             }}
@@ -451,51 +241,13 @@ const Pharmacy = () => {
         </View>
 
         <View style={{ marginTop: 38 }}>
-          <SeeMore
-            heading="Brain"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
-          <Pressable>
-            <FlatList
-              horizontal
-              data={brain_data}
-              renderItem={renderProductTile}
-              keyExtractor={(item) => item.key}
-              showsHorizontalScrollIndicator={false}
-              // scrollEnabled={isBottomSheetOpen === false}
-            />
-          </Pressable>
-        </View>
-
-        <View style={{ marginTop: 38 }}>
           <PharmacySponserAd
             height={180}
-            title={`Visa weekdays`}
-            description={`Use Visa30 on checkout${"\n"}and get 30% off!`}
+            title={`Mastercard weekdays`}
+            description={`Use Master30 on checkout${"\n"}and get 30% off!`}
             imageSource={require("@/assets/images/Mastercard.jpg")}
             width={150}
           />
-        </View>
-
-        <View>
-          <SeeMore
-            heading="Cold"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
-          <Pressable>
-            <FlatList
-              horizontal
-              data={brain_data}
-              renderItem={renderProductTile}
-              keyExtractor={(item) => item.key}
-              showsHorizontalScrollIndicator={false}
-              // scrollEnabled={isBottomSheetOpen === false}
-            />
-          </Pressable>
         </View>
       </ScrollView>
     </View>
@@ -551,11 +303,11 @@ const styles = StyleSheet.create({
   },
 
   productTile: {
-    width: 140,
-    marginRight: 10,
+    width: 120,
+    marginRight: 16,
     // justifyContent: "center",
     // alignItems: "center",
-    height: 140,
+    height: 120,
     borderRadius: 14,
     backgroundColor: "#F6F6F6",
     borderWidth: StyleSheet.hairlineWidth,
