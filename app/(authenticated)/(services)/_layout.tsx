@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import HospitalProvider from "@/providers/HospitalProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import PharmacyHeader from "@/components/PharmacyHeader";
+import GoBack from "@/components/GoBack";
 
 const Layout = () => {
   return (
@@ -22,7 +23,14 @@ const Layout = () => {
             name="pharmacy"
             options={{ header: () => <PharmacyHeader /> }}
           />
-          <Stack.Screen name="laboratory"/>
+          <Stack.Screen
+            name="laboratory"
+            options={{
+              headerShown: false,
+              
+              // header: () => <GoBack title={undefined} />,
+            }}
+          />
           <Stack.Screen name="(shops)" options={{ headerShown: false }} />
           <Stack.Screen
             name="(product)"
