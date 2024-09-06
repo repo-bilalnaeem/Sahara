@@ -3,25 +3,25 @@ export const data = [
       key: "1",
       imageSource: require("@/assets/images/convinence.png"),
       text: "Convenience",
-      screen: "/(shops)/Convinence",
+      screen: "/(shops)/convinence",
     },
     {
       key: "2",
       imageSource: require("@/assets/images/groceries.png"),
       text: "Groceries",
-      screen: "/(shops)/Groceries",
+      screen: "/(shops)/groceries",
     },
     {
       key: "3",
       imageSource: require("@/assets/images/health.png"),
       text: `Health &${"\n"}Wellbeing`,
-      screen: "/(shops)/Health&Wellbeing",
+      screen: "/(shops)/health&wellbeing",
     },
     {
       key: "4",
       imageSource: require("@/assets/images/household.png"),
       text: `Household &${"\n"}Living`,
-      screen: "/(shops)/Household&Living",
+      screen: "/(shops)/household&living",
     },
   ];
   

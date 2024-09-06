@@ -5,10 +5,10 @@ import { Stack } from "expo-router";
 const Layout = () => {
   return (
     <Stack>
-      <Stack.Screen name="Convinence" options={{ headerShown: false }} />
-      <Stack.Screen name="Groceries" options={{ headerShown: false }} />
-      <Stack.Screen name="Health&Wellbeing" options={{ headerShown: false }} />
-      <Stack.Screen name="Household&Living" options={{ headerShown: false }} />
+      <Stack.Screen name="convinence" options={{ headerShown: false }} />
+      <Stack.Screen name="groceries" options={{ headerShown: false }} />
+      <Stack.Screen name="health&wellbeing" options={{ headerShown: false }} />
+      <Stack.Screen name="household&living" options={{ headerShown: false }} />
     </Stack>
   );
 };

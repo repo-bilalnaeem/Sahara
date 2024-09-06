@@ -1,18 +1,15 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   useColorScheme,
   Pressable,
   Image,
   FlatList,
   ScrollView,
-  Touchable,
   TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Href, router } from "expo-router";
 import PharmacyFeatures from "@/components/PharmacyFeatures";
 import SeeMore from "@/components/SeeMore";

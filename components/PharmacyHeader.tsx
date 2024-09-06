@@ -9,12 +9,10 @@ import {
   useColorScheme,
 } from "react-native";
 import React from "react";
-import { BlurView } from "expo-blur";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import GoBack from "./GoBack";
 
 const PharmacyHeader = () => {
   const { top } = useSafeAreaInsets();
@@ -22,10 +20,11 @@ const PharmacyHeader = () => {
 
   return (
     <LinearGradient
-      colors={["#1661E0", "#478EEF"]}
+      colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
       style={[styles.linearGradient, { paddingTop: top }]}
       start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      locations={[0.0527, 0.9575]}
     >
       <View
         style={{

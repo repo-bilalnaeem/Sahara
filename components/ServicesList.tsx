@@ -15,25 +15,25 @@ const data = [
     key: "1",
     imageSource: require("@/assets/images/Emergency-PNG.png"),
     text: "Emergency",
-    screen: "/Emergency",
+    screen: "/emergency",
   },
   {
     key: "2",
     imageSource: require("@/assets/images/Consultation-PNG.png"),
     text: "Consultation",
-    screen: "/Consultation",
+    screen: "/consultation",
   },
   {
     key: "3",
     imageSource: require("@/assets/images/Medicine-PNG.png"),
     text: "Pharmacy",
-    screen: "/Pharmacy",
+    screen: "/pharmacy",
   },
   {
     key: "4",
     imageSource: require("@/assets/images/Needle-PNG.png"),
     text: "Laboratory",
-    screen: "/Laboratory",
+    screen: "/laboratory",
   },
 ];
 

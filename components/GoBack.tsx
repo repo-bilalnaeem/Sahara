@@ -41,8 +41,6 @@ const GoBack = ({ title }: TitleProps) => {
 };
 
 const styles = StyleSheet.create({
-
-
   lightBackButton: {
     borderRadius: 24,
     width: 42,
