@@ -31,7 +31,7 @@ interface ProductItem {
   title: string;
 }
 
-interface RenderProductTileProps {
+export interface RenderProductTileProps {
   item: ProductItem;
   index: number;
 }
@@ -54,7 +54,7 @@ const category = categoryData.map((item) => ({
   },
 }));
 
-function formatTitle(title: string, maxLength = 25) {
+export function formatTitle(title: string, maxLength = 25) {
   if (title.length > maxLength) {
     return title.substring(0, maxLength) + " ...";
   }
