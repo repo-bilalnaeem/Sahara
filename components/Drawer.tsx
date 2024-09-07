@@ -19,7 +19,6 @@ import { useDrawerStatus } from "@react-navigation/drawer";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import PharmacyHeader from "@/components/PharmacyHeader";
-import { StatusBar } from "expo-status-bar";
 import { Divider } from "react-native-paper";
 
 const CustomDrawerContent = (props: any) => {
