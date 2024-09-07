@@ -60,6 +60,7 @@ const Layout = () => {
           <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
           <Stack.Screen name="userProfile" options={{ headerShown: false }} />
           <Stack.Screen name="(services)" options={{ headerShown: false }} />
+     
         </Stack>
         <Toast />
       </OverlayProvider>

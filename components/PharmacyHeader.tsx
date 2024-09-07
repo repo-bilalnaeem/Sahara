@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { Pressable } from "react-native";
 
 const PharmacyHeader = () => {
   const { top } = useSafeAreaInsets();
@@ -75,12 +76,14 @@ const PharmacyHeader = () => {
             color={"#fff"}
             style={{ marginBottom: 5 }}
           />
-          <Ionicons
-            name="bag-outline"
-            size={22}
-            color={"#fff"}
-            style={{ marginBottom: 5 }}
-          />
+          <Pressable onPress={() => router.push("/(cart)")}>
+            <Ionicons
+              name="bag-outline"
+              size={22}
+              color={"#fff"}
+              style={{ marginBottom: 5 }}
+            />
+          </Pressable>
         </View>
       </View>
       <View style={styles.container}>

@@ -40,6 +40,10 @@ const Layout = () => {
           />
           <Stack.Screen name="(category)" options={{ headerShown: false }} />
           <Stack.Screen name="(laboratory)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(cart)"
+            options={{ animation: "slide_from_bottom", headerShown: false }}
+          />
         </Stack>
       </HospitalProvider>
     </GestureHandlerRootView>

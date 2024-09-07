@@ -1,34 +1,15 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  TouchableWithoutFeedback,
-  FlatList,
-  useWindowDimensions,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import React from "react";
-import { Href, useRouter } from "expo-router";
-import { formatTitle, RenderProductTileProps } from "../pharmacy";
-import { Ionicons } from "@expo/vector-icons";
-import { data } from "@/assets/data/labPageData";
+import { useRouter } from "expo-router";
 
 const index = () => {
-  const router = useRouter();
-  const { width } = useWindowDimensions();
-
-
-
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: "#fff",
       }}
-    >
-
-    </View>
+    ></View>
   );
 };
 

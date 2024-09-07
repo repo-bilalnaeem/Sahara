@@ -10,54 +10,17 @@ import {
 } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { medical_data } from "@/assets/data/PharmacyPageData";
-import { formatTitle, RenderProductTileProps } from "./pharmacy";
-import { Href, router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { data } from "@/assets/data/labPageData";
+import { Divider } from "react-native-paper";
+import { commonTests } from "@/assets/data/LaboratoryPageData";
+
 
 const Laboratory = () => {
-  const { top } = useSafeAreaInsets();
-
-  const renderProductTile = ({ item, index }: RenderProductTileProps) => (
-    <Pressable onPress={() => router.push(`/(product)/${item.key}` as Href)}>
-      <View style={[index === 0 ? { marginLeft: 16 } : null]}>
-        <View style={styles.productTile}>
-          <Image
-            source={item.imageSource}
-            style={[{ resizeMode: "contain", width: 120, height: 120 }]}
-          />
-          <TouchableWithoutFeedback>
-            <View style={styles.add_button}>
-              <Ionicons name="add" size={20} color={"#494848"} />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: "500",
-            marginBottom: 4,
-            width: 120,
-          }}
-        >
-          Rs. {item.price}
-        </Text>
-        <Text
-          style={{ width: 120, fontSize: 14, fontWeight: "400", color: "gray" }}
-        >
-          {formatTitle(item.title)}
-        </Text>
-      </View>
-    </Pressable>
-  );
-
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBar style="light" />
@@ -228,16 +191,49 @@ const Laboratory = () => {
           <Text style={styles.featuredHeading}>
             Most Common{"\n"}Blood Test
           </Text>
-          <Pressable>
-            <FlatList
-              horizontal
-              data={data}
-              renderItem={renderProductTile}
-              keyExtractor={(item) => item.key}
-              showsHorizontalScrollIndicator={false}
-              // scrollEnabled={isBottomSheetOpen === false}
-            />
-          </Pressable>
+          {commonTests.map((item, index) => (
+            <View
+              key={index}
+              style={{ paddingHorizontal: 12, paddingVertical: 10 }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 16,
+                  paddingHorizontal: 4,
+                }}
+              >
+                <Text
+                  style={{
+                    flexGrow: 1,
+                    color: "rgba(0, 37, 58, 0.76)",
+                    fontWeight: "600",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {item.title}
+                </Text>
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                >
+                  <Text style={{ fontWeight: "400" }}>Rs. {item.price}</Text>
+                  <Pressable>
+                    <View
+                      style={{
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                        borderRadius: 20,
+                        borderWidth: 1,
+                      }}
+                    >
+                      <Text style={{ fontWeight: "500" }}>Add</Text>
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
+              <Divider theme={{ colors: { primary: "#000" } }} />
+            </View>
+          ))}
         </View>
       </ScrollView>
     </View>
