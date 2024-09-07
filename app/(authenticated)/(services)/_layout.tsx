@@ -18,17 +18,8 @@ const Layout = () => {
             }}
           />
 
-          <Stack.Screen
-            name="pharmacy"
-            options={{ header: () => <PharmacyHeader /> }}
-          />
-          <Stack.Screen
-            name="laboratory"
-            options={{
-              // headerShown: false,
-              header: () => <PharmacyHeader />,
-            }}
-          />
+          <Stack.Screen name="(pharmacy)" options={{ headerShown: false }} />
+
           <Stack.Screen name="(shops)" options={{ headerShown: false }} />
           <Stack.Screen
             name="(product)"

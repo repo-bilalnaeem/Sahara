@@ -27,8 +27,6 @@ import { getChats, renameChat } from "@/utils/Database";
 import React from "react";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
-import GoBack from "@/components/GoBack";
-import { useHeaderHeight } from "@react-navigation/elements";
 
 export const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
@@ -200,12 +198,8 @@ export const CustomDrawerContent = (props: any) => {
 const Layout = () => {
   const navigation = useNavigation();
   const dimensions = useWindowDimensions();
-  //   const { user } = useRevenueCat();
   const router = useRouter();
   const isDarkMode = useColorScheme() === "dark";
-  const { top } = useSafeAreaInsets();
-
-  const headerHeight = useHeaderHeight();
 
   return (
     <Drawer

@@ -23,6 +23,7 @@ import {
   categoryData,
   blood_data,
 } from "@/assets/data/PharmacyPageData";
+import { StatusBar } from "expo-status-bar";
 
 interface ProductItem {
   key: string;
@@ -123,6 +124,7 @@ const Pharmacy = () => {
   );
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <StatusBar style="light" />
       <ScrollView
         style={{ flex: 1 }}
         showsHorizontalScrollIndicator={false}

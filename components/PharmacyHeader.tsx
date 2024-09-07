@@ -10,14 +10,16 @@ import {
 } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Pressable } from "react-native";
+import { DrawerActions } from "@react-navigation/native";
 
 const PharmacyHeader = () => {
   const { top } = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === "dark";
+  const navigation = useNavigation();
 
   return (
     <LinearGradient
@@ -69,13 +71,13 @@ const PharmacyHeader = () => {
           </View>
         </View>
 
-        <View style={{ flexDirection: "row", gap: 20 }}>
-          <Ionicons
+        <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
+          {/* <Ionicons
             name="heart-outline"
             size={22}
             color={"#fff"}
             style={{ marginBottom: 5 }}
-          />
+          /> */}
           <Pressable onPress={() => router.push("/(cart)")}>
             <Ionicons
               name="bag-outline"
@@ -84,6 +86,17 @@ const PharmacyHeader = () => {
               style={{ marginBottom: 5 }}
             />
           </Pressable>
+
+          <TouchableOpacity
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
+          >
+            <Ionicons
+              name="menu"
+              size={28}
+              color="#fff"
+              style={{ marginRight: 4 }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.container}>
