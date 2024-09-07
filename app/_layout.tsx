@@ -18,6 +18,7 @@ SplashScreen.preventAutoHideAsync();
 
 const InitialLayout = () => {
   LogBox.ignoreAllLogs(true); // Disable all warnings
+  
   const { authState, initialized } = useAuth();
   const segments = useSegments();
   const router = useRouter();

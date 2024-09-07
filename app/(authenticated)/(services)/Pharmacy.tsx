@@ -42,7 +42,7 @@ interface ServiceItem {
   text: string;
 }
 
-interface RenderServicesItemProps {
+export interface RenderServicesItemProps {
   item: ServiceItem;
   index: number;
 }

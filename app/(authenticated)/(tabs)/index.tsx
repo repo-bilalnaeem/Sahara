@@ -16,9 +16,7 @@ import {
   useColorScheme,
 } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
 import { RootSiblingParent } from "react-native-root-siblings";
 import UpcomingSchedule from "@/components/UpcomingSchedule";
 import CustomScrollView from "@/components/CustomScrollView";
@@ -75,9 +73,9 @@ const Home = () => {
                 style={styles.imageBackground}
               >
                 <LinearGradient
-                  colors={["rgba(0, 0, 0, 0.30)", "rgba(0, 0, 0, 0.2)"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                  colors={["rgba(0, 0, 0, 0.35)", "rgba(0, 0, 0, 0.12)"]}
+                  start={{ x: 0.5, y: 0 }}
+                  end={{ x: 0.25, y: 1 }}
                   style={styles.gradient}
                 />
                 <View style={styles.content}>
@@ -153,7 +151,7 @@ const styles = StyleSheet.create({
   },
 
   lightScreen: {
-    backgroundColor: "#fbfbfb",
+    backgroundColor: "#ffffff",
     overflow: "hidden",
     position: "relative",
     // paddingBottom: 120,
@@ -165,11 +163,11 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    elevation: 10, // for Android
-    shadowOpacity: 0.25,
-    shadowRadius: 13,
-    shadowOffset: { width: 0, height: 8 },
-    shadowColor: "black", // for iOS
+    elevation: 5, // for Android
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 5 },
+    shadowColor: "#131313", // for iOS
     // height: 370,
     borderRadius: 50,
     backgroundColor: "#fff",
