@@ -20,6 +20,7 @@ import { formatTitle, RenderProductTileProps } from "./pharmacy";
 import { Href, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import { data } from "@/assets/data/labPageData";
 
 const Laboratory = () => {
   const { top } = useSafeAreaInsets();
@@ -230,7 +231,7 @@ const Laboratory = () => {
           <Pressable>
             <FlatList
               horizontal
-              data={medical_data}
+              data={data}
               renderItem={renderProductTile}
               keyExtractor={(item) => item.key}
               showsHorizontalScrollIndicator={false}
