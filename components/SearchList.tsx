@@ -13,6 +13,7 @@ import { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
+import NotFound from "./NotFound";
 
 interface Props {
   listings: any[];
@@ -22,13 +23,22 @@ interface Props {
 const Listings = ({ listings: items, category }: Props) => {
   const [loading, setLoading] = useState(false);
   const listRef = useRef<FlatList>(null);
+
   useEffect(() => {
     console.log("RELOAD LISTINGS", items.length);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      listRef.current?.scrollToOffset({ animated: true, offset: 0 });
     }, 200);
   }, [category]);
+
+  // Filter the items based on the selected category
+  // const filteredItems = items.filter((item) => category === item.occup);
+  const filteredItems =
+    category === "All"
+      ? items
+      : items.filter(({ occupation }) => occupation === category);
 
   const renderRow = ({ item }: any) => (
     <Pressable onPress={() => router.push("/(doctor)")}>
@@ -102,21 +112,18 @@ const Listings = ({ listings: items, category }: Props) => {
   );
 
   return (
-    <View
-      style={{
-        paddingHorizontal: 13,
-        flex: 1,
-        top: 75,
-      }}
-    >
-    
-      <FlatList
-        ref={listRef}
-        renderItem={renderRow}
-        data={loading ? [] : items}
-        contentContainerStyle={styles.listitems}
-        showsVerticalScrollIndicator={false}
-      />
+    <View style={{ paddingHorizontal: 13, flex: 1, top: 75 }}>
+      {filteredItems.length === 0 ? (
+        <NotFound />
+      ) : (
+        <FlatList
+          ref={listRef}
+          renderItem={renderRow}
+          data={loading ? [] : filteredItems}
+          contentContainerStyle={styles.listitems}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };
@@ -130,35 +137,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listitems: {
-    // flex: 1,
     gap: 16,
     paddingBottom: 24,
-    marginTop: 120
-
+    marginTop: 120,
   },
-
   name: {
     color: "#FFF",
-    // font-family: Lato;
     fontSize: 24,
     fontStyle: "normal",
     fontWeight: "600",
-    lineHeight: 22 /* 91.667% */,
+    lineHeight: 22,
     left: 22,
     bottom: -223,
   },
-
   speciality: {
     color: "#FFF",
-    // font-family: Lato;
     fontSize: 16,
     fontStyle: "normal",
     fontWeight: "500",
-    lineHeight: 22 /* 137.5% */,
+    lineHeight: 22,
     left: 22,
-    bottom: -233 + 5,
+    bottom: -228,
   },
-
   bookNow: {
     borderRadius: 26,
     backgroundColor: "#2268FB",
@@ -168,25 +168,19 @@ const styles = StyleSheet.create({
     bottom: 26,
     right: 22,
   },
-
   bookText: {
     color: "#FFF",
-    // font-family: Lato;
     fontSize: 15,
     fontStyle: "normal",
     fontWeight: "400",
-    // lineHeight: 23.2 /* 23.2px */,
   },
-
   profession: {
     color: "#FFF",
-    // font-family: Inter;
     fontSize: 14,
     fontStyle: "normal",
     fontWeight: "400",
-    lineHeight: 13.555 /* 13.555px */,
+    lineHeight: 13.555,
   },
-
   professionLabel: {
     display: "flex",
     flexDirection: "row",
@@ -199,7 +193,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
   },
-
   ratings: {
     position: "absolute",
     top: 24,

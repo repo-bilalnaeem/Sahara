@@ -1,4 +1,4 @@
-[
+export const doctors =[
     {
       "id": "1",
       "firstName": "Mathew",

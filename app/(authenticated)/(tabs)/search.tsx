@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React, { useMemo, useState } from "react";
 import Listings from "@/components/SearchList";
-import ListingData from "@/assets/data/RecentlyViewed.json";
+import {doctors} from "@/assets/data/RecentlyViewed";
 import FilterList from "@/components/SearchFilter";
 const search = () => {
-  const items = useMemo(() => ListingData as any, []);
+  const items = useMemo(() => doctors as any, []);
   const [category, setCategory] = useState<string>("All");
 
   const onDataChanged = (category: string) => {
