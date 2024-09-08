@@ -10,6 +10,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { categories } from "@/assets/data/SearchFilters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Divider } from "react-native-paper";
 
 interface FilterListProps {
   onCategoryChanged: (category: string) => void;
@@ -34,7 +35,7 @@ const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { top: top*2.4 }]}>
+    <View style={[styles.container, { paddingTop: top * 2.4 }]}>
       <ScrollView
         ref={scrollRef}
         horizontal
@@ -66,19 +67,29 @@ const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <Divider />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
+    marginTop: 0,
     marginVertical: 14,
     marginBottom: 20,
     position: "absolute",
     zIndex: 2,
+    shadowColor: "#000",
+    shadowRadius: 3,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.09,
   },
   contentContainer: {
     paddingHorizontal: 10, // Add some horizontal padding if needed
+    paddingBottom: 16,
+    paddingTop: 14,
   },
   categoryText: {
     fontSize: 12,
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#478EEF",
     marginHorizontal: 4, // Add horizontal margin for spacing between items
-    backgroundColor:"#fff"
+    backgroundColor: "#fff",
   },
   categoriesBtnActive: {
     alignItems: "center",

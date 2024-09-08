@@ -17,6 +17,7 @@ import {
 } from "@/context/BottomSheetContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PharmacyHeader from "@/components/PharmacyHeader";
+import { Divider } from "react-native-paper";
 
 const Layout = () => {
   return (
@@ -85,7 +86,7 @@ const Container = () => {
           headerTransparent: true,
           tabBarShowLabel: false,
           header: () => (
-            <View style={[styles.meetDoctor, { top: top/1.5 }]}>
+            <View style={[styles.meetDoctor, { paddingTop: top / 1.5,  }]}>
               <View style={styles.searchbarBox}>
                 <AntDesign name="search1" size={20} color="#000" />
                 <TextInput
