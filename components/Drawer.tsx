@@ -3,7 +3,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Image,
@@ -59,30 +59,64 @@ const CustomDrawerContent = (props: any) => {
         </View>
       </DrawerContentScrollView>
 
-      <View
-        style={{
-          padding: 16,
-          paddingBottom: 10 + bottom,
-          backgroundColor: "#FFFCFF",
-        }}
-      >
-        <Link href="/" asChild>
-          <TouchableOpacity style={styles.footer}>
-            <Image
-              source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-              style={styles.avatar}
-            />
-            <Text style={styles.userName}>Bilal Naeem</Text>
-            <Ionicons name="ellipsis-horizontal" size={24} color={"#B8B3BA"} />
-          </TouchableOpacity>
-        </Link>
+      <View>
+        <Divider />
+        <View
+          style={{
+            padding: 16,
+            paddingBottom: 10 + bottom,
+            backgroundColor: "#FFFCFF",
+          }}
+        >
+          <Link href="/" asChild>
+            <TouchableOpacity style={styles.footer}>
+              <Image
+                source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+                style={styles.avatar}
+              />
+              <Text style={styles.userName}>Bilal Naeem</Text>
+              <Ionicons
+                name="ellipsis-horizontal"
+                size={24}
+                color={"#B8B3BA"}
+              />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
+    </View>
+  );
+};
+
+interface CustomHeaderProps {
+  onPress: () => void;
+  heading: string;
+}
+
+const CustomHeader = ({ onPress, heading }: CustomHeaderProps) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        paddingTop: 52,
+        paddingLeft: 18,
+        gap: 18,
+        alignItems: "center",
+        backgroundColor: "#fff",
+        paddingBottom: 16,
+      }}
+    >
+      <TouchableOpacity onPress={onPress} style={styles.closeButton}>
+        <Ionicons name="close" size={24} color={"#000000"} />
+      </TouchableOpacity>
+      <Text style={{ fontWeight: "600", fontSize: 16 }}>{heading}</Text>
     </View>
   );
 };
 
 const CutsomDrawer = () => {
   const dimensions = useWindowDimensions();
+  const router = useRouter();
 
   return (
     <Drawer
@@ -141,7 +175,10 @@ const CutsomDrawer = () => {
               />
             </View>
           ),
-          header: () => <PharmacyHeader />,
+
+          header: () => (
+            <CustomHeader onPress={router.back} heading="Vouchers & offers" />
+          ),
         }}
       />
       <Drawer.Screen
@@ -157,7 +194,7 @@ const CutsomDrawer = () => {
               />
             </View>
           ),
-          header: () => <PharmacyHeader />,
+          header: () => <CustomHeader onPress={router.back} heading="Orders" />,
         }}
       />
       <Drawer.Screen
@@ -173,7 +210,9 @@ const CutsomDrawer = () => {
               />
             </View>
           ),
-          header: () => <PharmacyHeader />,
+          header: () => (
+            <CustomHeader onPress={router.back} heading="Profile" />
+          ),
         }}
       />
       <Drawer.Screen
@@ -189,7 +228,9 @@ const CutsomDrawer = () => {
               />
             </View>
           ),
-          header: () => <PharmacyHeader />,
+          header: () => (
+            <CustomHeader onPress={router.back} heading="Addresses" />
+          ),
         }}
       />
       <Drawer.Screen
@@ -205,7 +246,9 @@ const CutsomDrawer = () => {
               />
             </View>
           ),
-          header: () => <PharmacyHeader />,
+          header: () => (
+            <CustomHeader onPress={router.back} heading="Help Center" />
+          ),
         }}
       />
     </Drawer>
@@ -240,6 +283,16 @@ const styles = StyleSheet.create({
     margin: 6,
     width: 24,
     height: 24,
+  },
+  closeButton: {
+    borderRadius: 24,
+    width: 36,
+    height: 36,
+    // backgroundColor: "#e0e0e0",
+    alignItems: "center",
+    justifyContent: "center",
+    // position: "absolute",
+    zIndex: 2,
   },
 });
 
