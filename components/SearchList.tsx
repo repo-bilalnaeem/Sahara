@@ -1,59 +1,37 @@
-import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
   FlatList,
-  StyleSheet,
   Pressable,
   Image,
-  useColorScheme,
   ImageBackground,
-  FlatListProps,
-  ViewStyle,
-  TextStyle,
-  ImageStyle,
+  StyleSheet,
 } from "react-native";
+import Animated from "react-native-reanimated";
+import React, { useEffect, useRef, useState } from "react";
+import { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 
-import NotFound from "@/components/NotFound";
-
-interface ListingItem {
-  id: string;
-  imageSource: string;
-  firstName: string;
-  lastName: string;
-  occupation: string;
-  ratings: number;
-}
-
-interface ListingsProps {
-  listings: ListingItem[];
+interface Props {
+  listings: any[];
   category: string;
 }
 
-const Listings: React.FC<ListingsProps> = ({ listings: items, category }) => {
+const Listings = ({ listings: items, category }: Props) => {
   const [loading, setLoading] = useState(false);
-  const listRef = useRef<FlatList<ListingItem>>(null);
-  const isDarkMode = useColorScheme() === "dark";
-  const [filteredData, setFilteredData] = useState<ListingItem[]>([]);
-
+  const listRef = useRef<FlatList>(null);
   useEffect(() => {
+    console.log("RELOAD LISTINGS", items.length);
     setLoading(true);
-
     setTimeout(() => {
       setLoading(false);
     }, 200);
   }, [category]);
 
-  const navigateToListing = (itemId: string) => {
-    router.push(``);
-  };
-
-  const renderRow: FlatListProps<ListingItem>["renderItem"] = ({ item }) => (
-    <Pressable onPress={() => navigateToListing(item.id)}>
+  const renderRow = ({ item }: any) => (
+    <Pressable onPress={() => router.push("/(doctor)")}>
       <Animated.View
         style={{ height: 300 }}
         entering={FadeInRight}
@@ -72,19 +50,19 @@ const Listings: React.FC<ListingsProps> = ({ listings: items, category }) => {
             locations={[0.044, 0.2209, 0.566]}
             start={{ x: 0.5, y: 1 }}
             end={{ x: 0.5, y: 0 }}
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
           />
           <View style={styles.professionLabel}>
-            <BlurView intensity={20} style={StyleSheet.absoluteFillObject} />
+            <BlurView intensity={20} style={StyleSheet.absoluteFill} />
             <Image
-              source={require("@/assets/images/Professional.png")}
+              source={require("../assets/images/Professional.png")}
               style={{ width: 22, height: 22 }}
             />
             <Text style={styles.profession}>Professional Doctor</Text>
           </View>
 
           <View style={styles.ratings}>
-            <BlurView intensity={35} style={StyleSheet.absoluteFillObject} />
+            <BlurView intensity={35} style={StyleSheet.absoluteFill} />
             <View
               style={{
                 display: "flex",
@@ -95,10 +73,19 @@ const Listings: React.FC<ListingsProps> = ({ listings: items, category }) => {
               }}
             >
               <Image
-                source={require("@/assets/images/StarGold.png")}
-                style={{ width: 18.46, height: 18, resizeMode: "contain" }}
+                source={require("../assets/images/StarGold.png")}
+                style={{ width: 18.46, height: 18, objectFit: "scale-down" }}
               />
-              <Text style={styles.ratingText}>{item.ratings}</Text>
+              <Text
+                style={{
+                  color: "#FFF",
+                  fontSize: 14,
+                  fontStyle: "normal",
+                  fontWeight: "500",
+                }}
+              >
+                {item.ratings}
+              </Text>
             </View>
           </View>
 
@@ -114,54 +101,64 @@ const Listings: React.FC<ListingsProps> = ({ listings: items, category }) => {
     </Pressable>
   );
 
-  return filteredData.length !== 0 ? (
-    <View style={styles.container}>
+  return (
+    <View
+      style={{
+        paddingHorizontal: 13,
+        flex: 1,
+        top: 75,
+      }}
+    >
+    
       <FlatList
-        renderItem={renderRow}
         ref={listRef}
-        data={loading ? [] : filteredData}
+        renderItem={renderRow}
+        data={loading ? [] : items}
         contentContainerStyle={styles.listitems}
         showsVerticalScrollIndicator={false}
       />
     </View>
-  ) : (
-    <NotFound />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 13,
-    flex: 1,
-    marginTop: 16,
-  } as ViewStyle,
   backgroundImage: {
     height: 500,
     borderRadius: 24,
     overflow: "hidden",
-    resizeMode: "cover",
+    objectFit: "cover",
     flex: 1,
-  } as ImageStyle,
+  },
   listitems: {
+    // flex: 1,
     gap: 16,
-    paddingBottom: 100,
-  } as ViewStyle,
+    paddingBottom: 24,
+    marginTop: 120
+
+  },
+
   name: {
     color: "#FFF",
+    // font-family: Lato;
     fontSize: 24,
+    fontStyle: "normal",
     fontWeight: "600",
-    lineHeight: 22,
+    lineHeight: 22 /* 91.667% */,
     left: 22,
     bottom: -223,
-  } as TextStyle,
+  },
+
   speciality: {
     color: "#FFF",
+    // font-family: Lato;
     fontSize: 16,
+    fontStyle: "normal",
     fontWeight: "500",
-    lineHeight: 22,
+    lineHeight: 22 /* 137.5% */,
     left: 22,
-    bottom: -228,
-  } as TextStyle,
+    bottom: -233 + 5,
+  },
+
   bookNow: {
     borderRadius: 26,
     backgroundColor: "#2268FB",
@@ -170,18 +167,26 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 26,
     right: 22,
-  } as ViewStyle,
+  },
+
   bookText: {
     color: "#FFF",
+    // font-family: Lato;
     fontSize: 15,
+    fontStyle: "normal",
     fontWeight: "400",
-  } as TextStyle,
+    // lineHeight: 23.2 /* 23.2px */,
+  },
+
   profession: {
     color: "#FFF",
+    // font-family: Inter;
     fontSize: 14,
+    fontStyle: "normal",
     fontWeight: "400",
-    lineHeight: 13.555,
-  } as TextStyle,
+    lineHeight: 13.555 /* 13.555px */,
+  },
+
   professionLabel: {
     display: "flex",
     flexDirection: "row",
@@ -193,7 +198,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 20,
     overflow: "hidden",
-  } as ViewStyle,
+  },
+
   ratings: {
     position: "absolute",
     top: 24,
@@ -202,12 +208,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 24,
     overflow: "hidden",
-  } as ViewStyle,
-  ratingText: {
-    color: "#FFF",
-    fontSize: 14,
-    fontWeight: "500",
-  } as TextStyle,
+  },
 });
 
 export default Listings;

@@ -1,12 +1,22 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { RefObject, useRef } from "react";
 import { BlurView } from "expo-blur";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import { Platform, View, StyleSheet, TextInput } from "react-native";
+import {
+  Platform,
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import {
   BottomSheetProvider,
   useBottomSheet,
 } from "@/context/BottomSheetContext";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import PharmacyHeader from "@/components/PharmacyHeader";
 
 const Layout = () => {
   return (
@@ -18,11 +28,12 @@ const Layout = () => {
 
 const Container = () => {
   const { isBottomSheetOpen } = useBottomSheet();
+  const { top } = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#fff",
-        headerShown: false,
         tabBarBackground: () => (
           <BlurView
             intensity={100}
@@ -60,7 +71,31 @@ const Container = () => {
             <Feather name="home" size={size} color={color} />
           ),
           tabBarShowLabel: false,
-          // tab
+        }}
+      />
+
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: "Search",
+          // tabBarStyle: { display: "none" },
+          tabBarIcon: ({ size, color }) => (
+            <AntDesign name="search1" size={size} color={color} />
+          ),
+          headerTransparent: true,
+          tabBarShowLabel: false,
+          header: () => (
+            <View style={[styles.meetDoctor, { top: top/1.5 }]}>
+              <View style={styles.searchbarBox}>
+                <AntDesign name="search1" size={20} color="#000" />
+                <TextInput
+                  style={styles.doctorSearch}
+                  placeholder="Search Doctor"
+                  placeholderTextColor={"#A9A9A9"}
+                />
+              </View>
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
@@ -74,28 +109,6 @@ const Container = () => {
             // <MessageIconLight />
           ),
           headerTransparent: true,
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "Search",
-          tabBarStyle: { display: "none" },
-          tabBarIcon: ({ size, color }) => (
-            <AntDesign name="search1" size={size} color={color} />
-          ),
-          headerTransparent: true,
-          header: () => (
-            <View style={styles.searchbarBox}>
-              <AntDesign name="search1" size={24} color={'##19407B'} />
-
-              <TextInput
-                style={styles.doctorSearch}
-                placeholder="Search Doctor"
-                placeholderTextColor={"#A9A9A9"}
-              />
-            </View>
-          ),
         }}
       />
     </Tabs>
@@ -129,6 +142,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     color: "#a1a1a1",
     flexGrow: 1,
+  },
+
+  meetDoctor: {
+    marginHorizontal: 13,
+    marginTop: 24,
+    marginBottom: 12,
   },
 });
 

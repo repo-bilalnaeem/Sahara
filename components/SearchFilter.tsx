@@ -6,46 +6,40 @@ import {
   TouchableOpacity,
   ScrollView,
   useColorScheme,
-  ScrollViewProps,
-  ViewStyle,
-  TextStyle,
 } from "react-native";
 import * as Haptics from "expo-haptics";
-import categories from "@/assets/data/PharmacyFilter.json";
+import { categories } from "@/assets/data/SearchFilters";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface FilterListProps {
   onCategoryChanged: (category: string) => void;
 }
 
 const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
-  const ScrollRef = useRef<ScrollView>(null);
-  const itemsRef = useRef<(TouchableOpacity | null)[]>([]);
+  const scrollRef = useRef<ScrollView>(null);
+  const itemsRef = useRef<Array<TouchableOpacity | null>>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const isDarkMode = useColorScheme() === "dark";
 
   const selectCategory = (index: number) => {
     const selected = itemsRef.current[index];
     setActiveIndex(index);
-
-    selected?.measure((x, y, width, height, pageX) => {
-      ScrollRef.current?.scrollTo({ x: pageX - 16, y: 0, animated: true });
+    selected?.measure((x) => {
+      scrollRef.current?.scrollTo({ x: x - 16, y: 0, animated: true });
     });
-
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(categories[index].text);
   };
 
+  const { top } = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { top: top*2.4 }]}>
       <ScrollView
-        ref={ScrollRef}
+        ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          gap: 12,
-          paddingHorizontal: 8,
-        }}
+        contentContainerStyle={styles.contentContainer}
       >
         {categories.map((item, index) => (
           <TouchableOpacity
@@ -80,40 +74,25 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 14,
     marginBottom: 20,
+    position: "absolute",
+    zIndex: 2,
   },
-  searchBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    borderColor: "#c2c2c2",
-    borderWidth: StyleSheet.hairlineWidth,
-    flex: 1,
-    padding: 14,
-    borderRadius: 30,
-    backgroundColor: "#fff",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
+  contentContainer: {
+    paddingHorizontal: 10, // Add some horizontal padding if needed
   },
   categoryText: {
     fontSize: 12,
     color: "#fff",
-  } as TextStyle,
+  },
   categoryTextDark: {
     fontSize: 12,
     color: "#000",
-  } as TextStyle,
+  },
   categoryTextActive: {
     fontSize: 12,
     color: "#fff",
-  } as TextStyle,
+  },
   categoriesBtn: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 12,
@@ -121,16 +100,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: "#478EEF",
-  } as ViewStyle,
+    marginHorizontal: 4, // Add horizontal margin for spacing between items
+    backgroundColor:"#fff"
+  },
   categoriesBtnActive: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#1661E0",
     padding: 12,
     borderRadius: 30,
     paddingHorizontal: 16,
-  } as ViewStyle,
+    marginHorizontal: 4, // Ensure the margin is consistent
+  },
 });
 
 export default FilterList;

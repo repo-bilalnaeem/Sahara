@@ -5,10 +5,9 @@ import {
   StyleSheet,
   useColorScheme,
   Image,
-  ImageStyle,
   TextStyle,
-  ViewStyle,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const GlassmorphicView = () => (
   <View style={styles.glassContainer}>
@@ -21,9 +20,10 @@ const GlassmorphicView = () => (
 
 const NotFound = () => {
   const isDarkMode = useColorScheme() === "dark";
+  const { top } = useSafeAreaInsets();
 
   return (
-    <>
+    <View style={{ flex: 1, justifyContent: "center", top: top  }}>
       <GlassmorphicView />
       <View style={{ flex: 0.4, justifyContent: "center" }}>
         <Text style={isDarkMode ? styles.notFoundLight : styles.notFoundDark}>
@@ -38,7 +38,7 @@ const NotFound = () => {
           again or search{"\n"}with another keyword.
         </Text>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -74,29 +74,20 @@ const styles = StyleSheet.create({
   } as TextStyle,
 
   glassContainer: {
-    backgroundColor: "rgba(107, 107, 107, 0.12)",
     borderRadius: 40,
     marginHorizontal: 20,
     marginTop: 36,
     padding: 20,
-    shadowColor: "#1f2687",
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 32,
+    paddingBottom: 0,
     elevation: 5,
     overflow: "hidden",
-    flex: 0.5,
     justifyContent: "center",
     alignItems: "center",
-  } as ViewStyle,
-
+  },
   image: {
     height: 150,
     resizeMode: "contain",
-  } as ImageStyle,
+  },
 });
 
 export default NotFound;
