@@ -1,8 +1,8 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { BlurView } from "expo-blur";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { Platform } from "react-native";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { Platform, View, StyleSheet, TextInput } from "react-native";
 import {
   BottomSheetProvider,
   useBottomSheet,
@@ -76,8 +76,60 @@ const Container = () => {
           headerTransparent: true,
         }}
       />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: "Search",
+          tabBarStyle: { display: "none" },
+          tabBarIcon: ({ size, color }) => (
+            <AntDesign name="search1" size={size} color={color} />
+          ),
+          headerTransparent: true,
+          header: () => (
+            <View style={styles.searchbarBox}>
+              <AntDesign name="search1" size={24} color={'##19407B'} />
+
+              <TextInput
+                style={styles.doctorSearch}
+                placeholder="Search Doctor"
+                placeholderTextColor={"#A9A9A9"}
+              />
+            </View>
+          ),
+        }}
+      />
     </Tabs>
   );
 };
+
+const styles = StyleSheet.create({
+  searchbarBox: {
+    backgroundColor: "#fff",
+    height: 50,
+    borderRadius: 30,
+    elevation: 5, // or use shadow properties for iOS
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 6.54,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    flexGrow: 1,
+    paddingLeft: 20,
+  },
+
+  doctorSearch: {
+    fontSize: 15,
+    fontWeight: "400",
+    justifyContent: "center",
+    marginHorizontal: 16,
+    color: "#a1a1a1",
+    flexGrow: 1,
+  },
+});
 
 export default Layout;
