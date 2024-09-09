@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 interface BookSliderProps {
   name: string;
@@ -20,10 +20,7 @@ interface BookSliderProps {
 const BookSlider: React.FC<BookSliderProps> = ({ name, data }) => {
   const isComponentReady = useRef(false);
   const translateX = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation();
-  const route =
-    useRoute<RouteProp<Record<string, object | undefined>, string>>();
-
+  const router = useRouter();
   const componentWidthRef = useRef(0);
 
   const panResponder = useRef(
@@ -40,12 +37,19 @@ const BookSlider: React.FC<BookSliderProps> = ({ name, data }) => {
           Math.max(minLimit, Math.min(newTranslateX, maxLimit))
         );
       },
+      onPanResponderRelease: (_, gestureState) => {
+        const endPosition = componentWidthRef.current - 64;
+        const hasReachedEnd = gestureState.dx > endPosition;
 
-      onPanResponderRelease: () => {
         Animated.spring(translateX, {
-          toValue: 0,
+          toValue: hasReachedEnd ? endPosition : 0,
           useNativeDriver: false,
-        }).start();
+        }).start(() => {
+          // Navigate to a different screen if the end position is reached
+          if (hasReachedEnd) {
+            router.push("/(booking)"); // Replace "TargetScreenName" with the actual screen name
+          }
+        });
       },
     })
   ).current;

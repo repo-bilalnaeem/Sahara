@@ -35,6 +35,10 @@ const Layout = () => {
             name="(cart)"
             options={{ animation: "slide_from_bottom", headerShown: false }}
           />
+          <Stack.Screen
+            name="(booking)"
+            options={{ headerShown: false, animation: "slide_from_bottom" }}
+          />
         </Stack>
       </HospitalProvider>
     </GestureHandlerRootView>

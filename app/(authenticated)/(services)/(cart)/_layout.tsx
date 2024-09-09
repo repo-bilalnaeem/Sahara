@@ -27,7 +27,9 @@ const Layout = () => {
               >
                 <Ionicons name="close" size={24} color={"#000000"} />
               </TouchableOpacity>
-              <Text style={{ fontWeight: "600", fontSize: 16 }}>Cart</Text>
+              <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                Cart
+              </Text>
             </View>
           ),
         }}
