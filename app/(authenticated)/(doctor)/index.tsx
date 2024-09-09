@@ -1,3 +1,4 @@
+import TimeSlots from "@/components/TimeSlots";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
 import React, { useMemo, useState } from "react";
@@ -60,10 +61,14 @@ const Reviews = () => {
   );
 };
 
+const Slots = () => {
+  return <TimeSlots />;
+};
+
 const Page = () => {
   const [expanded, setExpanded] = useState(false);
-  const [value, setValue] = useState("");
-  const snapPoints = useMemo(() => ["40%", "55%"], []);
+  const [value, setValue] = useState("slots");
+  const snapPoints = useMemo(() => ["40%", "55%", "70%"], []);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
@@ -143,6 +148,7 @@ const Page = () => {
               />
 
               {value === "review" && <Reviews />}
+              {value === "slots" && <Slots />}
             </View>
           </BottomSheetScrollView>
         </BottomSheet>
@@ -275,7 +281,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 20,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor:"#aaaaaa"
+    borderColor: "#aaaaaa",
   },
 
   image_name: {
