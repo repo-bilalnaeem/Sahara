@@ -1,7 +1,6 @@
-
-import React, {
-  useState,
-} from "react";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { BlurView } from "expo-blur";
+import React, { useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -10,42 +9,61 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Image,
+  useColorScheme,
+  FlatList,
 } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
-} from "react-native-reanimated";
+import { Divider, SegmentedButtons } from "react-native-paper";
+import Animated from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
 const IMG_HEIGHT = 380;
 
-const Page = () => {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const [expanded, setExpanded] = useState(false);
+const reviewsData = [
+  {
+    id: "1",
+    name: "Hannah Baker",
+    review:
+      "Dr. Lewis is an outstanding cardiologist! His expertise and compassion are truly remarkable. He took the time to thoroughly explain my condition and treatment options, putting my mind at ease. I highly recommend him to anyone seeking top-notch cardiac care.",
+    image: require("@/assets/images/profile_img.jpg"),
+  },
+  {
+    id: "2",
+    name: "John Doe",
+    review:
+      "Great experience with Dr. Lewis. He is very knowledgeable and caring.",
+    image: require("@/assets/images/profile_img.jpg"),
+  },
+  // Add more reviews as needed
+];
 
-  const scrollOffset = useScrollViewOffset(scrollRef);
-  const imageAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [-IMG_HEIGHT, 0, IMG_HEIGHT],
-            [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
-          ),
-        },
-        {
-          scale: interpolate(
-            scrollOffset.value,
-            [-IMG_HEIGHT, 0, IMG_HEIGHT],
-            [2, 1, 1]
-          ),
-        },
-      ],
-    };
-  });
+const Reviews = () => {
+  const renderItem = ({ item }: any) => (
+    <View style={styles.notificationBlock}>
+      <View style={styles.image_name}>
+        <Image source={item.image} style={styles.profile_img} />
+        <Text style={styles.review_name}>{item.name}</Text>
+      </View>
+      <Text style={styles.review_text} numberOfLines={3} ellipsizeMode="tail">
+        {item.review}
+      </Text>
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={reviewsData}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      contentContainerStyle={{ gap: 16, paddingTop: 24 }}
+    />
+  );
+};
+
+const Page = () => {
+  const [expanded, setExpanded] = useState(false);
+  const [value, setValue] = useState("");
+  const snapPoints = useMemo(() => ["40%", "55%"], []);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
@@ -54,41 +72,80 @@ const Page = () => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={0}>
       <View style={styles.screen}>
-        <Animated.ScrollView
-          ref={scrollRef}
-          scrollEventThrottle={16}
-          showsVerticalScrollIndicator={false}
-        >
-          <Animated.View style={[imageAnimatedStyle, styles.profileImage]}>
-            <Animated.Image
-              source={require("@/assets/images/doctor.jpg")}
-              style={[styles.image]}
-            />
-          </Animated.View>
-          <View style={styles.content}>
-            <Text style={styles.name}>Dr Mathew Lewis</Text>
-            <Text style={styles.occupation}>Heart Specialist</Text>
+        <View style={[styles.profileImage]}>
+          <Animated.Image
+            source={require("@/assets/images/doctor.jpg")}
+            style={[styles.image]}
+          />
+        </View>
 
-            <View style={styles.container}>
-              <Text
-                style={styles.aboutDark}
-                numberOfLines={expanded ? undefined : 3}
-                ellipsizeMode="tail"
-              >
-                Welcome to my profile! I am Dr. Mathew Lewis, a highly
-                experienced and board-certified Cardiologist dedicated to
-                providing exceptional cardiovascular care. With over 15 years of
-                clinical experience, I am passionate about ensuring the heart
-                health and well-being of my patients.
-              </Text>
-              <TouchableOpacity onPress={toggleExpansion}>
-                <Text style={styles.viewMore}>
-                  {expanded ? "View less" : "View more"}
+        <BottomSheet
+          snapPoints={snapPoints}
+          handleIndicatorStyle={{ width: 0, backgroundColor: "#fff" }}
+          backgroundStyle={{
+            borderTopRightRadius: 24,
+            borderTopLeftRadius: 24,
+          }}
+        >
+          <BottomSheetScrollView
+            bounces={false}
+            contentContainerStyle={{
+              marginBottom: 48,
+            }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.content}>
+              <Text style={styles.name}>Dr Mathew Lewis</Text>
+              <Text style={styles.occupation}>Heart Specialist</Text>
+              <Divider />
+
+              <View style={styles.container}>
+                <Text
+                  style={styles.aboutDark}
+                  numberOfLines={expanded ? undefined : 3}
+                  ellipsizeMode="tail"
+                >
+                  Welcome to my profile! I am Dr. Mathew Lewis, a highly
+                  experienced and board-certified Cardiologist dedicated to
+                  providing exceptional cardiovascular care. With over 15 years
+                  of clinical experience, I am passionate about ensuring the
+                  heart health and well-being of my patients.
+                  {expanded && (
+                    <TouchableOpacity onPress={toggleExpansion}>
+                      <Text style={styles.viewMore}>View Less</Text>
+                    </TouchableOpacity>
+                  )}
                 </Text>
-              </TouchableOpacity>
+                {!expanded && (
+                  <TouchableOpacity onPress={toggleExpansion}>
+                    <Text style={styles.viewMore}>View More</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <SegmentedButtons
+                value={value}
+                onValueChange={setValue}
+                buttons={[
+                  {
+                    value: "slots",
+                    label: "Slot",
+                  },
+                  {
+                    value: "review",
+                    label: "Review",
+                  },
+                  {
+                    value: "rating",
+                    label: "Rating",
+                  },
+                ]}
+              />
+
+              {value === "review" && <Reviews />}
             </View>
-          </View>
-        </Animated.ScrollView>
+          </BottomSheetScrollView>
+        </BottomSheet>
       </View>
     </KeyboardAvoidingView>
   );
@@ -111,11 +168,11 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingTop: 20,
+    // paddingTop: 20,
     backgroundColor: "#FFF",
     height: "100%",
     paddingHorizontal: 13,
-    marginBottom: 100,
+    marginBottom: 30,
   },
 
   name: {
@@ -209,6 +266,44 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: "rgba(151, 151, 151, 0.25)",
     color: "#000",
+  },
+
+  notificationBlock: {
+    overflow: "hidden",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor:"#aaaaaa"
+  },
+
+  image_name: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    gap: 10,
+    marginLeft: -5,
+  },
+
+  review_text: {
+    // color: "#fff",
+    lineHeight: 22,
+  },
+
+  profile_img: {
+    width: 35,
+    height: 35,
+    borderRadius: 100,
+  },
+
+  review_name: {
+    // color: "#fff",
+    // font-family: Lato;
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "500",
+    lineHeight: 22 /* 137.5% */,
   },
 });
 
