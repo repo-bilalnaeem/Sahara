@@ -16,8 +16,6 @@ import {
   useBottomSheet,
 } from "@/context/BottomSheetContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import PharmacyHeader from "@/components/PharmacyHeader";
-import { Divider } from "react-native-paper";
 
 const Layout = () => {
   return (

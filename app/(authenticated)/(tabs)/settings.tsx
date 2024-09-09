@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const Booking = () => {
+const settings = () => {
   return (
     <View>
-      <Text>Booking</Text>
+      <Text>settings</Text>
     </View>
   )
 }
 
-export default Booking
+export default settings

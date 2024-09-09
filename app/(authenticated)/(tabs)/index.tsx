@@ -37,6 +37,7 @@ import {
   useBottomSheet,
   BottomSheetProvider,
 } from "@/context/BottomSheetContext";
+import { StatusBar } from "expo-status-bar";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
@@ -57,6 +58,7 @@ const Home = () => {
 
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
+      {/* <StatusBar style="light" /> */}
       <RootSiblingParent>
         <BottomSheetModalProvider>
           <CustomScrollView
