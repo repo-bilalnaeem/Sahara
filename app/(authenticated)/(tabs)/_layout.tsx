@@ -84,7 +84,7 @@ const Container = () => {
           headerTransparent: true,
           tabBarShowLabel: false,
           header: () => (
-            <View style={[styles.meetDoctor, { paddingTop: top / 1.5,  }]}>
+            <View style={[styles.meetDoctor, { paddingTop: top / 1.5 }]}>
               <View style={styles.searchbarBox}>
                 <AntDesign name="search1" size={20} color="#000" />
                 <TextInput

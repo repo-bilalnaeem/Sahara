@@ -68,7 +68,7 @@ const Slots = () => {
 const Page = () => {
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("slots");
-  const snapPoints = useMemo(() => ["40%", "55%", "70%"], []);
+  const snapPoints = useMemo(() => ["40%", "50%", "55%"], []);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);

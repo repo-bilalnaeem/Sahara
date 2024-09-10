@@ -28,48 +28,50 @@ const TimeSlots = () => {
   const timeSlots = generateTimeSlots(14, 17, 15);
 
   return (
-    <View style={{ marginVertical: 24 }}>
-      <View style={styles.container}>
-        <DateTimePicker
-          mode="single"
-          date={date}
-          timePicker={false}
-          headerContainerStyle={{
-            paddingHorizontal: 5,
-            paddingTop: 10,
-            overflow: "hidden",
-          }}
-        />
-      </View>
-      <View>
-        <Text style={styles.slotsHeading}>Available Slots</Text>
+    <View>
+      <View style={{ marginVertical: 24 }}>
+        <View style={styles.container}>
+          <DateTimePicker
+            mode="single"
+            date={date}
+            timePicker={false}
+            headerContainerStyle={{
+              paddingHorizontal: 5,
+              paddingTop: 10,
+              overflow: "hidden",
+            }}
+          />
+        </View>
+        <View>
+          <Text style={styles.slotsHeading}>Available Slots</Text>
 
-        <View style={styles.slotsContainer}>
-          {timeSlots.map((slot, index) => (
-            <Pressable
-              key={index}
-              onPress={() => setSelectedSlot(slot)}
-              style={[
-                styles.timeBtn,
-                selectedSlot === slot && styles.selectedTimeBtn,
-              ]}
-            >
-              <Text
+          <View style={styles.slotsContainer}>
+            {timeSlots.map((slot, index) => (
+              <Pressable
+                key={index}
+                onPress={() => setSelectedSlot(slot)}
                 style={[
-                  styles.timeText,
-                  selectedSlot === slot && styles.selectedTimeText,
+                  styles.timeBtn,
+                  selectedSlot === slot && styles.selectedTimeBtn,
                 ]}
               >
-                {slot}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  style={[
+                    styles.timeText,
+                    selectedSlot === slot && styles.selectedTimeText,
+                  ]}
+                >
+                  {slot}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
-      </View>
 
-      <View style={styles.slider}>
-        <BookSlider name={"Book Appointment"} data={undefined} />
+        {/* <View style={styles.slider}> */}
+        {/* </View> */}
       </View>
+        <BookSlider name={"Book Appointment"} />
     </View>
   );
 };
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   slider: {
     // position: "absolute",
     // bottom: 32,
-    width: "100%",
+    // width: "100%",
     // paddingHorizontal: 10,
     marginTop: 32,
     flexDirection: "row",
