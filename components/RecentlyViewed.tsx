@@ -1,12 +1,43 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import React from "react";
+import SeeMore from "./SeeMore";
+import BookNow from "./BookNow";
+import { doctors } from "@/assets/data/RecentlyViewed";
+
+interface Item {
+  id: string;
+  firstName: string;
+  lastName: string;
+  occupation: string;
+  ratings: number;
+  imageSource: string;
+  about: string;
+  reviews: { patientName: string; reviews: string }[];
+}
 
 const RecentlyViewed = () => {
   return (
-    <View>
-      <Text>RecentlyViewed</Text>
+    <View style ={{marginBottom: 32}}>
+      <SeeMore
+        heading="Recently Viewed"
+        onSeeMorePress={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+      <View>
+        <FlatList
+          horizontal
+          data={doctors}
+          renderItem={({ item, index }) => (
+            <BookNow item={item} index={index} />
+          )}
+          keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+        />
+      </View>
     </View>
-  )
-}
+  );
+};
 
-export default RecentlyViewed
+export default RecentlyViewed;

@@ -25,7 +25,8 @@ const CustomScrollView = (props: CustomScrollViewProps) => {
       ref={scrollViewRef}
       onScroll={handleScroll}
       scrollEventThrottle={16} // Add this line to control the scroll event rate
-      />
+      contentContainerStyle={{ paddingBottom: 108 }}
+    />
   );
 };
 

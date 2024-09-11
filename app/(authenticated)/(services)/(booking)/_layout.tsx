@@ -30,13 +30,13 @@ const Layout = () => {
               </TouchableOpacity>
               <View>
                 <Text
-                  style={{ fontWeight: "600", fontSize: 16, marginBottom: 4 }}
+                  style={{ fontWeight: "600", fontSize: 16}}
                 >
-                  Cart
+                  Booking
                 </Text>
-                <Text style={{ fontWeight: "300", fontSize: 13 }}>
+                {/* <Text style={{ fontWeight: "300", fontSize: 13 }}>
                   Doctor Appointment
-                </Text>
+                </Text> */}
               </View>
             </View>
           ),

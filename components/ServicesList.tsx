@@ -43,7 +43,7 @@ interface ServicesListProps {
 
 const ServicesList = ({ isBottomSheetOpen }: ServicesListProps) => {
   const router = useRouter();
-  const renderServicesItem = ({ item, index }) => (
+  const renderServicesItem = ({ item, index }: any) => (
     <Pressable
       onPress={() => router.navigate(item.screen)}
       disabled={isBottomSheetOpen === true ? true : false}
@@ -91,8 +91,9 @@ const styles = StyleSheet.create({
   },
 
   service_icons: {
-    width: 36,
-    height: 36,
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
   },
 
   service_text: {

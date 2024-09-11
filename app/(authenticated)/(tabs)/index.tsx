@@ -24,10 +24,7 @@ import CustomScrollView from "@/components/CustomScrollView";
 import ServicesList from "@/components/ServicesList";
 import DoctorSpecialityList from "@/components/DoctorSpecialityList";
 import RecentlyViewed from "@/components/RecentlyViewed";
-import NearbyDoctor from "@/components/NearbyDoctors";
-import AvailableDiscounts from "@/components/AvailableDiscounts";
 import NearByFacilities from "@/components/NearByFacilities";
-import Biometrics from "@/components/Biometrics";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -38,6 +35,8 @@ import {
   BottomSheetProvider,
 } from "@/context/BottomSheetContext";
 import { StatusBar } from "expo-status-bar";
+import PharmacySponserAd from "@/components/PharmacySponserAd";
+import SaharaMart from "@/components/SaharaMart";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
@@ -112,12 +111,19 @@ const Home = () => {
                 onSeeMorePress={handlePresentModalPress}
               />
               <UpcomingSchedule />
-              <Biometrics />
               <RecentlyViewed />
+
+              <View>
+                <PharmacySponserAd
+                  height={180}
+                  title={`Mastercard weekdays`}
+                  description={`Use Master30 on checkout${"\n"}and get 30% off!`}
+                  imageSource={require("@/assets/images/Mastercard.jpg")}
+                  width={150}
+                />
+              </View>
               <DoctorSpecialityList />
-              <NearbyDoctor />
-              <AvailableDiscounts />
-              <NearByFacilities />
+
             </View>
           </CustomScrollView>
           <BottomSheetModal
