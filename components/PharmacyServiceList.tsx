@@ -1,11 +1,23 @@
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import { View, Image, Pressable, StyleSheet, Text } from "react-native";
+import {
+  View,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  FlatList,
+} from "react-native";
 
 interface ServiceItem {
+  key: string;
   screen: string;
   imageSource: any;
   text: string;
+}
+
+interface Props {
+  listData: ServiceItem[]; // Update to array of ServiceItem
 }
 
 export interface RenderServicesItemProps {
@@ -13,9 +25,10 @@ export interface RenderServicesItemProps {
   index: number;
 }
 
-const PharmacyServiceList = ({ item, index }: RenderServicesItemProps) => {
+const PharmacyServiceList = ({ listData }: Props) => {
   const router = useRouter();
-  return (
+
+  const PharmacyList = ({ item, index }: RenderServicesItemProps) => (
     <Pressable
       onPress={() => router.navigate(item.screen as Href)}
       style={{ alignItems: "center" }}
@@ -36,6 +49,16 @@ const PharmacyServiceList = ({ item, index }: RenderServicesItemProps) => {
       </Text>
     </Pressable>
   );
+
+  return (
+    <FlatList
+      horizontal
+      data={listData}
+      renderItem={PharmacyList}
+      keyExtractor={(item) => item.key}
+      showsHorizontalScrollIndicator={false}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
@@ -52,16 +75,13 @@ const styles = StyleSheet.create({
   service_icons: {
     width: 42,
     height: 42,
-    // marginLeft: 5,
   },
 
   service_text: {
     color: "#333",
-    // font-family: Lato;
     fontSize: 14,
-    fontStyle: "normal",
     fontWeight: "500",
-    lineHeight: 22 /* 157.143% */,
+    lineHeight: 22,
     marginTop: 5,
     textAlign: "center",
   },

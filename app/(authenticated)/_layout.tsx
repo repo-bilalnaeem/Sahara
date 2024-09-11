@@ -1,18 +1,3 @@
-// import React, { useState } from "react";
-// import { Stack } from "expo-router";
-
-// const layout = () => {
-//   return (
-//     <Stack>
-//       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-//       <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
-//       <Stack.Screen name="userProfile" options={{ headerShown: false }} />
-//       <Stack.Screen name="(services)" options={{ headerShown: false }} />
-//     </Stack>
-//   );
-// };
-
-// export default layout;
 import React, { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import {

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   useColorScheme,
   Pressable,
-  Image,
   FlatList,
   ScrollView,
 } from "react-native";
@@ -56,16 +55,8 @@ const Pharmacy = () => {
           >
             Shops
           </Text>
-          {/* <Pressable> */}
-          <FlatList
-            horizontal
-            data={data}
-            renderItem={PharmacyServiceList}
-            keyExtractor={(item) => item.key}
-            showsHorizontalScrollIndicator={false}
-            // scrollEnabled={isBottomSheetOpen === false}
-          />
-          {/* </Pressable> */}
+
+          <PharmacyServiceList listData={data} />
         </View>
         <PharmacySponserAd
           height={160}
@@ -123,14 +114,7 @@ const Pharmacy = () => {
             Category
           </Text>
 
-          <FlatList
-            horizontal
-            data={category}
-            renderItem={PharmacyServiceList}
-            keyExtractor={(item) => item.key}
-            showsHorizontalScrollIndicator={false}
-            // scrollEnabled={isBottomSheetOpen === false}
-          />
+          <PharmacyServiceList listData={category} />
         </View>
 
         <View style={{ marginTop: 38 }}>
@@ -185,6 +169,33 @@ const styles = StyleSheet.create({
   flex_headings: {
     marginHorizontal: 23,
     marginBottom: 26,
+  },
+
+  service_icons: {
+    width: 42,
+    height: 42,
+    // marginLeft: 5,
+  },
+
+  service_text: {
+    color: "#333",
+    // font-family: Lato;
+    fontSize: 14,
+    fontStyle: "normal",
+    fontWeight: "500",
+    lineHeight: 22 /* 157.143% */,
+    marginTop: 5,
+    textAlign: "center",
+  },
+
+  doctorServiceBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 100,
+    paddingVertical: 12,
+    borderRadius: 14,
+    backgroundColor: "#F6F6F6",
+    marginRight: 10,
   },
 });
 
