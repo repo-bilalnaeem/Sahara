@@ -1,12 +1,12 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
+import React from "react";
 
 const SaharaMart = () => {
   return (
-    <View>
-      <Text>SaharaMart</Text>
+    <View style={{ marginVertical: 38 , marginHorizontal: 12}}>
+     
     </View>
-  )
-}
+  );
+};
 
-export default SaharaMart
+export default SaharaMart;

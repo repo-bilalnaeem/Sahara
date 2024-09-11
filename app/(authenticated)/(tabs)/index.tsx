@@ -112,6 +112,7 @@ const Home = () => {
                 />
               </View>
               <DoctorSpecialityList />
+              <SaharaMart />
             </View>
           </CustomScrollView>
           <BottomSheetModal
