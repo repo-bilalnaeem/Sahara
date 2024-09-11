@@ -1,7 +1,7 @@
 export const doctorTypes = [
   {
     key: "1",
-    imageSource: require("@/assets/images/brain.png"),
+    imageSource: require("@/assets/images/brain-outline.png"),
     text: "Neurologist",
     screen: "Neurologists",
   },

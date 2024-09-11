@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
-  useMemo,
-} from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -30,11 +23,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import SeeMore from "@/components/SeeMore";
-import {
-  useBottomSheet,
-  BottomSheetProvider,
-} from "@/context/BottomSheetContext";
-import { StatusBar } from "expo-status-bar";
+import { useBottomSheet } from "@/context/BottomSheetContext";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
 
@@ -123,7 +112,6 @@ const Home = () => {
                 />
               </View>
               <DoctorSpecialityList />
-
             </View>
           </CustomScrollView>
           <BottomSheetModal
