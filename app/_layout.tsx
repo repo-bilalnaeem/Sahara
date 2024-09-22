@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
-import { Slot, Stack, useRouter, useSegments } from "expo-router";
+import { Href, Slot, Stack, useRouter, useSegments } from "expo-router";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
 import {
   GestureHandlerRootView,
@@ -18,7 +18,7 @@ SplashScreen.preventAutoHideAsync();
 
 const InitialLayout = () => {
   LogBox.ignoreAllLogs(true); // Disable all warnings
-  
+
   const { authState, initialized } = useAuth();
   const segments = useSegments();
   const router = useRouter();
@@ -39,7 +39,7 @@ const InitialLayout = () => {
     const inAuthGroup = segments[0] === "(authenticated)";
 
     if (authState?.authenticated && !inAuthGroup) {
-      router.replace("/(authenticated)");
+      router.replace("/(authenticated)/(tabs)" as Href);
     } else if (!authState?.authenticated && inAuthGroup) {
       router.replace("/signin"); // Ensure this redirects to the correct sign-in route
     }
@@ -65,14 +65,15 @@ const InitialLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    // <AuthProvider>
+    <AuthProvider>
       <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <InitialLayout />
         </GestureHandlerRootView>
-    {/* </AuthProvider> */}
       </SQLiteProvider>
+    </AuthProvider>
   );
 };
 
-export default RootLayoutNav;
+
+export default RootLayoutNav

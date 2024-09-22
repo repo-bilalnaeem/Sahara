@@ -6,7 +6,6 @@ import {
   User,
 } from "@stream-io/video-react-native-sdk";
 import { OverlayProvider } from "stream-chat-expo";
-import Toast from "react-native-toast-message";
 import { useAuth } from "@/context/AuthContext";
 
 const STREAM_KEY = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY;
@@ -25,6 +24,7 @@ const Layout = () => {
           token: authState.token,
         });
         setClient(newClient);
+        console.log(user);
       } catch (e) {
         console.log("Error creating StreamVideo client: ", e);
       }
@@ -45,9 +45,7 @@ const Layout = () => {
           <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
           <Stack.Screen name="userProfile" options={{ headerShown: false }} />
           <Stack.Screen name="(services)" options={{ headerShown: false }} />
-     
         </Stack>
-        <Toast />
       </OverlayProvider>
     </StreamVideo>
   ) : (
