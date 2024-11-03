@@ -1,8 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import BookSlider from "./BookSlider";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+
+const isAndroid = Platform.OS === "android";
 
 interface Props {
   item: {
@@ -18,7 +27,12 @@ interface Props {
 const BookNow = ({ item, index }: Props) => {
   const { id, firstName, lastName, occupation, imageSource } = item;
   return (
-    <View style={index === 0 ? { paddingLeft: 12 } : undefined}>
+    <View
+      style={[
+        index === 0 ? { paddingLeft: 12 } : undefined,
+        isAndroid ? { minWidth: 355 } : null,
+      ]}
+    >
       <LinearGradient
         colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
         start={{ x: 0, y: 0 }}
@@ -31,11 +45,23 @@ const BookNow = ({ item, index }: Props) => {
       >
         <View style={styles.name_image}>
           <View>
-            <Text style={styles.doctor_name}>
+            <Text
+              style={[
+                styles.doctor_name,
+                isAndroid ? { fontSize: 16, lineHeight: 24 } : null,
+              ]}
+            >
               Dr {firstName} {lastName}
             </Text>
 
-            <Text style={styles.occupation}>{occupation}</Text>
+            <Text
+              style={[
+                styles.occupation,
+                isAndroid ? { fontSize: 13, lineHeight: 22 } : null,
+              ]}
+            >
+              {occupation}
+            </Text>
           </View>
           <View style={styles.image_container}>
             <Image source={{ uri: imageSource }} style={styles.image} />
@@ -45,13 +71,13 @@ const BookNow = ({ item, index }: Props) => {
         <View style={styles.book_and_nav}>
           <BookSlider name={"Book Now"} />
 
-          <View style={styles.navigation_button}>
-            <Link href={"/(doctor)"}>
+          <View style={[styles.navigation_button]}>
+            <TouchableOpacity onPress={() => router.navigate("/(doctor)")}>
               <Image
                 source={require("@/assets/images/arrow-needle.png")}
                 style={styles.nav}
               />
-            </Link>
+            </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
@@ -125,15 +151,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 10,
     display: "flex",
-    paddingTop: 2,
+    transform: [{ rotate: "-135deg" }],
   },
 
   nav: {
     width: 30,
     height: 30,
-    transform: [{ rotate: "-135deg" }],
-    objectFit: "contain",
-    // marginTop: 2,
   },
 });
 

@@ -7,10 +7,13 @@ import {
 } from "@stream-io/video-react-native-sdk";
 import { OverlayProvider } from "stream-chat-expo";
 import { useAuth } from "@/context/AuthContext";
+import SystemNavigationBar from "react-native-system-navigation-bar";
 
 const STREAM_KEY = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY;
 
 const Layout = () => {
+  SystemNavigationBar.navigationHide(); // for android
+
   const { authState } = useAuth();
   const [client, setClient] = useState<StreamVideoClient | null>(null);
 

@@ -94,7 +94,7 @@ const ChatPage = () => {
 
   const onLayout = (event: any) => {
     const { height } = event.nativeEvent.layout;
-    setHeight(height / 2);
+    setHeight(height);
   };
 
   const getCompletion = async (text: string) => {
@@ -137,7 +137,7 @@ const ChatPage = () => {
               }}
             >
               <HeaderDropDown
-                title="ChatGPT"
+                title="SaharaBot"
                 items={[
                   { key: "3.5", title: "GPT-3.5", icon: "bolt" },
                   { key: "4", title: "GPT-4", icon: "sparkles" },
@@ -145,14 +145,7 @@ const ChatPage = () => {
                 onSelect={onGptVersionChange}
                 selected={gptVersion}
               />
-              <Link
-                href={"/(chat)/new"}
-                // href={
-                //   "/(authenticated)/(tabs)/(chat)/new" as Href<"/(authenticated)/(tabs)/(chat)/new">
-                // }
-                push
-                asChild
-              >
+              <Link href={"/(chat)/new"} push asChild>
                 <TouchableOpacity>
                   <Ionicons
                     name="create-outline"
@@ -170,7 +163,7 @@ const ChatPage = () => {
         {messages.length == 0 && (
           <View style={[styles.logoContainer, { marginTop: height / 2 - 100 }]}>
             <Image
-              source={require("@/assets/images/logo-white.png")}
+              source={require("@/assets/images/my-adaptive-icon.png")}
               style={styles.image}
             />
           </View>
@@ -206,15 +199,16 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    width: 50,
-    height: 50,
-    backgroundColor: "#000",
-    borderRadius: 50,
+    // width: 80,
+    // height: 80,
+    // backgroundColor: "#000",
+    // borderRadius: 50,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 80,
+    height: 80,
     resizeMode: "cover",
+    // tintColor: "gray",
   },
   page: {
     flex: 1,

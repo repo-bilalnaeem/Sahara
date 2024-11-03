@@ -7,6 +7,7 @@ import {
   Text,
   Pressable,
   useColorScheme,
+  Platform,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -44,6 +45,8 @@ const Home = () => {
     setIsBottomSheetOpen(false);
   }, [setIsBottomSheetOpen]);
 
+  const isAndroid = Platform.OS === "android";
+
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
       {/* <StatusBar style="light" /> */}
@@ -77,7 +80,20 @@ const Home = () => {
                           style={styles.profile_img}
                         />
                       </View>
-                      <Text style={styles.name}>Good Morning,{"\n"}Lizzy</Text>
+                      <Text
+                        style={[
+                          styles.name,
+                          isAndroid
+                            ? {
+                                fontSize: 14,
+                                textShadowOffset: { height: 2, width: 4 },
+                                lineHeight: 16,
+                              }
+                            : {},
+                        ]}
+                      >
+                        Good Morning,{"\n"}Lizzy
+                      </Text>
                     </View>
                     <Pressable style={styles.bell_icon_container}>
                       <Image
@@ -87,7 +103,12 @@ const Home = () => {
                       <View style={styles.notificationDot} />
                     </Pressable>
                   </View>
-                  <Text style={styles.hello}>
+                  <Text
+                    style={[
+                      styles.hello,
+                      isAndroid ? { fontSize: 28, lineHeight: 46 } : {},
+                    ]}
+                  >
                     How are you{"\n"}feeling today?
                   </Text>
                 </View>

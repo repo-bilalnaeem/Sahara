@@ -5,10 +5,13 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  Platform,
 } from "react-native";
 import SeeMore from "@/components/SeeMore";
 import React from "react";
 import { useRouter } from "expo-router";
+
+const isAndroid = Platform.OS === "android";
 
 const data = [
   {
@@ -58,13 +61,20 @@ const ServicesList = ({ isBottomSheetOpen }: ServicesListProps) => {
           source={item.imageSource}
           style={[styles.service_icons, { resizeMode: "contain" }]}
         />
-        <Text style={styles.service_text}>{item.text}</Text>
+        <Text style={[styles.service_text, isAndroid ? { fontSize: 12 } : {}]}>
+          {item.text}
+        </Text>
       </View>
     </Pressable>
   );
   return (
     <View style={styles.services}>
-      <SeeMore heading={"Services"} />
+      <SeeMore
+        heading={"Services"}
+        onSeeMorePress={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
       <Pressable>
         <FlatList
           horizontal

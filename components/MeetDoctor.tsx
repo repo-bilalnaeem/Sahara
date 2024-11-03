@@ -1,7 +1,15 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Platform,
+} from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+const isAndroid = Platform.OS === "android";
 
 const MeetDoctor = () => {
   return (
@@ -36,7 +44,10 @@ const MeetDoctor = () => {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text
-                style={{ fontWeight: "400", fontSize: 18, marginBottom: 6 }}
+                style={[
+                  { fontWeight: "400", fontSize: 18, marginBottom: 6 },
+                  isAndroid ? { fontSize: 14 } : null,
+                ]}
               >
                 Dr. Mathew Lewis
               </Text>
@@ -45,7 +56,12 @@ const MeetDoctor = () => {
                 style={{ width: 24, height: 24, resizeMode: "contain" }}
               />
             </View>
-            <Text style={{ fontSize: 13, fontWeight: "300" }}>
+            <Text
+              style={[
+                { fontSize: 13, fontWeight: "300" },
+                isAndroid ? { fontSize: 11 } : null,
+              ]}
+            >
               Heart Speacialist
             </Text>
             <View>
@@ -58,26 +74,32 @@ const MeetDoctor = () => {
                 }}
               />
               <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 7.5,
-                  alignItems: "center",
-                  // justifyContent: "center",
-                  marginTop: 16,
-                }}
+                style={[
+                  {
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 7.5,
+                    alignItems: "center",
+                    // justifyContent: "center",
+                    marginTop: 16,
+                  },
+                  isAndroid ? { marginTop: 12 } : null,
+                ]}
               >
                 <Image
                   source={require("@/assets/images/StarGold.png")}
                   style={{ width: 18.46, height: 18, objectFit: "scale-down" }}
                 />
                 <Text
-                  style={{
-                    // color: "#FFF",
-                    fontSize: 14,
-                    fontStyle: "normal",
-                    fontWeight: "500",
-                  }}
+                  style={[
+                    {
+                      // color: "#FFF",
+                      fontSize: 14,
+                      fontStyle: "normal",
+                      fontWeight: "500",
+                    },
+                    isAndroid ? { fontSize: 12 } : null,
+                  ]}
                 >
                   4.9
                 </Text>
@@ -106,12 +128,15 @@ const MeetDoctor = () => {
               }}
             >
               <Text
-                style={{
-                  textAlign: "center",
-                  color: "#fff",
-                  fontWeight: "500",
-                  fontSize: 15,
-                }}
+                style={[
+                  {
+                    textAlign: "center",
+                    color: "#fff",
+                    fontWeight: "500",
+                    fontSize: 15,
+                  },
+                  isAndroid ? { fontSize: 12 } : null,
+                ]}
               >
                 Book an appointment
               </Text>
@@ -149,7 +174,10 @@ const MeetDoctor = () => {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text
-                style={{ fontWeight: "400", fontSize: 18, marginBottom: 6 }}
+                style={[
+                  { fontWeight: "400", fontSize: 18, marginBottom: 6 },
+                  isAndroid ? { fontSize: 14 } : null,
+                ]}
               >
                 Dr. Sarah Ayoubi
               </Text>
@@ -158,7 +186,14 @@ const MeetDoctor = () => {
                 style={{ width: 24, height: 24, resizeMode: "contain" }}
               />
             </View>
-            <Text style={{ fontSize: 13, fontWeight: "300" }}>Neurologist</Text>
+            <Text
+              style={[
+                { fontSize: 13, fontWeight: "300" },
+                isAndroid ? { fontSize: 11 } : null,
+              ]}
+            >
+              Neurologist
+            </Text>
             <View>
               <BlurView
                 intensity={100}
@@ -169,26 +204,32 @@ const MeetDoctor = () => {
                 }}
               />
               <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 7.5,
-                  alignItems: "center",
-                  // justifyContent: "center",
-                  marginTop: 16,
-                }}
+                style={[
+                  {
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 7.5,
+                    alignItems: "center",
+                    // justifyContent: "center",
+                    marginTop: 16,
+                  },
+                  isAndroid ? { marginTop: 12 } : null,
+                ]}
               >
                 <Image
                   source={require("@/assets/images/StarGold.png")}
                   style={{ width: 18.46, height: 18, objectFit: "scale-down" }}
                 />
                 <Text
-                  style={{
-                    // color: "#FFF",
-                    fontSize: 14,
-                    fontStyle: "normal",
-                    fontWeight: "500",
-                  }}
+                  style={[
+                    {
+                      // color: "#FFF",
+                      fontSize: 14,
+                      fontStyle: "normal",
+                      fontWeight: "500",
+                    },
+                    isAndroid ? { fontSize: 12 } : null,
+                  ]}
                 >
                   4.9
                 </Text>
@@ -217,12 +258,15 @@ const MeetDoctor = () => {
               }}
             >
               <Text
-                style={{
-                  textAlign: "center",
-                  color: "#fff",
-                  fontWeight: "500",
-                  fontSize: 15,
-                }}
+                style={[
+                  {
+                    textAlign: "center",
+                    color: "#fff",
+                    fontWeight: "500",
+                    fontSize: 15,
+                  },
+                  isAndroid ? { fontSize: 12 } : null,
+                ]}
               >
                 Book an appointment
               </Text>

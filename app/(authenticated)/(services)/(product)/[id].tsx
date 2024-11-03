@@ -31,7 +31,8 @@ import {
 import { RadioButton } from "react-native-paper";
 import ImageView from "react-native-image-viewing";
 import { blood_data } from "@/assets/data/PharmacyPageData";
-import { formatTitle, RenderProductTileProps } from "../(pharmacy)";
+// import { formatTitle, RenderProductTileProps } from "../(pharmacy)";
+import { formatTitle, RenderProductTileProps } from "@/components/ProductTile";
 
 const { width } = Dimensions.get("window");
 const IMG_HEIGHT = 300;

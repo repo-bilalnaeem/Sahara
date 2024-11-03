@@ -8,7 +8,9 @@ import {
   Image,
   StyleSheet,
   Text,
+  Platform,
 } from "react-native";
+const isAndroid = Platform.OS === "android";
 
 interface ProductItem {
   key: string;
@@ -22,13 +24,26 @@ export interface RenderProductTileProps {
   index: number;
 }
 
-function formatTitle(title: string, maxLength = 25) {
+// export function formatTitle(title: string, maxLength = 28) {
+//   if (title.length > maxLength) {
+//     const trimmedTitle = title.substring(0, maxLength);
+
+//     // Find the last space within the truncated string
+//     const lastSpaceIndex = trimmedTitle.lastIndexOf(" ");
+
+//     // Only include words up to the last space if there's a space found
+//     return lastSpaceIndex > 0
+//       ? trimmedTitle.substring(0, lastSpaceIndex)
+//       : trimmedTitle;
+//   }
+//   return title;
+// }
+export function formatTitle(title: string, maxLength = 25) {
   if (title.length > maxLength) {
     return title.substring(0, maxLength) + " ...";
   }
   return title;
 }
-
 const ProductTile = ({ item, index }: RenderProductTileProps) => {
   return (
     <Pressable onPress={() => router.push(`/(product)/${item.key}` as Href)}>
@@ -36,7 +51,7 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
         <View style={styles.productTile}>
           <Image
             source={item.imageSource}
-            style={[{ resizeMode: "contain", width: 120, height: 120 }]}
+            style={[{ resizeMode: "contain", width: 130, height: 120 }]}
           />
           <TouchableWithoutFeedback>
             <View style={styles.add_button}>
@@ -45,17 +60,23 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
           </TouchableWithoutFeedback>
         </View>
         <Text
-          style={{
-            fontSize: 14,
-            fontWeight: "500",
-            marginBottom: 4,
-            width: 120,
-          }}
+          style={[
+            {
+              fontSize: 14,
+              fontWeight: "500",
+              marginBottom: 4,
+              width: 130,
+            },
+            isAndroid ? { fontSize: 12 } : null,
+          ]}
         >
           Rs. {item.price}
         </Text>
         <Text
-          style={{ width: 120, fontSize: 14, fontWeight: "400", color: "gray" }}
+          style={[
+            { width: 130, fontSize: 14, fontWeight: "400", color: "gray" },
+            isAndroid ? { fontSize: 12 } : null,
+          ]}
         >
           {formatTitle(item.title)}
         </Text>
@@ -66,7 +87,7 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
 
 const styles = StyleSheet.create({
   productTile: {
-    width: 120,
+    width: 130,
     marginRight: 16,
     // justifyContent: "center",
     // alignItems: "center",

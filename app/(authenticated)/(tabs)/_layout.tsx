@@ -39,14 +39,15 @@ const Container = () => {
             tint={"systemMaterialDark"}
             style={{
               flex: 1,
-              backgroundColor: "rgba(0,0,0,0.05)",
+              backgroundColor:
+                Platform.OS === "android" ? "#7d7d7d" : "rgba(0,0,0,0.05)", // for android
             }}
           />
         ),
         tabBarStyle: {
           backgroundColor: "transparent",
           position: "absolute",
-          bottom: Platform.OS === "android" ? 0 : 25,
+          bottom: Platform.OS === "android" ? 15 : 25,
           left: 0,
           right: 0,
           elevation: 0,

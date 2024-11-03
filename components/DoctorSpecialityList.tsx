@@ -8,12 +8,14 @@ import {
   TextInput,
   useColorScheme,
   ScrollView,
+  Platform,
 } from "react-native";
 import React from "react";
 import { doctorTypes } from "@/assets/data/HomePageData";
 import { router } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
 import MeetDoctor from "./MeetDoctor";
+
+const isAndroid = Platform.OS === "android";
 
 const renderDoctorFields = ({ item, index }: any) => {
   return (
@@ -25,7 +27,14 @@ const renderDoctorFields = ({ item, index }: any) => {
         ]}
       >
         <Image source={item.imageSource} style={styles.service_icons} />
-        <Text style={styles.doctorServiceText}>{item.text}</Text>
+        <Text
+          style={[
+            styles.doctorServiceText,
+            isAndroid ? { fontSize: 11 } : null,
+          ]}
+        >
+          {item.text}
+        </Text>
       </View>
     </Pressable>
   );
@@ -36,27 +45,13 @@ const DoctorSpecialityList = () => {
 
   return (
     <>
-      {/* <View style={styles.meetDoctor}>
+      <View style={[styles.services]}>
         <Text
           style={[
-            isDarkMode
-              ? styles.meetDoctorHeadingWhite
-              : styles.meetDoctorHeadingDark,
+            isDarkMode ? styles.discountLight : styles.discountDark,
+            isAndroid ? { fontSize: 14 } : null,
           ]}
         >
-          Meet a Doctor
-        </Text>
-        <View style={styles.searchbarBox}>
-          <AntDesign name="search1" size={20} color="#000" />
-          <TextInput
-            style={styles.doctorSearch}
-            placeholder="Search Doctor"
-            placeholderTextColor={"#A9A9A9"}
-          />
-        </View>
-      </View> */}
-      <View style={[styles.services]}>
-        <Text style={[isDarkMode ? styles.discountLight : styles.discountDark]}>
           Doctor's Speciality
         </Text>
         <Pressable>

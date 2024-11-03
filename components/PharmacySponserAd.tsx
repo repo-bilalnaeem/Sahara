@@ -1,5 +1,13 @@
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageSourcePropType,
+  Platform,
+} from "react-native";
 import React from "react";
+const isAndroid = Platform.OS === "android";
 
 interface PharmacySponserAdProps {
   imageSource: ImageSourcePropType;
@@ -40,15 +48,32 @@ const PharmacySponserAd: React.FC<PharmacySponserAdProps> = ({
           paddingVertical: 16,
           flexDirection: "column",
           justifyContent: "space-between",
-          flexGrow:1
+          flexGrow: 1,
         }}
       >
-        <Text style={{ color: "gray", fontSize: 12 }}>{sponsoredText}</Text>
+        <Text
+          style={[
+            { color: "gray", fontSize: 12 },
+            isAndroid ? { fontSize: 10 } : null,
+          ]}
+        >
+          {sponsoredText}
+        </Text>
         <View>
-          <Text style={{ fontWeight: "700", fontSize: 16, marginBottom: 12 }}>
+          <Text
+            style={[
+              { fontWeight: "700", fontSize: 16, marginBottom: 12 },
+              isAndroid ? { fontSize: 14 } : null,
+            ]}
+          >
             {title}
           </Text>
-          <Text style={{ fontSize: 12, color: "#999999", marginBottom: 8 }}>
+          <Text
+            style={[
+              { fontSize: 12, color: "#999999", marginBottom: 8 },
+              { fontSize: 10 },
+            ]}
+          >
             {description}
           </Text>
         </View>

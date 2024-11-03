@@ -1,15 +1,21 @@
 import React from "react";
-import { View, StyleSheet, Image, Text, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  Platform,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-import SeeMore from "./SeeMore";
 import { router } from "expo-router";
+
+const isAndroid = Platform.OS === "android";
 
 const UpcomingSchedule = () => {
   return (
     <View>
-      {/* <SeeMore heading={"My Checkup Schedule"} /> */}
-      
       <Pressable onPress={() => router.push("/(authenticated)(schedules)[id]")}>
         <View style={styles.container}>
           <LinearGradient
@@ -27,8 +33,22 @@ const UpcomingSchedule = () => {
                 />
               </View>
               <View>
-                <Text style={styles.doctor_name}>Doctor Mathew Lewis</Text>
-                <Text style={styles.occupation}>Heart Specialist</Text>
+                <Text
+                  style={[
+                    styles.doctor_name,
+                    isAndroid ? { fontSize: 16, lineHeight: 20 } : null,
+                  ]}
+                >
+                  Doctor Mathew Lewis
+                </Text>
+                <Text
+                  style={[
+                    styles.occupation,
+                    isAndroid ? { fontSize: 14, lineHeight: 18 } : null,
+                  ]}
+                >
+                  Heart Specialist
+                </Text>
               </View>
               <View style={styles.camera_holder}>
                 <Image
@@ -49,7 +69,9 @@ const UpcomingSchedule = () => {
                 end={{ x: 1, y: 1 }}
                 style={styles.innerGradient}
               >
-                <Text style={styles.time}>
+                <Text
+                  style={[styles.time, isAndroid ? { fontSize: 13 } : null]}
+                >
                   Sun, Jun 10, 08:00 am - 10:00 am
                 </Text>
               </LinearGradient>

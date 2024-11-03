@@ -17,6 +17,7 @@ import {
   Alert,
   Keyboard,
   useColorScheme,
+  Platform,
 } from "react-native";
 import { useSQLiteContext } from "expo-sqlite/next";
 import { useEffect, useState } from "react";
@@ -242,7 +243,7 @@ const Layout = () => {
         name="(chat)/new"
         getId={() => Math.random().toString()}
         options={{
-          title: "ChatGPT",
+          title: "SaharaBot",
           drawerIcon: () => (
             <View style={[styles.item, { backgroundColor: "#000" }]}>
               <Image
@@ -268,7 +269,12 @@ const Layout = () => {
               </TouchableOpacity>
             </View>
           ),
-          // headerLeft: () => <GoBack title={undefined} />,
+
+          ...(Platform.OS === "android" && {
+            headerTitleContainerStyle: { paddingTop: 20 },
+            headerLeftContainerStyle: { paddingTop: 20 },
+            headerRightContainerStyle: { paddingTop: 20 },
+          }),
         }}
       />
       <Drawer.Screen

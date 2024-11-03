@@ -1,20 +1,24 @@
-import { View, Text, FlatList, Pressable } from "react-native";
+import { View, Text, FlatList, Pressable, Platform } from "react-native";
 import React from "react";
 import { blood_data, popular_data } from "@/assets/data/PharmacyPageData";
 import ProductTile from "./ProductTile";
 import SeeMore from "./SeeMore";
+const isAndroid = Platform.OS === "android";
 
 const SaharaMart = () => {
   return (
     <View style={{ marginVertical: 38 }}>
       <View>
         <Text
-          style={{
-            marginHorizontal: 23,
-            fontWeight: "500",
-            fontSize: 20,
-            marginBottom: 24,
-          }}
+          style={[
+            {
+              marginHorizontal: 23,
+              fontWeight: "500",
+              fontSize: 20,
+              marginBottom: 24,
+            },
+            isAndroid ? { fontSize: 18 } : null,
+          ]}
         >
           SaharaMart
         </Text>

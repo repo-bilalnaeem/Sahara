@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Platform } from "react-native";
 import { Slider } from "@miblanchard/react-native-slider";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import * as Animatable from "react-native-animatable";
+const isAndroid = Platform.OS === "android";
 
 const ThumbComponent = () => {
   return (
@@ -49,9 +50,8 @@ const BookSlider = ({ name }: SliderProps) => {
           onSlidingComplete={handleSlidingComplete}
           animationType="spring"
         />
-        <Text style={styles.book}>
+        <Text style={[styles.book, isAndroid ? { fontSize: 14, lineHeight: 16 } : null]}>
           {name}
-          {/* {value} */}
         </Text>
         <View style={styles.arrows}>
           <Animatable.Image
@@ -117,18 +117,11 @@ const styles = StyleSheet.create({
   },
 
   slide_btn_container: {
-    // height: 66,
     paddingVertical: 12,
     borderRadius: 40,
-    backgroundColor: "#fff",
     padding: 4,
     alignItems: "stretch",
-    // alignItems: "center",
-    // flexDirection: "row",
-    // justifyContent: "space-between",
     flexGrow: 1,
-    // paddingHorizontal:6,
-    position: "relative",
   },
 
   book: {
