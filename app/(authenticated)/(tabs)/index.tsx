@@ -18,11 +18,12 @@ import CustomScrollView from "@/components/CustomScrollView";
 import ServicesList from "@/components/ServicesList";
 import DoctorSpecialityList from "@/components/DoctorSpecialityList";
 import RecentlyViewed from "@/components/RecentlyViewed";
-import NearByFacilities from "@/components/NearByFacilities";
+
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+
 import SeeMore from "@/components/SeeMore";
 import { useBottomSheet } from "@/context/BottomSheetContext";
 import PharmacySponserAd from "@/components/PharmacySponserAd";

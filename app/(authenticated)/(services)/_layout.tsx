@@ -3,6 +3,10 @@ import { Stack } from "expo-router";
 import HospitalProvider from "@/providers/HospitalProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import PharmacyHeader from "@/components/PharmacyHeader";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { View } from "react-native-animatable";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import GoBack from "@/components/GoBack";
 
 const Layout = () => {
   return (
@@ -13,8 +17,43 @@ const Layout = () => {
             name="emergency"
             options={{
               headerShadowVisible: false,
-              headerShown: false,
+              // headerShown: false,
               navigationBarHidden: true,
+              headerBackVisible: true,
+              headerTransparent: true,
+              // headerLeft: () => <GoBack title={undefined} />,
+              header: () => (
+                <View
+                  style={{
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    justifyContent: "center",
+                    paddingTop: 65,
+                  }}
+                >
+                  <GooglePlacesAutocomplete
+                    placeholder="Search"
+                    styles={{
+                      container: {
+                        flex: 0,
+                      },
+                    }}
+                    onPress={(data, details = null)=>{
+                      console.log(data)
+                      console.log(details)
+                    }}
+                    fetchDetails={true}
+                    enablePoweredByContainer={false}
+                    minLength={2}
+                    query={{
+                      key: "AIzaSyC7JYYXDCvta4nJW-PCvBWvc6_XyeNiSyY",
+                      language: "en",
+                    }}
+                    nearbyPlacesAPI="GooglePlacesSearch"
+                    debounce={400}
+                  />
+                </View>
+              ),
             }}
           />
 

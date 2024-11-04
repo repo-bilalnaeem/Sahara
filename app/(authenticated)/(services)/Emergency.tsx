@@ -1,33 +1,47 @@
-import React, { useEffect, useState } from "react";
-import Mapbox, {
-  Camera,
-  LocationPuck,
-  MapView,
-  MarkerView,
-} from "@rnmapbox/maps";
+import React, { useEffect, useRef, useState } from "react";
+// import Mapbox, {
+//   Camera,
+//   LocationPuck,
+//   MapView,
+//   MarkerView,
+// } from "@rnmapbox/maps";
+import MapView, {
+  Callout,
+  Marker,
+  PROVIDER_GOOGLE,
+  Region,
+} from "react-native-maps";
 import * as Location from "expo-location";
-import { View, Text, SafeAreaView } from "react-native";
+import { SafeAreaView, Alert, StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
 import HospitalMarkers from "@/components/HospitalMarkers";
 import LineRoute from "@/components/LineRoute";
 import { useHospital } from "@/providers/HospitalProvider";
 import SelectedScooterSheet from "@/components/SelectedHospitalSheet";
 // import { StatusBar } from "expo-status-bar";
-import { StatusBar } from "react-native";
-import GoBack from "@/components/GoBack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "expo-router";
 
-Mapbox.setAccessToken(
-  "pk.eyJ1IjoiYmlsbHUtd2hvIiwiYSI6ImNseGhpbDFseTFjYXgya3Iycmo0anIwdWMifQ.8sWurwteOb0WWeMffiUsTA"
-);
+// Mapbox.setAccessToken(
+//   "pk.eyJ1IjoiYmlsbHUtd2hvIiwiYSI6ImNseGhpbDFseTFjYXgya3Iycmo0anIwdWMifQ.8sWurwteOb0WWeMffiUsTA"
+// );
 
 // 24.817763, 67.066957
+
+const INITIAL_REGION = {
+  latitude: 24.8607343,
+  longitude: 67.0011364,
+  latitudeDelta: 2,
+  longitudeDelta: 2,
+};
 
 const Emergency = () => {
   type LocationType = Location.LocationObject | null;
   const [location, setLocation] = useState<LocationType>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { directionCoordinates } = useHospital();
-  const { top } = useSafeAreaInsets();
+  const { top, bottom, left, right } = useSafeAreaInsets();
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -43,85 +57,48 @@ const Emergency = () => {
   }, []);
 
   // console.log(directionCoordinates);
+  const mapRef = useRef<any>(null);
+  const navigation = useNavigation();
 
+  const onMarkerSelected = (marker: any) => {
+    Alert.alert(marker.name);
+  };
+
+  const calloutPressed = (ev: any) => {
+    console.log(ev);
+  };
+
+  const onRegionChange = (region: Region) => {
+    console.log(region);
+  };
   return (
-    <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "transparent",
-        }}
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "transparent",
+      }}
+    >
+      <MapView
+        mapType="terrain"
+        style={StyleSheet.absoluteFillObject}
+        initialRegion={INITIAL_REGION}
+        // showsUserLocation
+        showsMyLocationButton
+        
+        // showsCompass
+        showsTraffic
+        showsUserLocation={true}
+        // cameraZoomRange={}
+        // showsScale
+        provider={PROVIDER_GOOGLE}
+        ref={mapRef}
+        onRegionChangeComplete={onRegionChange}
+        mapPadding={{ left: 10, right, top: top * 2.5, bottom: 20 }}
+        followsUserLocation
       >
-        <View
-          style={{
-            position: "absolute",
-            zIndex: 1000,
-          }}
-        >
-          <GoBack title={undefined} />
-        </View>
-        <MapView
-          style={{ flex: 1 }}
-          styleURL="mapbox://styles/mapbox/dark-v11"
-          // scaleBarEnabled={false}
-          scaleBarPosition={{ left: 8, bottom: top }}
-          compassEnabled={true}
-          compassFadeWhenNorth
-          // compassViewMargins={{ x: 0, y: 0 }}
-          compassPosition={{ top: top, right: 8 }}
-          logoEnabled={false}
-          attributionEnabled={false}
-        >
-          <StatusBar barStyle={"light-content"} />
-          <Camera followZoomLevel={14} followUserLocation />
-          {location && (
-            <>
-              <Camera
-                zoomLevel={18}
-                centerCoordinate={[
-                  location?.coords.longitude,
-                  location?.coords.latitude,
-                ]}
-              />
-              <MarkerView
-                id="currentLocationMarker"
-                coordinate={[
-                  location?.coords.longitude,
-                  location?.coords.latitude,
-                ]}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    backgroundColor: "#0957DE",
-                    borderRadius: 10,
-                    borderColor: "white",
-                    borderWidth: 3,
-                  }}
-                />
-              </MarkerView>
-            </>
-          )}
-
-          <HospitalMarkers
-            longitude={
-              // 67.066957
-              location?.coords.longitude
-            }
-            latitude={
-              // 24.817763
-              location?.coords.latitude
-            }
-          />
-
-          {directionCoordinates && (
-            <LineRoute coordinates={directionCoordinates} />
-          )}
-        </MapView>
-      </View>
-      <SelectedScooterSheet></SelectedScooterSheet>
-    </>
+        
+      </MapView>
+    </SafeAreaView>
   );
 };
 

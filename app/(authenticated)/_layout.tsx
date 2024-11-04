@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Stack } from "expo-router";
+import "react-native-get-random-values";
 import {
   StreamVideo,
   StreamVideoClient,
