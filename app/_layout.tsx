@@ -13,6 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { SQLiteProvider } from "expo-sqlite";
 import { migrateDbIfNeeded } from "@/utils/Database";
 import { LogBox } from "react-native";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,15 +67,16 @@ const InitialLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    <AuthProvider>
-      <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <InitialLayout />
-        </GestureHandlerRootView>
-      </SQLiteProvider>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <InitialLayout />
+          </GestureHandlerRootView>
+        </SQLiteProvider>
+      </AuthProvider>
+    </Provider>
   );
 };
 
-
-export default RootLayoutNav
+export default RootLayoutNav;

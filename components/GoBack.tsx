@@ -24,7 +24,6 @@ const GoBack = ({ title }: TitleProps) => {
     <TouchableOpacity
       onPress={router.back}
       style={[
-        { top, marginHorizontal: 13 },
         isDarkMode ? styles.lightBackButton : styles.darkBackButton,
       ]}
     >
