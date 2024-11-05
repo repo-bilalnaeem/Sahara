@@ -78,6 +78,8 @@ export const CustomDrawerContent = (props: any) => {
     );
   };
 
+  const navigation = useNavigation();
+
   return (
     <View style={{ flex: 1, marginTop: top }}>
       <View style={{ backgroundColor: "#fff", paddingBottom: 10 }}>
@@ -101,23 +103,53 @@ export const CustomDrawerContent = (props: any) => {
         contentContainerStyle={{ backgroundColor: "#fff", paddingTop: 0 }}
       >
         <DrawerItemList {...props} />
+
+        <DrawerItem
+          label="Chats"
+          onPress={() => {
+            router.push("/(authenticated)/chats" as Href);
+            navigation.dispatch(DrawerActions.closeDrawer());
+          }}
+          inactiveTintColor="#000"
+          activeBackgroundColor="#F7F2F9"
+          labelStyle={{
+            marginLeft: -20,
+            borderRadius: 12,
+            // overlayColor: "rgba(0, 0, 0, 0.2)",
+            marginHorizontal: 13,
+          }}
+          activeTintColor="#000"
+          pressColor="rgba(0,0,0,0.2)"
+          icon={() => (
+            <View
+              style={[
+                styles.item,
+                {
+                  backgroundColor: "#fff",
+                  width: 28,
+                  height: 28,
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+              ]}
+            >
+              <Ionicons name="apps-outline" size={18} color="#000" />
+            </View>
+          )}
+        />
         {history.map((chat) => (
           <ContextMenu.Root key={chat.id}>
             <ContextMenu.Trigger>
               <DrawerItem
                 label={chat.title}
-                onPress={() =>
-                  router.push(
-                    `/(chat)/${chat.id}`
-                  )
-                }
+                onPress={() => router.push(`/(chat)/${chat.id}`)}
                 inactiveTintColor="#000"
               />
             </ContextMenu.Trigger>
             <ContextMenu.Content
-              loop={false} 
-              alignOffset={0} 
-              avoidCollisions={true} 
+              loop={false}
+              alignOffset={0}
+              avoidCollisions={true}
               collisionPadding={10}
             >
               <ContextMenu.Preview>
@@ -171,10 +203,7 @@ export const CustomDrawerContent = (props: any) => {
           backgroundColor: "#FFFCFF",
         }}
       >
-        <Link
-          href="/"
-          asChild
-        >
+        <Link href="/" asChild>
           <TouchableOpacity style={styles.footer}>
             <Image
               source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
@@ -291,29 +320,6 @@ const Layout = () => {
               >
                 <FontAwesome6 name="grip-lines" size={20} color={"#242026"} />
               </TouchableOpacity>
-            </View>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="chats"
-        options={{
-          title: "Explore GPTs",
-          drawerIcon: () => (
-            <View
-              style={[
-                styles.item,
-                {
-                  backgroundColor: "#fff",
-                  width: 28,
-                  height: 28,
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-              ]}
-            >
-              <Ionicons name="apps-outline" size={18} color="#000" />
             </View>
           ),
         }}
