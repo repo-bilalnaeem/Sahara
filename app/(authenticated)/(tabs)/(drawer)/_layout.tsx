@@ -108,7 +108,6 @@ export const CustomDrawerContent = (props: any) => {
                 label={chat.title}
                 onPress={() =>
                   router.push(
-                    // `/(authenticated)/(tabs)/(chat)/${chat.id}`
                     `/(chat)/${chat.id}`
                   )
                 }
@@ -116,13 +115,10 @@ export const CustomDrawerContent = (props: any) => {
               />
             </ContextMenu.Trigger>
             <ContextMenu.Content
-              loop={false} // Example: required by the ContextMenu.Content component
-              // align="start" // Example: add necessary alignment or other required props
-              alignOffset={0} // Example: adjust alignment offset as needed
-              avoidCollisions={true} // Example: handle collisions
-              collisionPadding={10} // Example: padding for collision detection
-              // side="bottom" // Example: side of the context menu
-              // sideOffset={5} // Example: offset from the side
+              loop={false} 
+              alignOffset={0} 
+              avoidCollisions={true} 
+              collisionPadding={10}
             >
               <ContextMenu.Preview>
                 {() => (
@@ -177,9 +173,6 @@ export const CustomDrawerContent = (props: any) => {
       >
         <Link
           href="/"
-          // href={
-          //   "/(authenticated)/(modals)/settings" as Href<"/(authenticated)/(modals)/settings">
-          // }
           asChild
         >
           <TouchableOpacity style={styles.footer}>
@@ -303,8 +296,8 @@ const Layout = () => {
         }}
       />
 
-      {/* <Drawer.Screen
-        name="explore"
+      <Drawer.Screen
+        name="chats"
         options={{
           title: "Explore GPTs",
           drawerIcon: () => (
@@ -324,7 +317,7 @@ const Layout = () => {
             </View>
           ),
         }}
-      /> */}
+      />
     </Drawer>
   );
 };
