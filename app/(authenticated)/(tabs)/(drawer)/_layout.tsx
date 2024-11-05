@@ -107,7 +107,7 @@ export const CustomDrawerContent = (props: any) => {
         <DrawerItem
           label="Chats"
           onPress={() => {
-            router.push("/(authenticated)/chats" as Href);
+            router.push("/(authenticated)/(chats)" as Href);
             navigation.dispatch(DrawerActions.closeDrawer());
           }}
           inactiveTintColor="#000"

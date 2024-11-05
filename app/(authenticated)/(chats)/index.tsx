@@ -1,16 +1,6 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
+import { View, ScrollView, FlatList, StyleSheet, Platform } from "react-native";
 import React from "react";
-import { Link, Stack } from "expo-router";
-import HeaderDropDown from "@/components/HeaderDropDown";
-import { Ionicons } from "@expo/vector-icons";
+
 import chat from "@/assets/data/chats.json";
 import ChatRow from "@/components/ChatRow";
 
@@ -18,7 +8,10 @@ const chats = () => {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{ paddingBottom: 40 }}
+      contentContainerStyle={[
+        { paddingBottom: 40, backgroundColor: "#fff" },
+        Platform.OS === "android" ? { paddingTop: "30%" } : null,
+      ]}
     >
       <FlatList
         data={chat}
