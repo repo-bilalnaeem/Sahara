@@ -1,11 +1,60 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Alert,
+  Platform,
+} from "react-native";
 import React from "react";
 import { Divider } from "react-native-paper";
 import { BlurView } from "expo-blur";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
+import { useCreatePaymentIntentMutation } from "@/slices/apiSlice";
+import { presentPaymentSheet, useStripe } from "@stripe/stripe-react-native";
+import { Href, router } from "expo-router";
 
 const Booking = () => {
+  const { initPaymentSheet } = useStripe();
+  const [createPaymentIntent] = useCreatePaymentIntentMutation();
+  const onCheckout = async () => {
+    // 1. create a payment intent
+    const response = await createPaymentIntent({
+      amount: 100,
+      currency: "usd",
+    });
+
+    if (response.error) {
+      Alert.alert("Something went wrong!");
+      return;
+    }
+
+    // 2. Initialize the payment sheet
+    const initResponse = await initPaymentSheet({
+      merchantDisplayName: "Sahara.dev",
+      paymentIntentClientSecret: response.data.clientSecret,
+    });
+    if (initResponse.error) {
+      console.log(initResponse.error);
+      Alert.alert("Something went wrong!");
+      return;
+    }
+
+    // 3. Present the Payment Sheet from Stripe
+    const paymentResponse = await presentPaymentSheet();
+    if (paymentResponse.error) {
+      Alert.alert(
+        `Error code: ${paymentResponse.error.code}`,
+        paymentResponse.error.message
+      );
+      return;
+    }
+    // 4.  If payment ok -> create the order
+    console.log(paymentResponse);
+  };
+
   return (
     <View
       style={{
@@ -298,7 +347,7 @@ const Booking = () => {
             </Text>
           </View>
           <View>
-            <Pressable>
+            <Pressable onPress={() => onCheckout()}>
               <LinearGradient
                 colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
                 start={{ x: 0, y: 0 }}
@@ -306,7 +355,11 @@ const Booking = () => {
                 locations={[0.0527, 0.9575]}
                 style={styles.linearGradient}
               >
-                <Text style={{ color: "#fff", fontSize: 16, fontWeight:"600" }}>Book</Text>
+                <Text
+                  style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}
+                >
+                  Book
+                </Text>
               </LinearGradient>
             </Pressable>
           </View>

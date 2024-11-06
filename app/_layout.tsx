@@ -1,20 +1,20 @@
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
-import { Href, Slot, Stack, useRouter, useSegments } from "expo-router";
+import { Href, Stack, useRouter, useSegments } from "expo-router";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
-import {
-  GestureHandlerRootView,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
-import Toast from "react-native-toast-message";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { Ionicons } from "@expo/vector-icons";
 import { SQLiteProvider } from "expo-sqlite";
 import { migrateDbIfNeeded } from "@/utils/Database";
 import { LogBox } from "react-native";
 import { Provider } from "react-redux";
 import { store } from "@/store";
+import { NativeModules } from "react-native";
+
+const { scriptURL } = NativeModules.SourceCode;
+const scriptHostname = scriptURL.split("://")[1].split(":")[0];
+console.log(scriptHostname);
 
 SplashScreen.preventAutoHideAsync();
 
