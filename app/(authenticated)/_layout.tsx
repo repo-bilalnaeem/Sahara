@@ -14,7 +14,6 @@ const STREAM_KEY = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY;
 
 const Layout = () => {
   SystemNavigationBar.navigationHide(); // for android
-  const navigation = useNavigation();
   const { authState } = useAuth();
   const [client, setClient] = useState<StreamVideoClient | null>(null);
 
@@ -40,7 +39,11 @@ const Layout = () => {
   return client ? (
     <StreamVideo client={client}>
       <OverlayProvider>
-        <Stack>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
           <Stack.Screen name="userProfile" options={{ headerShown: false }} />

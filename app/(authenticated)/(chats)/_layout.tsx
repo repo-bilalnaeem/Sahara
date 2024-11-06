@@ -30,11 +30,12 @@ const Layout = () => {
           ),
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="[id]"
         options={{
-          title: '',
+          title: "",
           headerBackTitleVisible: false,
+          // headerShown: false,
           headerTitle: () => (
             <View
               style={{

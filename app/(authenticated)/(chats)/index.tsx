@@ -6,23 +6,22 @@ import ChatRow from "@/components/ChatRow";
 
 const chats = () => {
   return (
-    <ScrollView
+    <FlatList
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={[
         { paddingBottom: 40, backgroundColor: "#fff" },
-        Platform.OS === "android" ? { paddingTop: "30%" } : null,
+        Platform.OS === "android" ? { paddingTop: 115 } : null,
       ]}
-    >
-      <FlatList
-        data={chat}
-        scrollEnabled={false}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => (
-          <View style={[defaultStyles.separator, { marginLeft: 90 }]} />
-        )}
-        renderItem={({ item }) => <ChatRow {...item} />}
-      />
-    </ScrollView>
+      data={chat}
+      scrollEnabled={true}
+      keyExtractor={(item) => item.id}
+      ItemSeparatorComponent={() => (
+        <View style={[defaultStyles.separator, { marginLeft: 90 }]} />
+      )}
+      renderItem={({ item }) => <ChatRow {...item} />}
+      initialNumToRender={10}
+      scrollEventThrottle={16}
+    />
   );
 };
 
