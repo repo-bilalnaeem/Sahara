@@ -13,7 +13,7 @@ import { BlurView } from "expo-blur";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import { useCreatePaymentIntentMutation } from "@/slices/apiSlice";
-import { presentPaymentSheet, useStripe } from "@stripe/stripe-react-native";
+import { PaymentSheet, presentPaymentSheet, useStripe } from "@stripe/stripe-react-native";
 import { Href, router } from "expo-router";
 
 const Booking = () => {
@@ -52,7 +52,7 @@ const Booking = () => {
       return;
     }
     // 4.  If payment ok -> create the order
-    console.log(paymentResponse);
+    PaymentSheet
   };
 
   return (
