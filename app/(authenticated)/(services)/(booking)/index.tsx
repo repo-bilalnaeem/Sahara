@@ -199,50 +199,6 @@ const Booking = () => {
                 marginBottom: 16,
               }}
             >
-              Reason
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 12,
-                marginHorizontal: 10,
-                gap: 28,
-              }}
-            >
-              <Image
-                source={require("@/assets/images/edit.png")}
-                style={{
-                  width: 26,
-                  height: 26,
-                  resizeMode: "contain",
-                  marginLeft: 2,
-                }}
-              />
-
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: "gray",
-                  fontWeight: "500",
-                  marginRight: 16,
-                  flexGrow: 1,
-                }}
-              >
-                Chest Pain
-              </Text>
-            </View>
-            <Divider />
-          </View>
-          <View style={{ marginBottom: 16 }}>
-            <Text
-              style={{
-                marginLeft: 8,
-                fontSize: 16,
-                fontWeight: "600",
-                marginBottom: 16,
-              }}
-            >
               Payment information
             </Text>
             <View

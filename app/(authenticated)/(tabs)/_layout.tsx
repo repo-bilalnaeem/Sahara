@@ -7,26 +7,12 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Text,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
-import {
-  BottomSheetProvider,
-  useBottomSheet,
-} from "@/context/BottomSheetContext";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Layout = () => {
-  return (
-    <BottomSheetProvider>
-      <Container />
-    </BottomSheetProvider>
-  );
-};
 
-const Container = () => {
-  const { isBottomSheetOpen } = useBottomSheet();
+const Layout = () => {
   const { top } = useSafeAreaInsets();
 
   return (
@@ -58,7 +44,6 @@ const Container = () => {
           marginHorizontal: 10,
           borderRadius: 40,
           overflow: "hidden",
-          zIndex: isBottomSheetOpen === true ? -100 : undefined,
         },
       }}
     >

@@ -10,10 +10,9 @@ import {
 
 type Props = {
   heading: string;
-  onSeeMorePress: () => void; // Add the prop for the callback
 };
 
-const SeeMore = ({ heading, onSeeMorePress }: Props) => {
+const SeeMore = ({ heading }: Props) => {
   const isDarkMode = useColorScheme() === "dark";
   const isAndroid = Platform.OS === "android";
 
@@ -22,12 +21,12 @@ const SeeMore = ({ heading, onSeeMorePress }: Props) => {
       <Text
         style={[
           isDarkMode ? styles.lightHeading : styles.darkHeading,
-          isAndroid ? { fontSize: 14, } : null,
+          isAndroid ? { fontSize: 14 } : null,
         ]}
       >
         {heading}
       </Text>
-      <Pressable onPress={onSeeMorePress}>
+      <Pressable>
         <Text
           style={[
             isDarkMode ? styles.seeAllLight : styles.seeAllDark,

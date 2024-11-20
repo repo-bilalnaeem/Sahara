@@ -16,16 +16,24 @@ import { CheckBox } from "react-native-elements";
 import LoginButton from "@/components/LoginButton";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
-import { useAuth } from "@/context/AuthContext";
+import { isClerkAPIResponseError, useSignIn, useUser } from "@clerk/clerk-expo";
+
+enum SignInType {
+  Phone,
+  Email,
+  Google,
+  Apple,
+}
 
 const signin = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const { onLogin, onRegister } = useAuth();
+  const { user, isLoaded: isUserLoaded } = useUser();
+  // const [loading, setLoading] = useState(false);
+  // const { userId } = useAuth();
+  const { signIn } = useSignIn();
 
   const isDarkMode = useColorScheme() === "dark";
 
@@ -45,21 +53,39 @@ const signin = () => {
     setSelection(!isSelected);
   };
 
-  const handleLogin = () => {
-    router.navigate("/(tabs)");
-  };
+  // const handleLogin = () => {
+  //   router.navigate("/(tabs)");
+  // };
 
   // Sign in with email and password
-  const onSignInPress = async () => {
-    setLoading(true);
+  const onSignIn = async (type: SignInType) => {
+    if (type === SignInType.Email) {
+      try {
+        const signInResponse = await signIn!.create({
+          identifier: email,
+          password,
+        });
+        if (signInResponse.status === "complete") {
+          // Once the sign-in is successful and user data is loaded, handle role-based navigation
+          if (isUserLoaded) {
+            const role = user?.publicMetadata?.role;
+            const targetRoute =
+              role === "user"
+                ? "/(authenticated)/customer/(tabs)"
+                : "/(authenticated)/admin/(tabs)/home";
 
-    try {
-      const result = await onLogin!(email, password);
-          router.navigate("/(authenticated)/(tabs)" as Href);
-    } catch (e) {
-      Alert.alert("Error", "Could not log in");
-    } finally {
-      setLoading(false);
+            router.replace(targetRoute as Href);
+          }
+        }
+      
+      } catch (error) {
+        console.log("error", JSON.stringify(error, null, 2));
+        if (isClerkAPIResponseError(error)) {
+          if (error.errors[0].code === "form_identifier_not_found") {
+            Alert.alert("Error", error.errors[0].message);
+          }
+        }
+      }
     }
   };
   return (
@@ -131,7 +157,7 @@ const signin = () => {
 
           <View style={styles.loginButton}>
             <LoginButton
-              onPress={onSignInPress}
+              onPress={() => onSignIn(SignInType.Email)}
               text="Sign in with email address"
             ></LoginButton>
           </View>

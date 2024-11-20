@@ -40,17 +40,10 @@ const data = [
   },
 ];
 
-interface ServicesListProps {
-  isBottomSheetOpen: boolean; // Define the prop type
-}
-
-const ServicesList = ({ isBottomSheetOpen }: ServicesListProps) => {
+const ServicesList = () => {
   const router = useRouter();
   const renderServicesItem = ({ item, index }: any) => (
-    <Pressable
-      onPress={() => router.navigate(item.screen)}
-      disabled={isBottomSheetOpen === true ? true : false}
-    >
+    <Pressable onPress={() => router.navigate(item.screen)}>
       <View
         style={[
           styles.doctorServiceBtn,
@@ -71,9 +64,6 @@ const ServicesList = ({ isBottomSheetOpen }: ServicesListProps) => {
     <View style={styles.services}>
       <SeeMore
         heading={"Services"}
-        onSeeMorePress={function (): void {
-          throw new Error("Function not implemented.");
-        }}
       />
       <Pressable>
         <FlatList
@@ -82,7 +72,6 @@ const ServicesList = ({ isBottomSheetOpen }: ServicesListProps) => {
           renderItem={renderServicesItem}
           keyExtractor={(item) => item.key}
           showsHorizontalScrollIndicator={false}
-          scrollEnabled={isBottomSheetOpen === false}
         />
       </Pressable>
     </View>
