@@ -4,32 +4,31 @@ import "react-native-get-random-values";
 import { OverlayProvider } from "stream-chat-expo";
 import SystemNavigationBar from "react-native-system-navigation-bar";
 import { StreamVideo, StreamVideoClient, User } from "@stream-io/video-react-native-sdk";
-import { useAuth } from "@clerk/clerk-expo";
 
 const STREAM_KEY = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY;
 
 const Layout = () => {
   SystemNavigationBar.navigationHide(); // for android
   const [client, setClient] = useState<StreamVideoClient | null>(null);
-  const { isSignedIn, userId } = useAuth();
+  // const { isSignedIn, userId } = useAuth();
 
-  useEffect(() => {
-    if (isSignedIn && userId) {
-      console.log("User ID:", userId);
+  // useEffect(() => {
+  //   if (isSignedIn && userId) {
+  //     console.log("User ID:", userId);
 
-      const streamUser: User = {
-        id: userId,
-        type: "guest",
-      };
-      const clientInstance = StreamVideoClient.getOrCreateInstance({
-        apiKey: STREAM_KEY!,
-        user: streamUser,
-      });
+  //     const streamUser: User = {
+  //       id: userId,
+  //       type: "guest",
+  //     };
+  //     const clientInstance = StreamVideoClient.getOrCreateInstance({
+  //       apiKey: STREAM_KEY!,
+  //       user: streamUser,
+  //     });
 
-      setClient(clientInstance);
-      // console.log("Client initialized:", clientInstance);
-    }
-  }, [isSignedIn]);
+  //     setClient(clientInstance);
+  //     // console.log("Client initialized:", clientInstance);
+  //   }
+  // }, [isSignedIn]);
 
   useEffect(() => {
     if (client) {

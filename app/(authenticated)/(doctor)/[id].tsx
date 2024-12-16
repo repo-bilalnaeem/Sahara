@@ -1,7 +1,8 @@
 import TimeSlots from "@/components/TimeSlots";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
-import React, { useMemo, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,6 +17,7 @@ import {
 } from "react-native";
 import { Divider, SegmentedButtons } from "react-native-paper";
 import Animated from "react-native-reanimated";
+import { useGetDoctorQuery } from "@/slices/apiSlice";
 
 const { width } = Dimensions.get("window");
 const IMG_HEIGHT = 380;
@@ -61,14 +63,41 @@ const Reviews = () => {
   );
 };
 
-const Slots = () => {
-  return <TimeSlots />;
-};
-
 const Page = () => {
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("slots");
   const snapPoints = useMemo(() => ["40%", "50%", "55%"], []);
+  const [doctor, setDoctor] = useState({
+    aboutMe: "",
+    city: "",
+    department: "",
+    firstName: "",
+    lastName: "",
+    imageUrl: "",
+  });
+  const { id } = useLocalSearchParams();
+
+  const { data, error, isLoading } = useGetDoctorQuery(id);
+
+  useEffect(() => {
+    if (data?.doctor?.Doctor && Array.isArray(data.doctor.Doctor)) {
+      const [doctorData] = data.doctor.Doctor; // Access the first doctor in the array
+
+      const { firstName, lastName, aboutMe, imageUrl, city, department } =
+        doctorData;
+
+      setDoctor({
+        aboutMe,
+        city,
+        department,
+        firstName,
+        lastName,
+        imageUrl,
+      });
+    }
+  }, [data]);
+
+  // console.log(doctor);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
@@ -100,8 +129,10 @@ const Page = () => {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.content}>
-              <Text style={styles.name}>Dr Mathew Lewis</Text>
-              <Text style={styles.occupation}>Heart Specialist</Text>
+              <Text style={styles.name}>
+                Dr {doctor.firstName} {doctor.lastName}
+              </Text>
+              <Text style={styles.occupation}>{doctor.department}</Text>
               <Divider />
 
               <View style={styles.container}>
@@ -110,11 +141,7 @@ const Page = () => {
                   numberOfLines={expanded ? undefined : 3}
                   ellipsizeMode="tail"
                 >
-                  Welcome to my profile! I am Dr. Mathew Lewis, a highly
-                  experienced and board-certified Cardiologist dedicated to
-                  providing exceptional cardiovascular care. With over 15 years
-                  of clinical experience, I am passionate about ensuring the
-                  heart health and well-being of my patients.
+                  {doctor.aboutMe}
                   {expanded && (
                     <TouchableOpacity onPress={toggleExpansion}>
                       <Text style={styles.viewMore}>View Less</Text>
@@ -148,7 +175,7 @@ const Page = () => {
               />
 
               {value === "review" && <Reviews />}
-              {value === "slots" && <Slots />}
+              {value === "slots" && <TimeSlots doctorId={id} />}
             </View>
           </BottomSheetScrollView>
         </BottomSheet>

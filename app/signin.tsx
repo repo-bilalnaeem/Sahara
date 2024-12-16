@@ -16,24 +16,22 @@ import { CheckBox } from "react-native-elements";
 import LoginButton from "@/components/LoginButton";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
-import { isClerkAPIResponseError, useSignIn, useUser } from "@clerk/clerk-expo";
+import * as SecureStore from "expo-secure-store";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { useDispatch } from "react-redux";
 
-enum SignInType {
-  Phone,
-  Email,
-  Google,
-  Apple,
+import { useSigninMutation } from "@/slices/apiSlice";
+
+interface CustomJwtPayload extends JwtPayload {
+  id: string;
 }
 
 const signin = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
-  const { user, isLoaded: isUserLoaded } = useUser();
-  // const [loading, setLoading] = useState(false);
-  // const { userId } = useAuth();
-  const { signIn } = useSignIn();
 
   const isDarkMode = useColorScheme() === "dark";
 
@@ -53,41 +51,32 @@ const signin = () => {
     setSelection(!isSelected);
   };
 
-  // const handleLogin = () => {
-  //   router.navigate("/(tabs)");
-  // };
+  const [signin] = useSigninMutation();
 
-  // Sign in with email and password
-  const onSignIn = async (type: SignInType) => {
-    if (type === SignInType.Email) {
-      try {
-        const signInResponse = await signIn!.create({
-          identifier: email,
-          password,
-        });
-        if (signInResponse.status === "complete") {
-          // Once the sign-in is successful and user data is loaded, handle role-based navigation
-          if (isUserLoaded) {
-            const role = user?.publicMetadata?.role;
-            const targetRoute =
-              role === "user"
-                ? "/(authenticated)/customer/(tabs)"
-                : "/(authenticated)/admin/(tabs)/home";
+  const onSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
+    }
 
-            router.replace(targetRoute as Href);
-          }
-        }
-      
-      } catch (error) {
-        console.log("error", JSON.stringify(error, null, 2));
-        if (isClerkAPIResponseError(error)) {
-          if (error.errors[0].code === "form_identifier_not_found") {
-            Alert.alert("Error", error.errors[0].message);
-          }
-        }
-      }
+    try {
+      const response = await signin({ email, password }).unwrap();
+      console.log("access_token:", response.access_token);
+
+      const decodedToken = jwtDecode<CustomJwtPayload>(response.access_token);
+      console.log("Decoded Token:", decodedToken);
+
+      const userId = decodedToken.id;
+
+      await SecureStore.setItemAsync("access_token", response.access_token);
+      await SecureStore.setItemAsync("user_id", userId);
+      router.replace("/(authenticated)/(tabs)" as Href);
+    } catch (err: any) {
+      console.log(err);
+      Alert.alert("Sign-in Failed", err);
     }
   };
+
   return (
     <View style={styles.lightScreen}>
       <TouchableWithoutFeedback onPress={handlePress}>
@@ -157,7 +146,7 @@ const signin = () => {
 
           <View style={styles.loginButton}>
             <LoginButton
-              onPress={() => onSignIn(SignInType.Email)}
+              onPress={onSignIn}
               text="Sign in with email address"
             ></LoginButton>
           </View>

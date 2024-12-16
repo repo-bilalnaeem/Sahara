@@ -10,6 +10,7 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 import { LinearGradient } from "expo-linear-gradient";
 import UpcomingSchedule from "@/components/UpcomingSchedule";
@@ -22,17 +23,20 @@ import RecentlyViewed from "@/components/RecentlyViewed";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
-import { useAuth } from "@clerk/clerk-expo";
 import { router } from "expo-router";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
   const isAndroid = Platform.OS === "android";
-  const { signOut } = useAuth();
 
-  const onSignOut = () => {
-    signOut();
-    router.replace("/");
+  const handleLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync("access_token"); // Clear the access token from SecureStore
+      await SecureStore.deleteItemAsync("user_id"); // Clear the access token from SecureStore
+      router.replace("/signin"); // Redirect to the sign-in screen
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
@@ -98,7 +102,7 @@ const Home = () => {
           </ImageBackground>
         </View>
         <View>
-          <TouchableOpacity onPress={() => onSignOut()}>
+          <TouchableOpacity onPress={handleLogout}>
             <Text
               style={{
                 // color: Colors.primary,

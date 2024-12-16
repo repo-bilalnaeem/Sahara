@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import {
   FlatList,
@@ -13,6 +13,7 @@ import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import NotFound from "./NotFound";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import { useGetDoctorsQuery } from "@/slices/apiSlice";
 
 interface Props {
   listings: any[];
@@ -21,7 +22,15 @@ interface Props {
 
 const Listings = ({ listings: items, category }: Props) => {
   const [loading, setLoading] = useState(false);
+  const { data, error, isLoading } = useGetDoctorsQuery(undefined);
+  const [doctors, setDoctors] = useState([]);
   const listRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    if (data?.doctors) {
+      setDoctors(data.doctors);
+    }
+  }, [data]);
 
   useEffect(() => {
     console.log("RELOAD LISTINGS", items.length);
@@ -40,7 +49,7 @@ const Listings = ({ listings: items, category }: Props) => {
   }, [items, category]);
 
   const renderRow = ({ item }: any) => (
-    <Pressable onPress={() => router.push("/(doctor)")}>
+    <Pressable onPress={() => router.push(`(doctor)/${item.doctorId}` as Href)}>
       <Animated.View
         style={{ height: 300 }}
         entering={FadeInRight}
@@ -48,7 +57,9 @@ const Listings = ({ listings: items, category }: Props) => {
       >
         <ImageBackground
           style={styles.backgroundImage}
-          source={{ uri: item.imageSource }}
+          source={{
+            uri: "https://plus.unsplash.com/premium_photo-1661764878654-3d0fc2eefcca?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          }}
         >
           <LinearGradient
             colors={[
@@ -93,7 +104,7 @@ const Listings = ({ listings: items, category }: Props) => {
                   fontWeight: "500",
                 }}
               >
-                {item.ratings}
+                5{/* {item.ratings} */}
               </Text>
             </View>
           </View>
@@ -101,7 +112,7 @@ const Listings = ({ listings: items, category }: Props) => {
           <Text style={styles.name}>
             {item.firstName} {item.lastName}
           </Text>
-          <Text style={styles.speciality}>{item.occupation}</Text>
+          <Text style={styles.speciality}>{item.department}</Text>
           <Pressable style={styles.bookNow}>
             <Text style={styles.bookText}>Book Now</Text>
           </Pressable>
@@ -111,14 +122,15 @@ const Listings = ({ listings: items, category }: Props) => {
   );
 
   return (
-    <View style={{ paddingHorizontal: 13, flex: 1, top: 75 }}>
+    <View style={{ paddingHorizontal: 13, flex: 1, top: 0 }}>
       {filteredItems.length === 0 ? (
         <NotFound />
       ) : (
         <FlatList
           ref={listRef}
+          // keyExtractor={(item) => item.id.toString()}
           renderItem={renderRow}
-          data={loading ? [] : filteredItems}
+          data={doctors}
           contentContainerStyle={styles.listitems}
           showsVerticalScrollIndicator={false}
           initialNumToRender={5}

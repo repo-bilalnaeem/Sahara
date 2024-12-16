@@ -67,10 +67,11 @@ const Layout = () => {
           tabBarIcon: ({ size, color }) => (
             <AntDesign name="search1" size={size} color={color} />
           ),
-          headerTransparent: true,
+          // headerTransparent: true,
           tabBarShowLabel: false,
+          tabBarHideOnKeyboard: true,
           header: () => (
-            <View style={[styles.meetDoctor, { paddingTop: top / 1.5 }]}>
+            <View style={[styles.meetDoctor, { paddingTop: top *1.5 }]}>
               <View style={styles.searchbarBox}>
                 <AntDesign name="search1" size={20} color="#000" />
                 <TextInput
@@ -130,9 +131,9 @@ const styles = StyleSheet.create({
   },
 
   meetDoctor: {
-    marginHorizontal: 13,
-    marginTop: 24,
-    marginBottom: 12,
+    paddingHorizontal: 13,
+    paddingBottom: 12,
+    backgroundColor:"#fff"
   },
 });
 

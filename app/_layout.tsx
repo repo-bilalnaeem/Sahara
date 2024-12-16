@@ -10,60 +10,47 @@ import { LogBox } from "react-native";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import { NativeModules } from "react-native";
-import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
-
-const enum Role {
-  ADMIN = "admin",
-  USER = "user",
-}
 
 const { scriptURL } = NativeModules.SourceCode;
 const scriptHostname = scriptURL.split("://")[1].split(":")[0];
-console.log(scriptHostname);
-
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-if (!CLERK_PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key in your .env");
-}
-
-// Cache the Clerk JWT
-const tokenCache = {
-  async getToken(key: string) {
-    try {
-      return SecureStore.getItemAsync(key);
-    } catch (err) {
-      return null;
-    }
-  },
-  async saveToken(key: string, value: string) {
-    try {
-      return SecureStore.setItemAsync(key, value);
-    } catch (err) {
-      return;
-    }
-  },
-};
+// console.log(scriptHostname);
 
 SplashScreen.preventAutoHideAsync();
 
 const InitialLayout = () => {
   LogBox.ignoreAllLogs(true);
-  const { isLoaded, isSignedIn } = useAuth();
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const segments = useSegments();
   const router = useRouter();
 
-  const [loaded, error] = useFonts({
+  const accessToken = async () => {
+    try {
+      const access_token = await SecureStore.getItemAsync("access_token");
+      const user_id = await SecureStore.getItemAsync("user_id");
+      if (access_token && user_id) {
+        console.log("Token available");
+        console.log("user_id", user_id);
+        setIsSignedIn(true); // User is signed in
+      } else {
+        console.log("No access_token ID found, redirecting to sign-in...");
+        setIsSignedIn(false); // User is not signed in
+      }
+    } catch (err) {
+      console.error("Error accessing SecureStore:", err);
+    }
+  };
+
+  const [loaded, fontError] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Lato700: require("@/assets/fonts/Lato-Bold.ttf"),
     Lato400: require("@/assets/fonts/Lato-Regular.ttf"),
   });
 
   useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+    if (fontError) throw fontError;
+  }, [fontError]);
 
   useEffect(() => {
     if (loaded) {
@@ -72,16 +59,19 @@ const InitialLayout = () => {
   }, [loaded]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    accessToken(); // Check SecureStore on app launch
+  }, []);
 
+  useEffect(() => {
+    if (!loaded) return;
     const inAuthGroup = segments[0] === "(authenticated)";
 
     if (isSignedIn && !inAuthGroup) {
       router.replace("/(authenticated)/(tabs)" as Href);
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, segments, loaded]);
 
-  if (!loaded || !isLoaded) {
+  if (!loaded) {
     return <Slot />;
   }
 
@@ -106,18 +96,13 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <Provider store={store}>
-      <ClerkProvider
-        publishableKey={CLERK_PUBLISHABLE_KEY}
-        tokenCache={tokenCache}
-      >
-        {/* <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} */}
-        <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <InitialLayout />
-          </GestureHandlerRootView>
-        </SQLiteProvider>
-        {/* </StripeProvider> */}
-      </ClerkProvider>
+      {/* <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} */}
+      <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </SQLiteProvider>
+      {/* </StripeProvider> */}
     </Provider>
   );
 };

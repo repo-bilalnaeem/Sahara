@@ -35,7 +35,7 @@ const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: top * 2.4 }]}>
+    <View style={[styles.container, {   }]}>
       <ScrollView
         ref={scrollRef}
         horizontal
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
     zIndex: 2,
     shadowColor: "#000",
     shadowRadius: 3,
-    elevation: 3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.09,
+    // elevation: 2,
+    shadowOffset: { width: 0, height: 12 },
+    // shadowOpacity: 0.09,
   },
   contentContainer: {
     paddingHorizontal: 10, // Add some horizontal padding if needed

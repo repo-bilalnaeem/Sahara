@@ -1,31 +1,48 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import DateTimePicker from "react-native-ui-datepicker";
 import BookSlider from "./BookSlider";
+import React, { useState, useEffect } from "react";
+import { useGetDoctorQuery } from "@/slices/apiSlice";
+import DateTimePicker from "react-native-ui-datepicker";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import dayjs from "dayjs";
+interface TimeSlotsProps {
+  doctorId: string | string[];
+}
 
-const generateTimeSlots = (
-  startHour: number,
-  endHour: number,
-  interval: number
-) => {
-  const slots = [];
-  for (let hour = startHour; hour <= endHour; hour++) {
-    for (let min = 0; min < 60; min += interval) {
-      const time = `${hour.toString().padStart(2, "0")}:${min
-        .toString()
-        .padStart(2, "0")}`;
-      slots.push(time);
-    }
-  }
-  return slots;
-};
-
-const TimeSlots = () => {
+const TimeSlots = ({ doctorId }: TimeSlotsProps) => {
   const [date, setDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  const { data, error, isLoading } = useGetDoctorQuery(doctorId);
+  const [slots, setSlots] = useState<
+    { id: number; time: string; isBooked: boolean }[]
+  >([]);
 
-  const timeSlots = generateTimeSlots(14, 17, 15);
+  useEffect(() => {
+    if (data?.doctor?.Doctor && Array.isArray(data.doctor.Doctor)) {
+      const doctorData = data.doctor.Doctor[0]; // Access the first doctor in the array
+
+      if (doctorData.schedules && Array.isArray(doctorData.schedules)) {
+        const allSlots = doctorData.schedules
+          .flatMap((schedule: any) => schedule.slots) // Combine all slots from all schedules
+          .map((slot: any) => ({
+            id: slot.id,
+            time: slot.time, // Extract time as is or format if needed
+            isBooked: slot.isBooked,
+          }));
+
+        setSlots(allSlots); // Update the state with all slots
+      }
+    }
+  }, [data]);
+
+  // console.log(slots);
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error loading slots!</Text>;
+  }
 
   return (
     <View>
@@ -46,32 +63,35 @@ const TimeSlots = () => {
           <Text style={styles.slotsHeading}>Available Slots</Text>
 
           <View style={styles.slotsContainer}>
-            {timeSlots.map((slot, index) => (
+            {slots.map((slot) => (
               <Pressable
-                key={index}
-                onPress={() => setSelectedSlot(slot)}
+                key={slot.id}
+                onPress={() => setSelectedSlot(slot.id)}
+                disabled={slot.isBooked} // Disable button if the slot is booked
                 style={[
                   styles.timeBtn,
-                  selectedSlot === slot && styles.selectedTimeBtn,
+                  selectedSlot === slot.id && styles.selectedTimeBtn,
+                  slot.isBooked && styles.bookedTimeBtn,
                 ]}
               >
                 <Text
                   style={[
                     styles.timeText,
-                    selectedSlot === slot && styles.selectedTimeText,
+                    selectedSlot === slot.id && styles.selectedTimeText,
+                    slot.isBooked && styles.bookedTimeText,
                   ]}
                 >
-                  {slot}
+                  {new Date(slot.time).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Text>
               </Pressable>
             ))}
           </View>
         </View>
-
-        {/* <View style={styles.slider}> */}
-        {/* </View> */}
       </View>
-        <BookSlider name={"Book Appointment"} />
+      <BookSlider name={"Book Appointment"} />
     </View>
   );
 };
@@ -133,6 +153,14 @@ const styles = StyleSheet.create({
     marginTop: 32,
     flexDirection: "row",
     alignItems: "center",
+  },
+
+  bookedTimeBtn: {
+    backgroundColor: "#D3D3D3",
+  },
+
+  bookedTimeText: {
+    color: "#888",
   },
 });
 
