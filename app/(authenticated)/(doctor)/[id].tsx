@@ -108,7 +108,7 @@ const Page = () => {
       <View style={styles.screen}>
         <View style={[styles.profileImage]}>
           <Animated.Image
-            source={require("@/assets/images/doctor.jpg")}
+            source={{ uri: doctor.imageUrl }}
             style={[styles.image]}
           />
         </View>
