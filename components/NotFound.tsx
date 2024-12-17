@@ -23,7 +23,7 @@ const NotFound = () => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", top: top  }}>
+    <View style={{ flex: 1, justifyContent: "center", top: top }}>
       <GlassmorphicView />
       <View style={{ flex: 0.4, justifyContent: "center" }}>
         <Text style={isDarkMode ? styles.notFoundLight : styles.notFoundDark}>
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     marginTop: 36,
     padding: 20,
     paddingBottom: 0,
-    elevation: 5,
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",

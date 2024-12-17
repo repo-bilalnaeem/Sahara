@@ -1,10 +1,11 @@
-import { View, Text } from "react-native";
-import React, { useMemo, useState } from "react";
+import { View } from "react-native";
+import React, { useState } from "react";
 import Listings from "@/components/SearchList";
-import {doctors} from "@/assets/data/RecentlyViewed";
 import FilterList from "@/components/SearchFilter";
+import { useGetDoctorsQuery } from "@/slices/apiSlice";
+
 const search = () => {
-  const items = useMemo(() => doctors as any, []);
+  const { data, error, isLoading } = useGetDoctorsQuery(undefined);
   const [category, setCategory] = useState<string>("All");
 
   const onDataChanged = (category: string) => {
@@ -15,7 +16,7 @@ const search = () => {
   return (
     <View style={{ flex: 1 }}>
       <FilterList onCategoryChanged={onDataChanged} />
-      <Listings listings={items} category={category} />
+      <Listings listings={data || []} category={category} />
     </View>
   );
 };

@@ -18,6 +18,7 @@ import {
 import { Divider, SegmentedButtons } from "react-native-paper";
 import Animated from "react-native-reanimated";
 import { useGetDoctorQuery } from "@/slices/apiSlice";
+import { ActivityIndicator } from "react-native";
 
 const { width } = Dimensions.get("window");
 const IMG_HEIGHT = 380;
@@ -63,52 +64,62 @@ const Reviews = () => {
   );
 };
 
+interface Doctor {
+  firstName: string;
+  lastName: string;
+  imageUrl: string;
+  department: string;
+  aboutMe: string;
+}
+
 const Page = () => {
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("slots");
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
   const snapPoints = useMemo(() => ["40%", "50%", "55%"], []);
-  const [doctor, setDoctor] = useState({
-    aboutMe: "",
-    city: "",
-    department: "",
-    firstName: "",
-    lastName: "",
-    imageUrl: "",
-  });
+
   const { id } = useLocalSearchParams();
 
   const { data, error, isLoading } = useGetDoctorQuery(id);
 
   useEffect(() => {
-    if (data?.doctor?.Doctor && Array.isArray(data.doctor.Doctor)) {
-      const [doctorData] = data.doctor.Doctor; // Access the first doctor in the array
-
-      const { firstName, lastName, aboutMe, imageUrl, city, department } =
-        doctorData;
-
+    if (!isLoading && data?.doctor?.Doctor) {
+      // console.log(data.doctor.Doctor);
+      const { firstName, lastName, imageUrl, department, aboutMe } =
+        data?.doctor?.Doctor;
       setDoctor({
-        aboutMe,
-        city,
-        department,
         firstName,
         lastName,
         imageUrl,
+        department,
+        aboutMe,
       });
     }
-  }, [data]);
-
-  // console.log(doctor);
+  }, [data, isLoading]);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
   };
+
+  if (isLoading) {
+    return <ActivityIndicator size="small" color="#0000ff" />;
+  }
+
+  if (error) {
+    return (
+      <View>
+        <Text>Error fetching doctor data. Please try again later.</Text>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={0}>
       <View style={styles.screen}>
         <View style={[styles.profileImage]}>
           <Animated.Image
-            source={{ uri: doctor.imageUrl }}
+            source={{ uri: doctor?.imageUrl }}
+            
             style={[styles.image]}
           />
         </View>
@@ -130,9 +141,9 @@ const Page = () => {
           >
             <View style={styles.content}>
               <Text style={styles.name}>
-                Dr {doctor.firstName} {doctor.lastName}
+                Dr {doctor?.firstName} {doctor?.lastName}
               </Text>
-              <Text style={styles.occupation}>{doctor.department}</Text>
+              <Text style={styles.occupation}>{doctor?.department}</Text>
               <Divider />
 
               <View style={styles.container}>
@@ -141,7 +152,7 @@ const Page = () => {
                   numberOfLines={expanded ? undefined : 3}
                   ellipsizeMode="tail"
                 >
-                  {doctor.aboutMe}
+                  {doctor?.aboutMe}
                   {expanded && (
                     <TouchableOpacity onPress={toggleExpansion}>
                       <Text style={styles.viewMore}>View Less</Text>

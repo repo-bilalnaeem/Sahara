@@ -20,17 +20,22 @@ interface Props {
   category: string;
 }
 
-const Listings = ({ listings: items, category }: Props) => {
+
+const Listings = ({ listings: data, category }: Props) => {
+  console.log("category:", category);
   const [loading, setLoading] = useState(false);
-  const { data, error, isLoading } = useGetDoctorsQuery(undefined);
-  const [doctors, setDoctors] = useState([]);
   const listRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    if (data?.doctors) {
-      setDoctors(data.doctors);
+  const items = useMemo(() => data?.doctors || [], [data]);
+
+  const filteredItems = useMemo(() => {
+    if (category === "All") {
+      return items; // Show all doctors
     }
-  }, [data]);
+    return items.filter(
+      (doctor: { department: string }) => doctor.department === category
+    ); // Filter by department
+  }, [items, category]);
 
   useEffect(() => {
     console.log("RELOAD LISTINGS", items.length);
@@ -42,11 +47,10 @@ const Listings = ({ listings: items, category }: Props) => {
   }, [category]);
 
   // Memoize the filtered items to avoid unnecessary recalculations
-  const filteredItems = useMemo(() => {
-    return category === "All"
-      ? items
-      : items.filter(({ occupation }) => occupation === category);
-  }, [items, category]);
+  const filterData = items.filter(
+    (department: string) => department === category
+  );
+  console.log(filterData);
 
   const renderRow = ({ item }: any) => (
     <Pressable onPress={() => router.push(`(doctor)/${item.doctorId}` as Href)}>
@@ -130,10 +134,10 @@ const Listings = ({ listings: items, category }: Props) => {
           ref={listRef}
           // keyExtractor={(item) => item.id.toString()}
           renderItem={renderRow}
-          data={doctors}
+          data={filteredItems}
           contentContainerStyle={styles.listitems}
           showsVerticalScrollIndicator={false}
-          initialNumToRender={5}
+          initialNumToRender={2}
           onEndReachedThreshold={0.5}
         />
       )}
