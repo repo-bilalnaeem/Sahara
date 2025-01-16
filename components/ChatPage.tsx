@@ -19,7 +19,7 @@ import ChatMessage from "@/components/ChatMessage";
 import { Message, Role } from "@/utils/Interfaces";
 import MessageIdeas from "@/components/MessageIdeas";
 import { addChat, addMessage, getMessages } from "@/utils/Database";
-import { useSQLiteContext } from "expo-sqlite/next";
+import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -38,7 +38,6 @@ const ChatPage = () => {
 
   const [chatId, _setChatId] = useState(id);
   const chatIdRef = useRef(chatId);
-  // https://stackoverflow.com/questions/55265255/react-usestate-hook-event-handler-using-initial-state
   function setChatId(id: string) {
     chatIdRef.current = id;
     _setChatId(id);
@@ -145,17 +144,20 @@ const ChatPage = () => {
                 onSelect={onGptVersionChange}
                 selected={gptVersion}
               />
-              <Link href={"/(chat)/new"} push asChild>
-                <TouchableOpacity>
-                  <Ionicons
-                    name="create-outline"
-                    size={24}
-                    color="#242026"
-                    style={{ marginRight: 16 }}
-                  />
-                </TouchableOpacity>
-              </Link>
             </View>
+          ),
+
+          headerRight: () => (
+            <Link href={"/(drawer)/(chat)/new"} push asChild>
+              <TouchableOpacity>
+                <Ionicons
+                  name="create-outline"
+                  size={24}
+                  color={"#242026"}
+                  style={{ marginRight: 16 }}
+                />
+              </TouchableOpacity>
+            </Link>
           ),
         }}
       />

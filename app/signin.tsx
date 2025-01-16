@@ -10,10 +10,10 @@ import {
   useColorScheme,
   Alert,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Href, useRouter } from "expo-router";
 import LoginHook from "@/hooks/LoginHook";
 import { CheckBox } from "react-native-elements";
-import LoginButton from "@/components/LoginButton";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
 import { useAuth } from "@/context/AuthContext";
@@ -46,7 +46,7 @@ const signin = () => {
   };
 
   const handleLogin = () => {
-    router.navigate("/(tabs)");
+    router.navigate("/(authenticated)/(tabs)");
   };
 
   // Sign in with email and password
@@ -55,7 +55,7 @@ const signin = () => {
 
     try {
       const result = await onLogin!(email, password);
-          router.navigate("/(authenticated)/(tabs)" as Href);
+      router.navigate("/(authenticated)/(tabs)" as Href);
     } catch (e) {
       Alert.alert("Error", "Could not log in");
     } finally {
@@ -130,10 +130,16 @@ const signin = () => {
           </View>
 
           <View style={styles.loginButton}>
-            <LoginButton
-              onPress={onSignInPress}
-              text="Sign in with email address"
-            ></LoginButton>
+            <TouchableOpacity activeOpacity={0.9} onPress={handleLogin}>
+              <LinearGradient
+                colors={["#1661E0", "#478EEF"]}
+                style={styles.linearGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.LightText}>Sign in with email address</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity
@@ -268,6 +274,22 @@ const styles = StyleSheet.create({
 
   continue: {
     marginBottom: 10,
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });
 

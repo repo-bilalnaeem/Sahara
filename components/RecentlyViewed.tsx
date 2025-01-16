@@ -17,13 +17,8 @@ interface Item {
 
 const RecentlyViewed = () => {
   return (
-    <View style ={{marginBottom: 32}}>
-      <SeeMore
-        heading="Recently Viewed"
-        onSeeMorePress={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-      />
+    <View style={{ marginBottom: 32 }}>
+      <SeeMore heading="Recently Viewed" />
       <View>
         <FlatList
           horizontal

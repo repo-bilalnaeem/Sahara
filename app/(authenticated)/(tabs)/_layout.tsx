@@ -1,38 +1,19 @@
 import { Tabs } from "expo-router";
-import React, { RefObject, useRef } from "react";
+import React from "react";
 import { BlurView } from "expo-blur";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import {
-  Platform,
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from "react-native";
-import {
-  BottomSheetProvider,
-  useBottomSheet,
-} from "@/context/BottomSheetContext";
+import { Platform, View, StyleSheet, TextInput } from "react-native";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Layout = () => {
-  return (
-    <BottomSheetProvider>
-      <Container />
-    </BottomSheetProvider>
-  );
-};
-
-const Container = () => {
-  const { isBottomSheetOpen } = useBottomSheet();
   const { top } = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#fff",
+
         tabBarBackground: () => (
           <BlurView
             intensity={100}
@@ -52,13 +33,12 @@ const Container = () => {
           right: 0,
           elevation: 0,
           borderTopWidth: 0,
-          height: 70,
-          paddingTop: 0,
+          height: 65,
+          paddingTop: 10,
           paddingBottom: 0,
           marginHorizontal: 10,
           borderRadius: 40,
           overflow: "hidden",
-          zIndex: isBottomSheetOpen === true ? -100 : undefined,
         },
       }}
     >
@@ -78,14 +58,13 @@ const Container = () => {
         name="search"
         options={{
           title: "Search",
-          // tabBarStyle: { display: "none" },
           tabBarIcon: ({ size, color }) => (
             <AntDesign name="search1" size={size} color={color} />
           ),
-          headerTransparent: true,
           tabBarShowLabel: false,
+          tabBarHideOnKeyboard: true,
           header: () => (
-            <View style={[styles.meetDoctor, { paddingTop: top / 1.5 }]}>
+            <View style={[styles.meetDoctor, { paddingTop: top }]}>
               <View style={styles.searchbarBox}>
                 <AntDesign name="search1" size={20} color="#000" />
                 <TextInput
@@ -99,16 +78,18 @@ const Container = () => {
         }}
       />
       <Tabs.Screen
-        name="(drawer)"
+        name="(chats)"
         options={{
           title: "Messages",
           headerShown: false,
-          tabBarStyle: { display: "none" },
+          tabBarShowLabel: false,
+
+          // tabBarStyle: { display: "none" },
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="chatbubbles-outline" size={size} color={color} />
             // <MessageIconLight />
           ),
-          headerTransparent: true,
+          // headerTransparent: true,
         }}
       />
     </Tabs>

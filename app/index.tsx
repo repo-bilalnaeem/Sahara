@@ -7,10 +7,11 @@ import {
   Image,
   Pressable,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { router } from "expo-router";
-import LoginButton from "@/components/LoginButton";
+import { LinearGradient } from "expo-linear-gradient";
 
 const MainScreen = () => {
   return (
@@ -59,10 +60,21 @@ const MainScreen = () => {
           </View>
 
           <View style={styles.loginButton}>
-            <LoginButton
+            <TouchableOpacity
+              activeOpacity={0.9}
               onPress={() => router.push("/signin")}
-              text={"Sigin in with email address"}
-            ></LoginButton>
+            >
+              <LinearGradient
+                colors={["#1661E0", "#478EEF"]}
+                style={styles.linearGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.LightText}>
+                  Sigin in with email address
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.signup}>
@@ -84,7 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "space-around",
-    paddingHorizontal: 13
+    paddingHorizontal: 13,
   },
 
   imageContainer: {
@@ -98,12 +110,11 @@ const styles = StyleSheet.create({
     objectFit: "contain",
     marginBottom: 50,
     marginTop: 50,
-
   },
 
   heading: {
     fontFamily: "Lato700",
-    fontWeight:"500",
+    fontWeight: "500",
     fontSize: 28,
     textAlign: "center",
     marginBottom: 53,
@@ -190,6 +201,22 @@ const styles = StyleSheet.create({
 
   signupButton: {
     color: "#5998D2",
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });
 

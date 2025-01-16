@@ -8,7 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
-import { Href, router } from "expo-router";
 import PharmacyFeatures from "@/components/PharmacyFeatures";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
@@ -67,12 +66,7 @@ const Pharmacy = () => {
         />
 
         <View>
-          <SeeMore
-            heading="Recommended for you"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
+          <SeeMore heading="Recommended for you" />
           <Pressable>
             <FlatList
               horizontal
@@ -86,12 +80,7 @@ const Pharmacy = () => {
         </View>
 
         <View style={{ marginTop: 38 }}>
-          <SeeMore
-            heading="Popular products"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
+          <SeeMore heading="Popular products" />
           <Pressable>
             <FlatList
               horizontal
@@ -118,12 +107,7 @@ const Pharmacy = () => {
         </View>
 
         <View style={{ marginTop: 38 }}>
-          <SeeMore
-            heading="General"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
+          <SeeMore heading="General" />
           <Pressable>
             <FlatList
               horizontal

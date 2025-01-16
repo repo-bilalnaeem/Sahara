@@ -16,7 +16,7 @@ const isAndroid = Platform.OS === "android";
 const UpcomingSchedule = () => {
   return (
     <View>
-      <Pressable onPress={() => router.push("/(authenticated)(schedules)[id]")}>
+      <Pressable onPress={() => router.push("/(authenticated)/(schedules)/[id]")}>
         <View style={styles.container}>
           <LinearGradient
             colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}

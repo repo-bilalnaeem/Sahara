@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, StyleSheet, Text, useColorScheme } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-
-import LoginButton from "@/components/LoginButton";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Modal = () => {
   const isDarkMode = useColorScheme() == "dark";
@@ -29,7 +35,7 @@ const Modal = () => {
 
   const handleLoginPress = () => {
     if (previousRoute === "(authenticated)") {
-      router.replace("/(tabs)");
+      router.replace("/(authenticated)/(tabs)");
     }
     if (previousRoute === "resetPassword") {
       router.navigate("/signin");
@@ -56,7 +62,16 @@ const Modal = () => {
           {previousRoute === "resetPassword" && RESET_PROMPT}
         </Text>
 
-        <LoginButton onPress={handleLoginPress} text="Continue"></LoginButton>
+        <TouchableOpacity activeOpacity={0.9} onPress={handleLoginPress}>
+          <LinearGradient
+            colors={["#1661E0", "#478EEF"]}
+            style={styles.linearGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Text style={styles.LightText}>Continue</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -122,5 +137,21 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: "15%",
     marginHorizontal: 18,
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });

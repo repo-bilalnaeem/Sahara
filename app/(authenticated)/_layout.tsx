@@ -52,16 +52,13 @@ const Layout = () => {
             <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
             <Stack.Screen name="userProfile" options={{ headerShown: false }} />
             <Stack.Screen name="(services)" options={{ headerShown: false }} />
-            <Stack.Screen name="(chats)" options={{ headerShown: false }} />
+            {/* <Stack.Screen name="(chats)" options={{ headerShown: false }} /> */}
           </Stack>
         </OverlayProvider>
       </StreamVideo>
     </StripeProvider>
   ) : (
-    // Optionally, you can handle the case where the client is not available
-    <Stack screenOptions={{ headerShown: false }}>
-      {/* You can place a fallback UI here if needed */}
-    </Stack>
+    <Stack screenOptions={{ headerShown: false }}></Stack>
   );
 };
 

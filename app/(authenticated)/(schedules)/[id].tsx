@@ -1,13 +1,9 @@
 import BottomSheet, {
   BottomSheetBackdrop,
-  BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Href,
-  Link,
-  router,
-  Stack,
   useLocalSearchParams,
   useRouter,
 } from "expo-router";
@@ -24,8 +20,6 @@ import {
   StyleSheet,
   Dimensions,
   useColorScheme,
-  Pressable,
-  Image,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -43,7 +37,6 @@ const IMG_HEIGHT = 420;
 
 const Page = () => {
   const { id } = useLocalSearchParams();
-  const isDarkMode = useColorScheme() === "dark";
 
   const router = useRouter();
 
@@ -95,12 +88,10 @@ const Page = () => {
 
   // Inside your component
   const onJoinCall = () => {
-    // const randomId = Math.floor(Math.random() * 1000).toString();
-    // Explicitly cast the route to `Href` type
     bottomSheetRef.current?.close();
     setMeetingId(null);
     router.push(
-      `/(authenticated)/(schedules)/(stream)/${meetingId}` as Href<`/(authenticated)/(schedules)/(stream)/${string}`>
+      `/(authenticated)/(schedules)/(stream)/${meetingId}`
     );
   };
 

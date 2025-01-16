@@ -10,14 +10,14 @@ import {
   Animated,
   SafeAreaView,
   useColorScheme,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 import { router } from "expo-router";
-import LoginButton from "@/components/LoginButton";
+
 import LoginHook from "@/hooks/LoginHook";
-// import emailIcon from "@/assets/images/Email.png";
-// import phoneIcon from "@/assets/images/phone.png";
+import { LinearGradient } from "expo-linear-gradient";
 
 const forgotPassword = () => {
   const navigation = useNavigation();
@@ -154,10 +154,19 @@ const forgotPassword = () => {
             </Animated.View>
           </View>
 
-          <LoginButton
+          <TouchableOpacity
+            activeOpacity={0.9}
             onPress={() => router.push("/verification")}
-            text="Rest Password"
-          ></LoginButton>
+          >
+            <LinearGradient
+              colors={["#1661E0", "#478EEF"]}
+              style={styles.linearGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Text style={styles.LightText}>Reset Password</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
@@ -236,7 +245,7 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    marginBottom: 51,
+    marginBottom: 20,
     // marginRight: 13,
     // marginRight: 10,
   },
@@ -288,6 +297,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "normal",
     color: "#A1A8B0",
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });
 export default forgotPassword;

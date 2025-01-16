@@ -9,15 +9,16 @@ import {
   Keyboard,
   useColorScheme,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useNavigation } from "@react-navigation/native";
 
-import LoginButton from "@/components/LoginButton";
 import LoginHook from "@/hooks/LoginHook";
 
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const NewPassword = () => {
   const headerHeight = useHeaderHeight();
@@ -54,7 +55,7 @@ const NewPassword = () => {
   }, [navigation, previousRoute]);
 
   const handleResetPassword = () => {
-    router.navigate("/(modals)/modal");
+    router.replace("/(modal)/modal");
   };
 
   const isDarkMode = useColorScheme() === "dark";
@@ -69,6 +70,10 @@ const NewPassword = () => {
       <TouchableWithoutFeedback onPress={handlePress}>
         <View style={isDarkMode ? styles.darkScreen : styles.lightScreen}>
           <View style={{ flex: 1 }}>
+            <Text style={isDarkMode ? styles.lightHeading : styles.darkHeading}>
+              Create New Password
+            </Text>
+
             <Text style={isDarkMode ? styles.lightText : styles.darkText}>
               Create your new password to login
             </Text>
@@ -92,10 +97,16 @@ const NewPassword = () => {
                 imageSource={require("@/assets/images/key.png")}
               />
             </View>
-            <LoginButton
-              onPress={handleResetPassword}
-              text="Verify"
-            ></LoginButton>
+            <TouchableOpacity activeOpacity={0.9} onPress={handleResetPassword}>
+              <LinearGradient
+                colors={["#1661E0", "#478EEF"]}
+                style={styles.linearGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.LightText}>Verify</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -138,14 +149,14 @@ const styles = StyleSheet.create({
     color: "#1E1F22",
     fontSize: 32,
     fontWeight: "500",
-    marginTop: 39,
+    marginTop: 98,
     marginBottom: 28,
   },
   lightHeading: {
     color: "#FFF",
     fontSize: 32,
     fontWeight: "500",
-    marginTop: 39,
+    marginTop: 98,
     marginBottom: 28,
   },
   darkText: {
@@ -153,27 +164,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 30,
     fontWeight: "400",
-    width: "90%",
+    // width: "90%",
     lineHeight: 24,
-    marginLeft: 10,
-    marginTop: 98,
   },
   lightText: {
     color: "#A1A8B0",
     fontSize: 16,
     marginBottom: 30,
     fontWeight: "400",
-    width: "90%",
+    // width: "90%",
     lineHeight: 24,
-    marginLeft: 10,
-    marginTop: 98,
   },
 
   password: {
-    marginBottom: 31,
+    marginBottom: 20,
   },
   confirm_password: {
-    marginBottom: 37,
+    marginBottom: 20,
   },
 
   modal: {
@@ -240,5 +247,21 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "500",
     // marginTop: 10,
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });

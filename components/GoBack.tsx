@@ -15,7 +15,7 @@ interface TitleProps {
   title: string | undefined;
 }
 
-const GoBack = ({ title }: TitleProps) => {
+const GoBack = () => {
   const { top } = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === "dark";
   const router = useRouter();
@@ -23,15 +23,13 @@ const GoBack = ({ title }: TitleProps) => {
   return (
     <TouchableOpacity
       onPress={router.back}
-      style={[
-        isDarkMode ? styles.lightBackButton : styles.darkBackButton,
-      ]}
+      style={styles.darkBackButton}
     >
       <Image
         style={[
           { width: 20 },
           { height: 20 },
-          isDarkMode ? null : { tintColor: "#fff" },
+         { tintColor: "#fff" },
         ]}
         source={require("@/assets/images/arrow.png")}
       />

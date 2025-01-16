@@ -19,15 +19,14 @@ import {
   useColorScheme,
   Platform,
 } from "react-native";
-import { useSQLiteContext } from "expo-sqlite/next";
+import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import { Chat } from "@/utils/Interfaces";
 import * as ContextMenu from "zeego/context-menu";
 import { getChats, renameChat } from "@/utils/Database";
 import React from "react";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import { DrawerActions } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 export const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
@@ -78,8 +77,6 @@ export const CustomDrawerContent = (props: any) => {
     );
   };
 
-  const navigation = useNavigation();
-
   return (
     <View style={{ flex: 1, marginTop: top }}>
       <View style={{ backgroundColor: "#fff", paddingBottom: 10 }}>
@@ -105,15 +102,14 @@ export const CustomDrawerContent = (props: any) => {
         <DrawerItemList {...props} />
 
         <DrawerItem
-          label="Chats"
+          label="Home"
           onPress={() => {
-            router.push("/(authenticated)/(chats)" as Href);
-            navigation.dispatch(DrawerActions.closeDrawer());
+            router.replace("/(authenticated)/(tabs)");
           }}
           inactiveTintColor="#000"
           activeBackgroundColor="#F7F2F9"
           labelStyle={{
-            marginLeft: -20,
+            marginLeft: -5,
             borderRadius: 12,
             // overlayColor: "rgba(0, 0, 0, 0.2)",
             marginHorizontal: 13,
@@ -133,7 +129,7 @@ export const CustomDrawerContent = (props: any) => {
                 },
               ]}
             >
-              <Ionicons name="apps-outline" size={18} color="#000" />
+              <Ionicons name="home" size={18} color="#000" />
             </View>
           )}
         />
@@ -209,7 +205,7 @@ export const CustomDrawerContent = (props: any) => {
               source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
               style={styles.avatar}
             />
-            <Text style={styles.userName}>Mika Meerkat</Text>
+            <Text style={styles.userName}>Bilal Naeem</Text>
             <Ionicons name="ellipsis-horizontal" size={24} color={"#B8B3BA"} />
           </TouchableOpacity>
         </Link>
@@ -219,35 +215,12 @@ export const CustomDrawerContent = (props: any) => {
 };
 
 const Layout = () => {
-  const navigation = useNavigation();
   const dimensions = useWindowDimensions();
-  const router = useRouter();
-  const isDarkMode = useColorScheme() === "dark";
 
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
-        headerLeft: () => (
-          <View style={{ display: "flex", flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={router.back}
-              style={[
-                { marginHorizontal: 13 },
-                isDarkMode ? styles.lightBackButton : styles.darkBackButton,
-              ]}
-            >
-              <Image
-                style={[
-                  { width: 20 },
-                  { height: 20 },
-                  isDarkMode ? null : { tintColor: "#fff" },
-                ]}
-                source={require("@/assets/images/arrow.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        ),
         headerStyle: {
           backgroundColor: "#FFFCFF",
         },
@@ -257,7 +230,7 @@ const Layout = () => {
         drawerInactiveTintColor: "#000",
         overlayColor: "rgba(0, 0, 0, 0.2)",
         drawerItemStyle: { borderRadius: 12 },
-        drawerLabelStyle: { marginLeft: -20 },
+        drawerLabelStyle: { marginLeft: -5 },
         drawerStyle: { width: dimensions.width * 0.86 },
       }}
     >
@@ -274,23 +247,6 @@ const Layout = () => {
               />
             </View>
           ),
-          headerRight: () => (
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                // gap: 16,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
-                style={{ marginRight: 20 }}
-              >
-                <FontAwesome6 name="grip-lines" size={20} color={"#242026"} />
-              </TouchableOpacity>
-            </View>
-          ),
 
           ...(Platform.OS === "android" && {
             headerTitleContainerStyle: { paddingTop: 20 },
@@ -305,23 +261,6 @@ const Layout = () => {
           drawerItemStyle: {
             display: "none",
           },
-          headerRight: () => (
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                // gap: 16,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
-                style={{ marginRight: 20 }}
-              >
-                <FontAwesome6 name="grip-lines" size={20} color={"#242026"} />
-              </TouchableOpacity>
-            </View>
-          ),
         }}
       />
     </Drawer>

@@ -22,8 +22,8 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import LoginButton from "../components/LoginButton";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface RouteParams {
   email: string;
@@ -122,6 +122,9 @@ const VerificationCode = () => {
             paddingHorizontal: 13,
           }}
         >
+          <Text style={isDarkMode ? styles.lightHeading : styles.darkHeading}>
+            Enter Verification Code
+          </Text>
           <Text style={isDarkMode ? styles.lightText : styles.darkText}>
             Enter code that we have sent to your number{" "}
             <Text
@@ -133,23 +136,6 @@ const VerificationCode = () => {
               {email}
             </Text>
           </Text>
-
-          {/* <View style={styles.verifycodes}> */}
-          {/* {codes.map((code, index) => (
-              <TextInput
-                key={index}
-                style={[
-                  index === activeIndex ? styles.active : styles.not_active,
-                ]}
-                keyboardType="numeric"
-                maxLength={1}
-                value={code}
-                onChangeText={(text) => handleCodeChange(index, text)}
-                ref={(ref) => (codeRefs.current[index] = ref!)}
-              />
-            ))} */}
-          {/* </View> */}
-
           <CodeField
             ref={ref}
             {...props}
@@ -162,7 +148,6 @@ const VerificationCode = () => {
             renderCell={({ index, symbol, isFocused }) => (
               <Fragment key={index}>
                 <View
-                  // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
                   onLayout={getCellOnLayoutHandler(index)}
                   key={index}
                   style={[styles.not_active, isFocused && styles.active]}
@@ -191,10 +176,20 @@ const VerificationCode = () => {
               </TouchableOpacity>
             )}
           </View>
-          <LoginButton
+
+          <TouchableOpacity
+            activeOpacity={0.9}
             onPress={handleVerificationCode}
-            text="Verify"
-          ></LoginButton>
+          >
+            <LinearGradient
+              colors={["#1661E0", "#478EEF"]}
+              style={styles.linearGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Text style={styles.LightText}>Verify</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -202,6 +197,21 @@ const VerificationCode = () => {
 };
 
 const styles = StyleSheet.create({
+
+  darkHeading: {
+    color: "#1E1F22",
+    fontSize: 32,
+    fontWeight: "500",
+    marginTop: 98,
+    marginBottom: 28,
+  },
+  lightHeading: {
+    color: "#FFF",
+    fontSize: 32,
+    fontWeight: "500",
+    marginTop: 98,
+    marginBottom: 28,
+  },
   lightScreen: {
     flex: 1,
     paddingHorizontal: 13,
@@ -236,8 +246,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     // width: "90%",
     lineHeight: 24,
-    marginTop: 98,
-    marginLeft: 10,
   },
   lightText: {
     color: "#A1A8B0",
@@ -246,8 +254,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     // width: "90%",
     lineHeight: 24,
-    marginTop: 98,
-    marginLeft: 10,
   },
 
   verifycodes: {
@@ -372,6 +378,22 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "500",
     // marginTop: 10,
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });
 

@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   useColorScheme,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -18,10 +19,10 @@ import { useState } from "react";
 import LoginHook from "@/hooks/LoginHook";
 import Continue from "@/components/Continue";
 import MediaIcons from "@/components/MediaIcons";
-import LoginButton from "@/components/LoginButton";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import React from "react";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -55,25 +56,28 @@ const Signup = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView
-        style={[
-          { paddingTop: headerHeight },
-          isDarkMode ? styles.darkScreen : styles.lightScreen,
-        ]}
+        style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}
       >
         {isDarkMode ? <StatusBar style="light" /> : <StatusBar style="dark" />}
         <View
           style={{
             display: "flex",
-            // flex: 1,
-            justifyContent: "space-around",
             paddingHorizontal: 13,
             flexGrow: 1,
           }}
         >
+          <Text style={isDarkMode ? styles.lightHeading : styles.darkHeading}>
+            Sign Up
+          </Text>
           <Text style={isDarkMode ? styles.lightText : styles.darkText}>
             Please Sign up to continue
           </Text>
-          <View>
+          <View
+            style={{
+              // flexGrow: 1,
+              marginTop: 34,
+            }}
+          >
             <View style={styles.input}>
               <LoginHook
                 label="Email"
@@ -112,11 +116,17 @@ const Signup = () => {
             </View>
           </View>
 
-          <View style={styles.continue}>
-            <LoginButton
-              onPress={handleSignIn}
-              text=" Sign up to continue"
-            ></LoginButton>
+          <View style={{ marginBottom: 32 }}>
+            <TouchableOpacity activeOpacity={0.9} onPress={handleSignIn}>
+              <LinearGradient
+                colors={["#1661E0", "#478EEF"]}
+                style={styles.linearGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.LightText}>Sign up to continue</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
 
           <View>
@@ -167,12 +177,11 @@ const styles = StyleSheet.create({
   darkText: {
     color: "rgba(30, 31, 34, 0.80)",
     fontSize: 16,
-    marginBottom: 30,
     fontWeight: "400",
     width: "90%",
     lineHeight: 24,
     marginLeft: 10,
-    marginTop: 80,
+    marginTop: 24,
   },
   lightText: {
     color: "#A1A8B0",
@@ -181,15 +190,27 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 24,
     marginLeft: 10,
-    marginTop: 80,
-  },
-
-  continue: {
-    marginBottom: 32,
+    marginTop: 24,
   },
 
   input: {
-    marginBottom: 31,
+    marginBottom: 18,
+  },
+
+  linearGradient: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
   },
 });
 

@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Href, Stack, useRouter, useSegments } from "expo-router";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -7,14 +7,10 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { SQLiteProvider } from "expo-sqlite";
 import { migrateDbIfNeeded } from "@/utils/Database";
-import { LogBox } from "react-native";
+import { LogBox, View, Text, StyleSheet } from "react-native";
+import GoBack from "@/components/GoBack";
 import { Provider } from "react-redux";
 import { store } from "@/store";
-import { NativeModules } from "react-native";
-
-const { scriptURL } = NativeModules.SourceCode;
-const scriptHostname = scriptURL.split("://")[1].split(":")[0];
-console.log(scriptHostname);
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,25 +36,54 @@ const InitialLayout = () => {
 
     const inAuthGroup = segments[0] === "(authenticated)";
 
-    if (authState?.authenticated && !inAuthGroup) {
-      router.replace("/(authenticated)/(tabs)" as Href);
-    } else if (!authState?.authenticated && inAuthGroup) {
-      router.replace("/signin"); // Ensure this redirects to the correct sign-in route
-    }
+    // if (authState?.authenticated && !inAuthGroup) {
+    //   router.replace("/(authenticated)/(tabs)" as Href);
+    // } else if (!authState?.authenticated && inAuthGroup) {
+    //   router.replace("/signin");
+    // }
   }, [loaded, initialized, authState, segments, router]);
 
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
+        gestureEnabled: true,
+        headerShadowVisible: false,
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="signin" options={{ headerShown: false }} />
-      <Stack.Screen name="signup" options={{ headerShown: false }} />
-      <Stack.Screen name="resetPassword" options={{ headerShown: false }} />
-      <Stack.Screen name="forgotPassword" options={{ headerShown: false }} />
-      <Stack.Screen name="verification" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="signup"
+        options={{
+          headerTitle: "",
+          headerLeft: () => (
+            <View style={styles.titleFlex}>
+              <GoBack />
+            </View>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="resetPassword"
+        options={{
+          headerLeft: () => <GoBack />,
+          headerTitle: "",
+        }}
+      />
+      <Stack.Screen
+        name="forgotPassword"
+        options={{
+          headerLeft: () => <GoBack />,
+          headerTitle: "",
+        }}
+      />
+      <Stack.Screen
+        name="verification"
+        options={{
+          headerTitle: "",
+          headerLeft: () => <GoBack />,
+        }}
+      />
       <Stack.Screen name="modal" options={{ headerShown: false }} />
       <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
     </Stack>
@@ -67,16 +92,32 @@ const InitialLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    <Provider store={store}>
-      <AuthProvider>
+    <AuthProvider>
+      <Provider store={store}>
         <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <InitialLayout />
           </GestureHandlerRootView>
         </SQLiteProvider>
-      </AuthProvider>
-    </Provider>
+      </Provider>
+    </AuthProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  titleFlex: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 15,
+    alignItems: "center",
+  },
+
+  title: {
+    fontSize: 20,
+    color: "#1E1F22",
+    fontStyle: "normal",
+    fontWeight: "500",
+  },
+});
 
 export default RootLayoutNav;

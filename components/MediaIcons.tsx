@@ -32,14 +32,6 @@ const MediaIcons = () => {
           source={require("@/assets/images/Google-Icon.png")}
         />
       </Pressable>
-      <Pressable
-        style={isDarkMode ? styles.darkloginIcons : styles.lightloginIcons}
-      >
-        <Image
-          style={{ width: 28, height: 28, tintColor: "#2F6EF4" }}
-          source={require("@/assets/images/Facebook-Icon.png")}
-        />
-      </Pressable>
     </View>
   );
 };

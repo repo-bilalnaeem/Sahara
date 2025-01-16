@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import { Divider } from "react-native-elements";
 import { StatusBar } from "expo-status-bar";
-import { data } from "@/assets/data/PharmacyPageData";
+import { data } from "@/assets/data/HelpPageData";
 import { AntDesign } from "@expo/vector-icons";
 
 const HelpCenter = () => {

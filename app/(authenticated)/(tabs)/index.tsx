@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useMemo } from "react";
+import React from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -8,10 +8,11 @@ import {
   Pressable,
   useColorScheme,
   Platform,
+  TouchableOpacity,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { RootSiblingParent } from "react-native-root-siblings";
 import UpcomingSchedule from "@/components/UpcomingSchedule";
 import CustomScrollView from "@/components/CustomScrollView";
 
@@ -19,141 +20,106 @@ import ServicesList from "@/components/ServicesList";
 import DoctorSpecialityList from "@/components/DoctorSpecialityList";
 import RecentlyViewed from "@/components/RecentlyViewed";
 
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
-
 import SeeMore from "@/components/SeeMore";
-import { useBottomSheet } from "@/context/BottomSheetContext";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
+import { router } from "expo-router";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
-  const snapPoints = useMemo(() => ["50%"], []);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  const { isBottomSheetOpen, setIsBottomSheetOpen } = useBottomSheet();
-
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-    setIsBottomSheetOpen(true);
-  }, [setIsBottomSheetOpen]);
-
-  const handleCloseModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.dismiss();
-    setIsBottomSheetOpen(false);
-  }, [setIsBottomSheetOpen]);
-
   const isAndroid = Platform.OS === "android";
+
+  const handleLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync("access_token"); // Clear the access token from SecureStore
+      await SecureStore.deleteItemAsync("user_id"); // Clear the access token from SecureStore
+      router.replace("/signin"); // Redirect to the sign-in screen
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
       {/* <StatusBar style="light" /> */}
-      <RootSiblingParent>
-        <BottomSheetModalProvider>
-          <CustomScrollView
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={!isBottomSheetOpen}
+      <CustomScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Image
+            source={require("@/assets/images/Circle.png")}
+            style={styles.circle}
+          />
+          <ImageBackground
+            source={require("@/assets/images/back_img.jpg")}
+            style={styles.imageBackground}
           >
-            <View style={styles.container}>
-              <Image
-                source={require("@/assets/images/Circle.png")}
-                style={styles.circle}
-              />
-              <ImageBackground
-                source={require("@/assets/images/back_img.jpg")}
-                style={styles.imageBackground}
-              >
-                <LinearGradient
-                  colors={["rgba(0, 0, 0, 0.35)", "rgba(0, 0, 0, 0.12)"]}
-                  start={{ x: 0.5, y: 0 }}
-                  end={{ x: 0.25, y: 1 }}
-                  style={styles.gradient}
-                />
-                <View style={styles.content}>
-                  <View style={styles.profile_greeting_bell}>
-                    <View style={styles.image_greeting}>
-                      <View style={styles.profile_img_container}>
-                        <Image
-                          source={require("@/assets/images/profile_img.jpg")}
-                          style={styles.profile_img}
-                        />
-                      </View>
-                      <Text
-                        style={[
-                          styles.name,
-                          isAndroid
-                            ? {
-                                fontSize: 14,
-                                textShadowOffset: { height: 2, width: 4 },
-                                lineHeight: 16,
-                              }
-                            : {},
-                        ]}
-                      >
-                        Good Morning,{"\n"}Lizzy
-                      </Text>
-                    </View>
-                    <Pressable style={styles.bell_icon_container}>
-                      <Image
-                        source={require("@/assets/images/bell-icon.png")}
-                        style={styles.bell_icon}
-                      />
-                      <View style={styles.notificationDot} />
-                    </Pressable>
+            <LinearGradient
+              colors={["rgba(0, 0, 0, 0.35)", "rgba(0, 0, 0, 0.12)"]}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.25, y: 1 }}
+              style={styles.gradient}
+            />
+            <View style={styles.content}>
+              <View style={styles.profile_greeting_bell}>
+                <View style={styles.image_greeting}>
+                  <View style={styles.profile_img_container}>
+                    <Image
+                      source={require("@/assets/images/profile_img.jpg")}
+                      style={styles.profile_img}
+                    />
                   </View>
                   <Text
                     style={[
-                      styles.hello,
-                      isAndroid ? { fontSize: 28, lineHeight: 46 } : {},
+                      styles.name,
+                      isAndroid
+                        ? {
+                            fontSize: 14,
+                            textShadowOffset: { height: 2, width: 4 },
+                            lineHeight: 16,
+                          }
+                        : {},
                     ]}
                   >
-                    How are you{"\n"}feeling today?
+                    Good Morning,{"\n"}Lizzy
                   </Text>
                 </View>
-              </ImageBackground>
-            </View>
-            <View>
-              <ServicesList isBottomSheetOpen={isBottomSheetOpen} />
-              <SeeMore
-                heading={"My Checkup Schedule"}
-                onSeeMorePress={handlePresentModalPress}
-              />
-              <UpcomingSchedule />
-              <RecentlyViewed />
-
-              <View>
-                <PharmacySponserAd
-                  height={180}
-                  title={`Mastercard weekdays`}
-                  description={`Use Master30 on checkout${"\n"}and get 30% off!`}
-                  imageSource={require("@/assets/images/Mastercard.jpg")}
-                  width={150}
-                />
+                <Pressable style={styles.bell_icon_container}>
+                  <Image
+                    source={require("@/assets/images/bell-icon.png")}
+                    style={styles.bell_icon}
+                  />
+                  <View style={styles.notificationDot} />
+                </Pressable>
               </View>
-              <DoctorSpecialityList />
-              <SaharaMart />
+              <Text
+                style={[
+                  styles.hello,
+                  isAndroid ? { fontSize: 28, lineHeight: 46 } : {},
+                ]}
+              >
+                How are you{"\n"}feeling today?
+              </Text>
             </View>
-          </CustomScrollView>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            snapPoints={snapPoints}
-            onDismiss={handleCloseModalPress}
-            index={0}
-            containerStyle={{
-              position: "absolute",
-              backgroundColor: "#30303044",
-              flex: 1,
-            }}
-          >
-            <View>
-              <Text>More</Text>
-            </View>
-          </BottomSheetModal>
-        </BottomSheetModalProvider>
-      </RootSiblingParent>
+          </ImageBackground>
+        </View>
+        <View>
+          <ServicesList />
+          <SeeMore heading={"My Checkup Schedule"} />
+          <UpcomingSchedule />
+          <RecentlyViewed />
+
+          <View>
+            <PharmacySponserAd
+              height={180}
+              title={`Mastercard weekdays`}
+              description={`Use Master30 on checkout${"\n"}and get 30% off!`}
+              imageSource={require("@/assets/images/Mastercard.jpg")}
+              width={150}
+            />
+          </View>
+          <DoctorSpecialityList />
+          <SaharaMart />
+        </View>
+      </CustomScrollView>
     </View>
   );
 };
