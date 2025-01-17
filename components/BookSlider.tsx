@@ -19,9 +19,19 @@ const ThumbComponent = () => {
 
 interface SliderProps {
   name: String;
+  doctorId?: string | string[];
+  selectedDate?: Date;
+  selectedSlot?: string | null;
+  fees?: number | null;
 }
 
-const BookSlider = ({ name }: SliderProps) => {
+const BookSlider = ({
+  name,
+  doctorId,
+  selectedDate,
+  selectedSlot,
+  fees,
+}: SliderProps) => {
   const [value, setValue] = useState(0);
   const handleSlidingComplete = () => {
     if (value < 0.45) {
@@ -29,7 +39,15 @@ const BookSlider = ({ name }: SliderProps) => {
       return;
     }
     setValue(0);
-    router.push("/(booking)");
+    router.push({
+      pathname: "/(booking)",
+      params: {
+        doctorId,
+        selectedDate: selectedDate?.toISOString(),
+        selectedSlot,
+        fees,
+      },
+    });
   };
 
   return (
@@ -50,7 +68,12 @@ const BookSlider = ({ name }: SliderProps) => {
           onSlidingComplete={handleSlidingComplete}
           animationType="spring"
         />
-        <Text style={[styles.book, isAndroid ? { fontSize: 14, lineHeight: 16 } : null]}>
+        <Text
+          style={[
+            styles.book,
+            isAndroid ? { fontSize: 14, lineHeight: 16 } : null,
+          ]}
+        >
           {name}
         </Text>
         <View style={styles.arrows}>

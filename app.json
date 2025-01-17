@@ -89,6 +89,7 @@
       [
         "@stripe/stripe-react-native",
         {
+          "merchantIdentifier": "sk_test_51OlPKCLrLAoOM1DreaLa3vyeG4ewDYz5oQCtPInTeMkHTsbY5vb3kyUu0thtFoTAYcT2JAmrJ65CRGGqcOE6E14m00ChiAk7c6",
           "enableGooglePay": true
         }
       ]

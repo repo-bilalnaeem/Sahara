@@ -25,9 +25,7 @@ const SaharaMart = () => {
         <View>
           <SeeMore
             heading="Popular products"
-            onSeeMorePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
+         
           />
         </View>
         <Pressable>
@@ -44,9 +42,7 @@ const SaharaMart = () => {
       <View style={{ marginTop: 24 }}>
         <SeeMore
           heading="General"
-          onSeeMorePress={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+      
         />
       </View>
       <Pressable>

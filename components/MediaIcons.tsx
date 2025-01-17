@@ -7,9 +7,19 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
+import { useOAuth } from "@clerk/clerk-expo";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
+import { Link } from "expo-router";
+
+
+
+WebBrowser.maybeCompleteAuthSession();
 
 const MediaIcons = () => {
   const isDarkMode = useColorScheme() === "dark";
+
+
 
   return (
     <View style={styles.loginIcons}>
@@ -32,6 +42,7 @@ const MediaIcons = () => {
           source={require("@/assets/images/Google-Icon.png")}
         />
       </Pressable>
+
       <Pressable
         style={isDarkMode ? styles.darkloginIcons : styles.lightloginIcons}
       >

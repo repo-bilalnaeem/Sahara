@@ -11,12 +11,33 @@ import { Provider } from "react-redux";
 import { store } from "@/store";
 import { NativeModules } from "react-native";
 import * as SecureStore from "expo-secure-store";
-
 const { scriptURL } = NativeModules.SourceCode;
 const scriptHostname = scriptURL.split("://")[1].split(":")[0];
 // console.log(scriptHostname);
 
+
+
 SplashScreen.preventAutoHideAsync();
+
+
+
+// Cache the Clerk JWT
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 
 const InitialLayout = () => {
   LogBox.ignoreAllLogs(true);
@@ -96,13 +117,11 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <Provider store={store}>
-      {/* <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} */}
-      <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <InitialLayout />
-        </GestureHandlerRootView>
-      </SQLiteProvider>
-      {/* </StripeProvider> */}
+        <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <InitialLayout />
+          </GestureHandlerRootView>
+        </SQLiteProvider>
     </Provider>
   );
 };

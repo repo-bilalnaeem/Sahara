@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import * as SecureStore from "expo-secure-store";
 
-const baseUrl = "http://192.168.1.101:3001/";
+const baseUrl = "http://192.168.0.105:3001/";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -26,12 +26,21 @@ export const apiSlice = createApi({
       }),
     }),
 
+
+
     // Doctors
     getDoctors: builder.query({
       query: (data) => ({
         url: "doctors",
         method: "GET",
         body: data,
+      }),
+    }),
+
+    getProducts: builder.query({
+      query: (data) => ({
+        url: "products",
+        method: "GET",
       }),
     }),
 
@@ -59,4 +68,5 @@ export const {
   useGetDoctorsQuery,
   useGetDoctorQuery,
   useSigninMutation,
+  useGetProductsQuery,
 } = apiSlice;
