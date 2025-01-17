@@ -11,6 +11,15 @@ import { LogBox, View, Text, StyleSheet } from "react-native";
 import GoBack from "@/components/GoBack";
 import { Provider } from "react-redux";
 import { store } from "@/store";
+import { StripeProvider } from "@stripe/stripe-react-native";
+
+const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+if (!STRIPE_PUBLISHABLE_KEY) {
+  throw new Error(
+    "Missing Publishable Key. Please set EXPO_STRIPE_PUBLISHABLE_KEY in your .env"
+  );
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -93,13 +102,15 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <AuthProvider>
-      <Provider store={store}>
-        <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <InitialLayout />
-          </GestureHandlerRootView>
-        </SQLiteProvider>
-      </Provider>
+      <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY!}>
+        <Provider store={store}>
+          <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <InitialLayout />
+            </GestureHandlerRootView>
+          </SQLiteProvider>
+        </Provider>
+      </StripeProvider>
     </AuthProvider>
   );
 };

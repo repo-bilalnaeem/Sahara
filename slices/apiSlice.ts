@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const baseUrl = "http://192.168.0.104:3001/";
+const baseUrl = "http://192.168.0.108:3001/";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -14,7 +14,28 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+    // Appointments
+    createAppointmentIntent: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `/appointments/${id}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // Confirm Appointment
+    confirmAppointment: builder.mutation({
+      query: ({ data }) => ({
+        url: "/appointments",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useCreatePaymentIntentMutation } = apiSlice;
+export const {
+  useCreatePaymentIntentMutation,
+  useCreateAppointmentIntentMutation,
+  useConfirmAppointmentMutation,
+} = apiSlice;

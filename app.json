@@ -61,6 +61,11 @@
         {
           "ios": {
             "deploymentTarget": "18.0"
+          },
+          "android": {
+            "extraMavenRepos": [
+              "$rootDir/../../../node_modules/@notifee/react-native/android/libs"
+            ]
           }
         }
       ],
