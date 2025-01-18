@@ -46,12 +46,12 @@ export function formatTitle(title: string, maxLength = 25) {
 }
 const ProductTile = ({ item, index }: RenderProductTileProps) => {
   return (
-    <Pressable onPress={() => router.push(`/(product)/${item.key}` as Href)}>
+    <Pressable onPress={() => router.push(`/(mart)/${item.key}`)}>
       <View style={[index === 0 ? { marginLeft: 16 } : null]}>
         <View style={styles.productTile}>
           <Image
             source={item.imageSource}
-            style={[{ resizeMode: "contain", width: 130, height: 120 }]}
+            style={[{ resizeMode: "contain", width: 110, height: 100 }]}
           />
           <TouchableWithoutFeedback>
             <View style={styles.add_button}>
@@ -65,7 +65,7 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
               fontSize: 14,
               fontWeight: "500",
               marginBottom: 4,
-              width: 130,
+              width: 110,
             },
             isAndroid ? { fontSize: 12 } : null,
           ]}
@@ -74,7 +74,7 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
         </Text>
         <Text
           style={[
-            { width: 130, fontSize: 14, fontWeight: "400", color: "gray" },
+            { width: 115, fontSize: 14, fontWeight: "400", color: "gray" },
             isAndroid ? { fontSize: 12 } : null,
           ]}
         >
@@ -87,11 +87,11 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
 
 const styles = StyleSheet.create({
   productTile: {
-    width: 130,
-    marginRight: 16,
+    width: 110,
+    marginRight: 12,
     // justifyContent: "center",
     // alignItems: "center",
-    height: 120,
+    height: 100,
     borderRadius: 14,
     backgroundColor: "#F6F6F6",
     borderWidth: StyleSheet.hairlineWidth,

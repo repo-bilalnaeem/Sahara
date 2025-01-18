@@ -74,26 +74,19 @@ const Layout = () => {
         <Stack.Screen name="(pharmacy)" options={{ headerShown: false }} />
 
         <Stack.Screen name="(shops)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(product)"
-          options={{
-            headerShown: false,
-            // presentation: "containedModal",
-            animation: "slide_from_bottom",
-          }}
-        />
-        <Stack.Screen name="(category)" options={{ headerShown: false }} />
+
         <Stack.Screen name="(laboratory)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(cart)"
-          options={{ animation: "slide_from_bottom", headerShown: false }}
-        />
+
         <Stack.Screen
           name="(booking)"
-          options={{ headerShown: false, animation: "slide_from_bottom" }}
+          options={{
+            headerShown: false,
+            animation: "slide_from_bottom",
+            animationDuration: 350,
+          }}
         />
 
-        <Stack.Screen name="(consultation)" options={{headerShown: false}}/>
+        <Stack.Screen name="(consultation)" options={{ headerShown: false }} />
       </Stack>
     </GestureHandlerRootView>
   );

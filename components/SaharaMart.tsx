@@ -32,7 +32,6 @@ const SaharaMart = () => {
             renderItem={ProductTile}
             keyExtractor={(item) => item.key}
             showsHorizontalScrollIndicator={false}
-            // scrollEnabled={isBottomSheetOpen === false}
           />
         </Pressable>
       </View>

@@ -18,7 +18,7 @@ const Layout = () => {
                 paddingLeft: 18,
                 gap: 18,
                 alignItems: "center",
-                backgroundColor: "#fff",
+                backgroundColor: "#ffffff",
               }}
             >
               <TouchableOpacity

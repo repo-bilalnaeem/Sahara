@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const baseUrl = "http://192.168.0.108:3001/";
+const baseUrl = "http://192.168.0.100:3001/";
 
 export const apiSlice = createApi({
   reducerPath: "api",
