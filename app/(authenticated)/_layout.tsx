@@ -45,11 +45,10 @@ const Layout = () => {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
           <Stack.Screen name="(schedules)" options={{ headerShown: false }} />
           <Stack.Screen name="userProfile" options={{ headerShown: false }} />
           <Stack.Screen name="(services)" options={{ headerShown: false }} />
-          {/* <Stack.Screen name="(chats)" options={{ headerShown: false }} /> */}
         </Stack>
       </OverlayProvider>
     </StreamVideo>

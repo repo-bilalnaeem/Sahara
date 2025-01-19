@@ -55,7 +55,6 @@ const Layout = () => {
         name="index"
         options={{
           title: "Home",
-
           tabBarIcon: ({ size, color }) => (
             <Feather name="home" size={size} color={color} />
           ),
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingTop: 24,
     paddingBottom: 12,
-    backgroundColor:"#fff"
+    backgroundColor: "#fff",
   },
 });
 

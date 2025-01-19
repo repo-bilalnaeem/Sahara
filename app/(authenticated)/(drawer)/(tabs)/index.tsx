@@ -25,13 +25,19 @@ import RecentlyViewed from "@/components/RecentlyViewed";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
-import { router, Stack } from "expo-router";
+import { router, Stack, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
   const isAndroid = Platform.OS === "android";
   const { top } = useSafeAreaInsets();
+
+  const navigation = useNavigation(); // Get the navigation object
+
+  const openDrawer = () => {
+    navigation.openDrawer(); // Open the drawer directly
+  };
 
   const handleLogout = async () => {
     try {
@@ -53,8 +59,6 @@ const Home = () => {
 
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
-      {/* <StatusBar style="light" /> */}
-
       <Stack.Screen
         options={{
           header: () => (
@@ -72,12 +76,16 @@ const Home = () => {
                 ]}
               >
                 <View style={styles.image_greeting}>
-                  <View style={styles.profile_img_container}>
-                    <Image
-                      source={require("@/assets/images/profile_img.jpg")}
-                      style={styles.profile_img}
-                    />
-                  </View>
+                  <Pressable
+                  onPress={openDrawer}
+                  >
+                    <View style={styles.profile_img_container}>
+                      <Image
+                        source={require("@/assets/images/profile_img.jpg")}
+                        style={styles.profile_img}
+                      />
+                    </View>
+                  </Pressable>
                   <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
                 </View>
                 <Pressable style={styles.bell_icon_container}>

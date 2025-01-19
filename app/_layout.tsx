@@ -55,7 +55,7 @@ const InitialLayout = () => {
   return (
     <Stack
       screenOptions={{
-        gestureEnabled: true,
+        gestureEnabled: false,
         headerShadowVisible: false,
       }}
     >

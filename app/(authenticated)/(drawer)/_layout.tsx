@@ -2,8 +2,9 @@ import { Drawer } from "expo-router/drawer";
 import {
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerItem,
 } from "@react-navigation/drawer";
-import { Link, useRouter } from "expo-router";
+import { Href, Link, useNavigation, useRouter, useSegments } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Image,
@@ -12,110 +13,25 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  TextInput,
+  Alert,
   Keyboard,
+  useColorScheme,
+  Platform,
 } from "react-native";
-import { useEffect } from "react";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useState } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
+import { Chat } from "@/utils/Interfaces";
+import * as ContextMenu from "zeego/context-menu";
+import { getChats, renameChat } from "@/utils/Database";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import PharmacyHeader from "@/components/PharmacyHeader";
-import { Divider } from "react-native-paper";
+import { CustomDrawerContent, CustomHeader } from "@/components/Drawer";
 
-export const CustomDrawerContent = (props: any) => {
-  const { bottom, top } = useSafeAreaInsets();
-  const isDrawerOpen = useDrawerStatus() === "open";
-
-  useEffect(() => {
-    Keyboard.dismiss();
-  }, [isDrawerOpen]);
-
-  return (
-    <View style={{ flex: 1, marginTop: top }}>
-      <View style={{ backgroundColor: "#fff", paddingBottom: 16 }}>
-        <View
-          style={{
-            paddingHorizontal: 24,
-            paddingVertical: 24,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 16,
-          }}
-        >
-          <Image
-            source={require("@/assets/images/Vector.png")}
-            style={{ width: 36, height: 36, resizeMode: "contain" }}
-          />
-          <Text style={{ fontWeight: "600", fontSize: 17 }}>Sahara</Text>
-        </View>
-        <Divider theme={{ colors: { primary: "#000" } }} />
-      </View>
-
-      <DrawerContentScrollView
-        {...props}
-        contentContainerStyle={{ backgroundColor: "#fff", paddingTop: 0 }}
-      >
-        <View>
-          <DrawerItemList {...props} />
-        </View>
-      </DrawerContentScrollView>
-
-      <View>
-        <Divider />
-        <View
-          style={{
-            padding: 16,
-            paddingBottom: 10 + bottom,
-            backgroundColor: "#FFFCFF",
-          }}
-        >
-          <Link href="/" asChild>
-            <TouchableOpacity style={styles.footer}>
-              <Image
-                source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-                style={styles.avatar}
-              />
-              <Text style={styles.userName}>Bilal Naeem</Text>
-              <Ionicons
-                name="ellipsis-horizontal"
-                size={24}
-                color={"#B8B3BA"}
-              />
-            </TouchableOpacity>
-          </Link>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-export interface CustomHeaderProps {
-  onPress: () => void;
-  heading: string;
-}
-
-export const CustomHeader = ({ onPress, heading }: CustomHeaderProps) => {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        paddingTop: 52,
-        paddingLeft: 18,
-        gap: 18,
-        alignItems: "center",
-        backgroundColor: "#fff",
-        paddingBottom: 16,
-      }}
-    >
-      <TouchableOpacity onPress={onPress} style={styles.closeButton}>
-        <Ionicons name="close" size={24} color={"#000000"} />
-      </TouchableOpacity>
-      <Text style={{ fontWeight: "600", fontSize: 16 }}>{heading}</Text>
-    </View>
-  );
-};
-
-const CutsomDrawer = () => {
+const Layout = () => {
   const dimensions = useWindowDimensions();
+  const segments = useSegments();
   const router = useRouter();
 
   return (
@@ -137,16 +53,17 @@ const CutsomDrawer = () => {
       }}
     >
       <Drawer.Screen
-        name="index"
+        name="(tabs)"
         options={{
           title: undefined,
           drawerIcon: () => null,
           drawerLabel: () => null,
           drawerItemStyle: { display: "none" },
-          header: () => <PharmacyHeader />,
+          headerShown: false,
         }}
       />
-      <Drawer.Screen
+
+<Drawer.Screen
         name="offers"
         // getId={() => Math.random().toString()}
         options={{
@@ -159,9 +76,12 @@ const CutsomDrawer = () => {
               />
             </View>
           ),
-          header: () => <PharmacyHeader />,
+          header: () => (
+            <CustomHeader onPress={router.back} heading="Offersr" />
+          ),
         }}
       />
+
       <Drawer.Screen
         name="vouchers"
         // getId={() => Math.random().toString()}
@@ -181,6 +101,7 @@ const CutsomDrawer = () => {
           ),
         }}
       />
+
       <Drawer.Screen
         name="orders"
         // getId={() => Math.random().toString()}
@@ -197,24 +118,7 @@ const CutsomDrawer = () => {
           header: () => <CustomHeader onPress={router.back} heading="Orders" />,
         }}
       />
-      <Drawer.Screen
-        name="viewProfile"
-        // getId={() => Math.random().toString()}
-        options={{
-          title: "View Profile",
-          drawerIcon: () => (
-            <View style={[styles.item]}>
-              <Image
-                source={require("@/assets/images/profile.png")}
-                style={styles.btnImage}
-              />
-            </View>
-          ),
-          header: () => (
-            <CustomHeader onPress={router.back} heading="Profile" />
-          ),
-        }}
-      />
+
       <Drawer.Screen
         name="address"
         // getId={() => Math.random().toString()}
@@ -233,8 +137,9 @@ const CutsomDrawer = () => {
           ),
         }}
       />
+
       <Drawer.Screen
-        name="helpCenter"
+        name="helpCentre"
         // getId={() => Math.random().toString()}
         options={{
           title: "Help Center",
@@ -251,11 +156,34 @@ const CutsomDrawer = () => {
           ),
         }}
       />
+
+     
     </Drawer>
   );
 };
 
 const styles = StyleSheet.create({
+  searchSection: {
+    marginHorizontal: 16,
+    borderRadius: 10,
+    height: 34,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#EEE9F0",
+  },
+  searchIcon: {
+    padding: 6,
+  },
+  input: {
+    flex: 1,
+    paddingTop: 8,
+    paddingRight: 8,
+    paddingBottom: 8,
+    paddingLeft: 0,
+    alignItems: "center",
+    color: "#424242",
+  },
   footer: {
     flexDirection: "row",
     alignItems: "center",
@@ -281,19 +209,34 @@ const styles = StyleSheet.create({
   },
   btnImage: {
     margin: 6,
-    width: 24,
-    height: 24,
+    width: 16,
+    height: 16,
   },
-  closeButton: {
+  dallEImage: {
+    width: 28,
+    height: 28,
+    resizeMode: "cover",
+  },
+
+  lightBackButton: {
     borderRadius: 24,
-    width: 36,
-    height: 36,
-    // backgroundColor: "#e0e0e0",
+    width: 42,
+    height: 42,
+    backgroundColor: "#D9D9D9",
     alignItems: "center",
     justifyContent: "center",
-    // position: "absolute",
-    zIndex: 2,
+    // marginVertical: 22,
+  },
+
+  darkBackButton: {
+    borderRadius: 24,
+    width: 42,
+    height: 42,
+    backgroundColor: "#1E1F22",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
   },
 });
 
-export default CutsomDrawer;
+export default Layout;

@@ -46,7 +46,7 @@ const signin = () => {
   };
 
   const handleLogin = () => {
-    router.navigate("/(authenticated)/(tabs)");
+    router.replace("/(authenticated)/(drawer)/(tabs)");
   };
 
   // Sign in with email and password

@@ -28,7 +28,7 @@ import { getChats, renameChat } from "@/utils/Database";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
-export const CustomDrawerContent = (props: any) => {
+const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const db = useSQLiteContext();
   const isDrawerOpen = useDrawerStatus() === "open";
