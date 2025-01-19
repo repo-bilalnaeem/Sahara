@@ -1,29 +1,14 @@
-import BottomSheet, {
-  BottomSheetBackdrop,
-} from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  Href,
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
-  useColorScheme,
   TouchableOpacity,
-  TextInput,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from "react-native";
 import Animated, {
   interpolate,
@@ -33,7 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
-const IMG_HEIGHT = 420;
+const IMG_HEIGHT = 485;
 
 const Page = () => {
   const { id } = useLocalSearchParams();
@@ -42,7 +27,6 @@ const Page = () => {
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const [expanded, setExpanded] = useState(false);
-  const [meetingId, setMeetingId] = useState<string | null>(null);
 
   const scrollOffset = useScrollViewOffset(scrollRef);
   const imageAnimatedStyle = useAnimatedStyle(() => {
@@ -68,60 +52,6 @@ const Page = () => {
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
-  };
-
-  const [isTimeToJoinCall, setIsTimeToJoinCall] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      const currentHours = currentTime.getHours();
-      const currentMinutes = currentTime.getMinutes();
-
-      if (currentHours >= 0 && currentMinutes >= 0) {
-        setIsTimeToJoinCall(true);
-      }
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Inside your component
-  const onJoinCall = () => {
-    bottomSheetRef.current?.close();
-    setMeetingId(null);
-    router.push(
-      `/(authenticated)/(schedules)/(stream)/${meetingId}`
-    );
-  };
-
-  const snapPoints = useMemo(() => ["20%"], []);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const textInputRef = useRef<TextInput>(null);
-
-  const handleOpenPress = () => {
-    bottomSheetRef.current?.expand();
-  };
-
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        {...props}
-      />
-    ),
-    []
-  );
-
-  const handleJoinPress = () => {
-    // Expand the bottom sheet
-    bottomSheetRef.current?.expand();
-
-    // Automatically focus the TextInput
-    setTimeout(() => {
-      textInputRef.current?.focus();
-    }, 300); // Delay to ensure the bottom sheet is expanded before focusing
   };
 
   return (
@@ -163,13 +93,7 @@ const Page = () => {
           </View>
         </Animated.ScrollView>
         <View style={styles.actions}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={
-              // isTimeToJoinCall ? onJoinCall : () => router.push(`/_sitemap`)
-              handleOpenPress
-            }
-          >
+          <TouchableOpacity activeOpacity={0.8}>
             <LinearGradient
               colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
               start={{ x: 0, y: 0.5 }}
@@ -177,40 +101,11 @@ const Page = () => {
               style={[styles.cancel_btn]}
             >
               <View style={{ width: "100%" }}>
-                <Text style={styles.cancel_txt}>
-                  {isTimeToJoinCall ? "Join Call" : "Cancel Appointment"}
-                </Text>
+                <Text style={styles.cancel_txt}>Go to Chat</Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
-
-          {/* <Pressable style={styles.message_btn}>
-          <View>
-            <Image
-              source={require("@/assets/images/chat-msg.png")}
-              style={{ width: 26, height: 26 }}
-            />
-          </View>
-        </Pressable> */}
         </View>
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={-1}
-          snapPoints={snapPoints}
-          enablePanDownToClose
-          handleIndicatorStyle={{ backgroundColor: "#fff" }}
-          backdropComponent={renderBackdrop}
-        >
-          {/* <TextInput placeholder="Enter Meeting ID" /> */}
-          <TextInput
-            placeholder="Enter Meeting ID"
-            style={styles.input}
-            keyboardType="numeric"
-            enablesReturnKeyAutomatically
-            ref={textInputRef}
-            onSubmitEditing={onJoinCall}
-          />
-        </BottomSheet>
       </View>
     </KeyboardAvoidingView>
   );
@@ -229,15 +124,15 @@ const styles = StyleSheet.create({
 
   image: {
     width,
-    height: 580,
+    height: 680,
   },
 
   content: {
     paddingTop: 20,
     backgroundColor: "#FFF",
-    height: "100%",
     paddingHorizontal: 13,
     marginBottom: 100,
+    height:"100%"
   },
 
   name: {
@@ -293,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    bottom: Platform.OS ==="android" ? 0: 25,
+    bottom: Platform.OS === "android" ? 0 : 25,
   },
 
   cancel_txt: {

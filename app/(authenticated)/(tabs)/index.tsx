@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -9,6 +9,8 @@ import {
   useColorScheme,
   Platform,
   TouchableOpacity,
+  ScrollView,
+  Animated,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
@@ -23,11 +25,13 @@ import RecentlyViewed from "@/components/RecentlyViewed";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
   const isAndroid = Platform.OS === "android";
+  const { top } = useSafeAreaInsets();
 
   const handleLogout = async () => {
     try {
@@ -39,10 +43,68 @@ const Home = () => {
     }
   };
 
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const headerTranslate = scrollY.interpolate({
+    inputRange: [0, 100], // Adjust input range based on your scrollable content
+    outputRange: [0, -150], // Move header out of view
+    extrapolate: "clamp",
+  });
+
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
       {/* <StatusBar style="light" /> */}
-      <CustomScrollView showsVerticalScrollIndicator={false}>
+
+      <Stack.Screen
+        options={{
+          header: () => (
+            <Animated.View
+              style={[
+                {
+                  transform: [{ translateY: headerTranslate }],
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.profile_greeting_bell,
+                  { paddingTop: top, paddingHorizontal: 20 },
+                ]}
+              >
+                <View style={styles.image_greeting}>
+                  <View style={styles.profile_img_container}>
+                    <Image
+                      source={require("@/assets/images/profile_img.jpg")}
+                      style={styles.profile_img}
+                    />
+                  </View>
+                  <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
+                </View>
+                <Pressable style={styles.bell_icon_container}>
+                  <Image
+                    source={require("@/assets/images/bell-icon.png")}
+                    style={styles.bell_icon}
+                  />
+                  <View style={styles.notificationDot} />
+                </Pressable>
+              </View>
+            </Animated.View>
+          ),
+          headerShadowVisible: false,
+          headerTransparent: true,
+        }}
+      />
+
+      <Animated.ScrollView
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        scrollEventThrottle={16} // Ensures smooth updates
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+      >
         <View style={styles.container}>
           <Image
             source={require("@/assets/images/Circle.png")}
@@ -59,37 +121,6 @@ const Home = () => {
               style={styles.gradient}
             />
             <View style={styles.content}>
-              <View style={styles.profile_greeting_bell}>
-                <View style={styles.image_greeting}>
-                  <View style={styles.profile_img_container}>
-                    <Image
-                      source={require("@/assets/images/profile_img.jpg")}
-                      style={styles.profile_img}
-                    />
-                  </View>
-                  <Text
-                    style={[
-                      styles.name,
-                      isAndroid
-                        ? {
-                            fontSize: 14,
-                            textShadowOffset: { height: 2, width: 4 },
-                            lineHeight: 16,
-                          }
-                        : {},
-                    ]}
-                  >
-                    Good Morning,{"\n"}Lizzy
-                  </Text>
-                </View>
-                <Pressable style={styles.bell_icon_container}>
-                  <Image
-                    source={require("@/assets/images/bell-icon.png")}
-                    style={styles.bell_icon}
-                  />
-                  <View style={styles.notificationDot} />
-                </Pressable>
-              </View>
               <Text
                 style={[
                   styles.hello,
@@ -119,27 +150,16 @@ const Home = () => {
           <DoctorSpecialityList />
           <SaharaMart />
         </View>
-      </CustomScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  notificationDot: {
-    position: "absolute",
-    top: 7,
-    right: 9,
-    backgroundColor: "#e34234",
-    width: 8,
-    height: 8,
-    borderRadius: 5,
-  },
-
   lightScreen: {
     backgroundColor: "#ffffff",
     overflow: "hidden",
     position: "relative",
-    // paddingBottom: 120,
   },
   darkScreen: {
     backgroundColor: "#1E1F22",
@@ -148,12 +168,11 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    elevation: 5, // for Android
+    elevation: 5,
     shadowOpacity: 0.2,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
-    shadowColor: "#131313", // for iOS
-    // height: 370,
+    shadowColor: "#131313",
     borderRadius: 50,
     backgroundColor: "#fff",
     marginHorizontal: 5,
@@ -169,7 +188,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 50,
     width: "100%",
-    // height: 370,
   },
 
   gradient: {
@@ -185,28 +203,23 @@ const styles = StyleSheet.create({
 
   hello: {
     color: "#FFF",
-    // font-family: Roboto;
     fontSize: 36,
     fontStyle: "normal",
     fontWeight: "400",
-    lineHeight: 53.28 /* 53.28px */,
-    // width: 273,
+    lineHeight: 53.28,
     textShadowColor: "rgba(0, 0, 0, 0.25)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 7,
     marginLeft: 10,
     marginVertical: 40,
     marginBottom: 80,
-    // letter-spacing: 1.62px;
     flexGrow: 1,
   },
 
   profile_img: {
     width: "100%",
     height: "130%",
-    // objectFit: "fill",
     resizeMode: "cover",
-    // borderRadius: 200,
   },
 
   profile_img_container: {
@@ -215,34 +228,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     width: 60,
     height: 60,
-    // backgroundColor: "#fff",
     borderRadius: 200,
-  },
-
-  name: {
-    color: "#FFF",
-    // text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    // font-family: Lato;
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "500",
-    lineHeight: 23.68 /* 23.68px */,
-    marginLeft: 15,
-    textShadowColor: "rgba(0,0,0,0.4)",
-    textShadowRadius: 4,
-    textShadowOffset: { width: 4, height: 4 },
-  },
-
-  image_greeting: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  bell_icon: {
-    height: 22,
-    width: 22,
-    tintColor: "#fff",
-    borderColor: "#fff",
   },
 
   bell_icon_container: {
@@ -256,14 +242,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  profile_greeting_bell: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-
   content: {
-    marginTop: 65,
+    marginTop: 90,
     marginHorizontal: 19,
   },
 
@@ -273,6 +253,46 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginHorizontal: 16,
     color: "#a1a1a1",
+  },
+
+  profile_greeting_bell: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  image_greeting: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  name: {
+    color: "#FFF",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "500",
+    lineHeight: 23.68,
+    marginLeft: 15,
+    textShadowColor: "rgba(0,0,0,0.4)",
+    textShadowRadius: 4,
+    textShadowOffset: { width: 4, height: 4 },
+  },
+
+  bell_icon: {
+    height: 22,
+    width: 22,
+    tintColor: "#fff",
+    borderColor: "#fff",
+  },
+
+  notificationDot: {
+    position: "absolute",
+    top: 7,
+    right: 9,
+    backgroundColor: "#e34234",
+    width: 8,
+    height: 8,
+    borderRadius: 5,
   },
 });
 

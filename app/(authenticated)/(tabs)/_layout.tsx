@@ -1,8 +1,17 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useRef } from "react";
 import { BlurView } from "expo-blur";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import { Platform, View, StyleSheet, TextInput } from "react-native";
+import {
+  Platform,
+  View,
+  StyleSheet,
+  TextInput,
+  Image,
+  Pressable,
+  Text,
+  Animated,
+} from "react-native";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -46,7 +55,7 @@ const Layout = () => {
         name="index"
         options={{
           title: "Home",
-          headerShown: false,
+
           tabBarIcon: ({ size, color }) => (
             <Feather name="home" size={size} color={color} />
           ),
@@ -126,9 +135,10 @@ const styles = StyleSheet.create({
   },
 
   meetDoctor: {
-    marginHorizontal: 13,
-    marginTop: 24,
-    marginBottom: 12,
+    paddingHorizontal: 13,
+    paddingTop: 24,
+    paddingBottom: 12,
+    backgroundColor:"#fff"
   },
 });
 

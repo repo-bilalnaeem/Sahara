@@ -68,7 +68,7 @@ const Slots = () => {
 const Page = () => {
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("slots");
-  const snapPoints = useMemo(() => ["40%", "50%", "55%"], []);
+  const snapPoints = useMemo(() => ["40%", "55%", "75%"], []);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
@@ -86,11 +86,13 @@ const Page = () => {
 
         <BottomSheet
           snapPoints={snapPoints}
-          handleIndicatorStyle={{ width: 0, backgroundColor: "#fff" }}
+          // enableContentPanningGesture={false}
+          handleIndicatorStyle={{ width: 5, backgroundColor: "#fff" }}
           backgroundStyle={{
             borderTopRightRadius: 24,
             borderTopLeftRadius: 24,
           }}
+          maxDynamicContentSize={500}
         >
           <BottomSheetScrollView
             bounces={false}
@@ -98,6 +100,7 @@ const Page = () => {
               marginBottom: 48,
             }}
             showsVerticalScrollIndicator={false}
+            scrollEnabled
           >
             <View style={styles.content}>
               <Text style={styles.name}>Dr Mathew Lewis</Text>
