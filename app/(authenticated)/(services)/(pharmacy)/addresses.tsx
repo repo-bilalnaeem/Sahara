@@ -1,1 +1,1 @@
-export {default} from "@/components/Addresses"
+export { default } from "@/components/Address";

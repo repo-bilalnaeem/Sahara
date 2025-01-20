@@ -72,7 +72,7 @@ const BookNow = ({ item, index }: Props) => {
           <BookSlider name={"Book Now"} data={undefined} />
 
           <View style={[styles.navigation_button]}>
-            <TouchableOpacity onPress={() => router.navigate("/(doctor)")}>
+            <TouchableOpacity onPress={() => router.navigate("/(doctor)/1")}>
               <Image
                 source={require("@/assets/images/arrow-needle.png")}
                 style={styles.nav}

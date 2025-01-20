@@ -5,11 +5,12 @@ import React from "react";
 const Layout = () => {
   return (
     <Stack>
+
       <Stack.Screen
-        name="index"
+        name="[id]"
         options={{
-          headerTransparent: true,
           headerLeft: () => <GoBack />,
+          headerTransparent: true,
           headerTitle: "",
         }}
       />

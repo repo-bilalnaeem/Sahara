@@ -14,13 +14,13 @@ export const data = [
     {
       key: "3",
       imageSource: require("@/assets/images/health.png"),
-      text: `Health &${"\n"}Wellbeing`,
+      text: `Health & Wellbeing`,
       screen: "/(shops)/health&wellbeing",
     },
     {
       key: "4",
       imageSource: require("@/assets/images/household.png"),
-      text: `Household &${"\n"}Living`,
+      text: `Household & Living`,
       screen: "/(shops)/household&living",
     },
   ];

@@ -1,27 +1,75 @@
-import { View, ScrollView, FlatList, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  ScrollView,
+  FlatList,
+  StyleSheet,
+  Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 
 import chat from "@/assets/data/chats.json";
 import ChatRow from "@/components/ChatRow";
+import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const chats = () => {
   return (
-    <FlatList
-      contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={[
-        { paddingBottom: 40, backgroundColor: "#fff" },
-        Platform.OS === "android" ? { paddingTop: 115 } : null,
-      ]}
-      data={chat}
-      scrollEnabled={true}
-      keyExtractor={(item) => item.id}
-      ItemSeparatorComponent={() => (
-        <View style={[defaultStyles.separator, { marginLeft: 90 }]} />
-      )}
-      renderItem={({ item }) => <ChatRow {...item} />}
-      initialNumToRender={10}
-      scrollEventThrottle={16}
-    />
+    <View
+      style={{
+        position: "relative",
+      }}
+    >
+      <FlatList
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={[
+          { paddingBottom: 40, backgroundColor: "#fff" },
+          Platform.OS === "android" ? { paddingTop: 115 } : null,
+        ]}
+        data={chat}
+        scrollEnabled={true}
+        keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={() => (
+          <View style={[defaultStyles.separator, { marginLeft: 90 }]} />
+        )}
+        renderItem={({ item }) => <ChatRow {...item} />}
+        initialNumToRender={10}
+        scrollEventThrottle={16}
+      />
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          zIndex: 10,
+          bottom: "6%",
+          right: "6%",
+          // backgroundColor: "#3d74c2",
+        }}
+        activeOpacity={0.95}
+        onPress={() => router.back()}
+      >
+        <LinearGradient
+          colors={["#3d547b", "rgb(12, 95, 144)"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          locations={[0.0527, 0.9575]}
+          style={[
+            {
+              width: 60,
+              height: 60,
+              borderRadius: 50,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <Feather name="home" size={20} color={"#fff"} />
+        </LinearGradient>
+      </TouchableOpacity>
+    </View>
   );
 };
 

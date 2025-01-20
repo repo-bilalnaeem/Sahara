@@ -66,8 +66,10 @@ const Layout = () => {
 <Drawer.Screen
         name="offers"
         // getId={() => Math.random().toString()}
+        
         options={{
           title: "Offers",
+          
           drawerIcon: () => (
             <View style={[styles.item]}>
               <Image
@@ -77,7 +79,7 @@ const Layout = () => {
             </View>
           ),
           header: () => (
-            <CustomHeader onPress={router.back} heading="Offersr" />
+            <CustomHeader onPress={router.back} heading="Offers" />
           ),
         }}
       />

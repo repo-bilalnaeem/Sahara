@@ -76,9 +76,7 @@ const Home = () => {
                 ]}
               >
                 <View style={styles.image_greeting}>
-                  <Pressable
-                  onPress={openDrawer}
-                  >
+                  <Pressable onPress={openDrawer}>
                     <View style={styles.profile_img_container}>
                       <Image
                         source={require("@/assets/images/profile_img.jpg")}
@@ -88,7 +86,10 @@ const Home = () => {
                   </Pressable>
                   <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
                 </View>
-                <Pressable style={styles.bell_icon_container}>
+                <Pressable
+                  style={styles.bell_icon_container}
+                  onPress={() => router.push("/(authenticated)/notification")}
+                >
                   <Image
                     source={require("@/assets/images/bell-icon.png")}
                     style={styles.bell_icon}

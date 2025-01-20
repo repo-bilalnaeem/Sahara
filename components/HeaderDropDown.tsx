@@ -28,7 +28,7 @@ const HeaderDropDown = ({ title, selected, items, onSelect }: Props) => {
                 color: "#B8B3BA",
               }}
             >
-              {selected} &gt;
+              {selected}
             </Text>
           )}
         </View>

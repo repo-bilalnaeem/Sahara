@@ -143,6 +143,7 @@ const ChatPage = () => {
                 ]}
                 onSelect={onGptVersionChange}
                 selected={gptVersion}
+                
               />
             </View>
           ),
