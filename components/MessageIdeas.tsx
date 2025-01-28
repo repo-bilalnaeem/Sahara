@@ -8,12 +8,11 @@ import {
 } from "react-native";
 
 const PredefinedMessages = [
-  { title: "Explain React Native", text: "like I'm five years old" },
   {
-    title: "Suggest fun activites",
-    text: "for a family visting San Francisco",
+    title: "Suggest me home remidies",
+    text: "how can i treat fever at home",
   },
-  { title: "Recommend a dish", text: "to impress a date who's a picky eater" },
+  { title: "How late can I sleep", text: "Can sleeping late be dangerous" },
 ];
 
 type Props = {

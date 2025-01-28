@@ -87,7 +87,7 @@ const MessageInput = ({ onShouldSend }: Props) => {
     <BlurView
       intensity={90}
       tint="extraLight"
-      style={{ paddingBottom: bottom, paddingTop: 10, marginBottom: 20 }}
+      style={{ paddingBottom: bottom, paddingTop: 10, }}
     >
       <View style={styles.row}>
         <ATouchableOpacity

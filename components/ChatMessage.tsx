@@ -46,13 +46,13 @@ const ChatMessage = ({
       {role === Role.Bot ? (
         <View style={[styles.item, { backgroundColor: "#000" }]}>
           <Image
-            source={require("@/assets/images/logo-white.png")}
+            source={require("@/assets/images/my-adaptive-icon.png")}
             style={styles.btnImage}
           />
         </View>
       ) : (
         <Image
-          source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+          source={ require('@/assets/images/profile_img.jpg')}
           style={styles.avatar}
         />
       )}
@@ -121,9 +121,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   btnImage: {
-    margin: 6,
-    width: 16,
-    height: 16,
+    // margin: 6,
+    width: 30,
+    height: 30,
+    objectFit: "contain",
+    borderRadius: 15,
+
+    backgroundColor: "#ffffff",
   },
   avatar: {
     width: 30,

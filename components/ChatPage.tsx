@@ -12,8 +12,8 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+import axios from 'axios'
 import { useMMKVString } from "react-native-mmkv";
-import OpenAI from "react-native-openai";
 import { FlashList } from "@shopify/flash-list";
 import ChatMessage from "@/components/ChatMessage";
 import { Message, Role } from "@/utils/Interfaces";
@@ -32,9 +32,6 @@ const ChatPage = () => {
   const db = useSQLiteContext();
   let { id } = useLocalSearchParams<{ id: string }>();
 
-  // if (!key || key === "" || !organization || organization === "") {
-  //   return <Redirect href={"/(modals)/settings"} />;
-  // }
 
   const [chatId, _setChatId] = useState(id);
   const chatIdRef = useRef(chatId);
@@ -51,41 +48,9 @@ const ChatPage = () => {
     }
   }, [id]);
 
-  const openAI = useMemo(
-    () =>
-      new OpenAI({
-        apiKey: "",
-        organization: "",
-      }),
-    []
-  );
+  const flaskBaseURL = process.env.EXPO_PUBLIC_FLASK_SERVER_URL;
 
-  useEffect(() => {
-    const handleNewMessage = (payload: any) => {
-      setMessages((messages) => {
-        const newMessage = payload.choices[0]?.delta.content;
-        if (newMessage) {
-          messages[messages.length - 1].content += newMessage;
-          return [...messages];
-        }
-        if (payload.choices[0]?.finishReason) {
-          // save the last message
-
-          addMessage(db, parseInt(chatIdRef.current), {
-            content: messages[messages.length - 1].content,
-            role: Role.Bot,
-          });
-        }
-        return messages;
-      });
-    };
-
-    openAI.chat.addListener("onChatMessageReceived", handleNewMessage);
-
-    return () => {
-      openAI.chat.removeListener("onChatMessageReceived");
-    };
-  }, [openAI]);
+  const [result, setResult] = React.useState("");
 
   const onGptVersionChange = (version: string) => {
     setGptVersion(version);
@@ -96,32 +61,82 @@ const ChatPage = () => {
     setHeight(height);
   };
 
+  // Function to send messages to Flask server
   const getCompletion = async (text: string) => {
+    // If it's the first message, create a new chat entry in the database
     if (messages.length === 0) {
       addChat(db, text).then((res) => {
         const chatID = res.lastInsertRowId;
         setChatId(chatID.toString());
+  
+        // Save the user message in the database
         addMessage(db, chatID, { content: text, role: Role.User });
+  
+        // Add the user message to the state as well
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: Role.User, content: text },
+          { role: Role.Bot, content: "..." }, // Placeholder for bot's response
+        ]);
       });
+    } else {
+      // If there are existing messages, add the new message directly
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: Role.User, content: text },
+        { role: Role.Bot, content: "..." }, // Placeholder for bot's response
+      ]);
     }
-
-    setMessages([
-      ...messages,
-      { role: Role.User, content: text },
-      { role: Role.Bot, content: "" },
-    ]);
-    messages.push();
-    openAI.chat.stream({
-      messages: [
-        {
-          role: "user",
-          content: text,
-        },
-      ],
-      model: gptVersion == "4" ? "gpt-4" : "gpt-3.5-turbo",
-    });
+  
+    try {
+      // Send the user's message to the Flask server to get the bot's response
+      const response = await axios.post(`${flaskBaseURL}/chat`, {
+        message: text,
+        gptVersion: gptVersion === "4" ? "gpt-4" : "gpt-3.5-turbo",
+      });
+  
+      // Update the last message (the bot's placeholder) with the actual response
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg, index) =>
+          index === prevMessages.length - 1
+            ? { ...msg, content: response.data.response } // Replace placeholder with response
+            : msg
+        );
+      });
+  
+      // Save the bot's response to the database as well
+      if (chatIdRef.current) {
+        addMessage(db, parseInt(chatIdRef.current), {
+          content: response.data.response,
+          role: Role.Bot,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching response from server:", error);
+  
+      // If there's an error, replace the placeholder with an error message
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg, index) =>
+          index === prevMessages.length - 1
+            ? { ...msg, content: "Sorry, something went wrong!" }
+            : msg
+        );
+      });
+  
+      // Optionally, save an error message to the database if needed
+      if (chatIdRef.current) {
+        addMessage(db, parseInt(chatIdRef.current), {
+          content: "Sorry, something went wrong!",
+          role: Role.Bot,
+        });
+      }
+    }
   };
+  
+  
+  
 
+  
   return (
     <View style={styles.pageContainer}>
       <Stack.Screen

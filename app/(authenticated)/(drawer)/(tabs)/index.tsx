@@ -52,8 +52,8 @@ const Home = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const headerTranslate = scrollY.interpolate({
-    inputRange: [0, 100], // Adjust input range based on your scrollable content
-    outputRange: [0, -150], // Move header out of view
+    inputRange: [0, 250], // Adjust input range based on your scrollable content
+    outputRange: [0, -250], // Move header out of view
     extrapolate: "clamp",
   });
 
@@ -130,6 +130,42 @@ const Home = () => {
               style={styles.gradient}
             />
             <View style={styles.content}>
+              <Animated.View
+                style={[
+                  {
+                    transform: [{ translateY: headerTranslate }],
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.profile_greeting_bell,
+                    // { paddingTop: top, paddingHorizontal: 20 },
+                  ]}
+                >
+                  <View style={styles.image_greeting}>
+                    <Pressable onPress={openDrawer}>
+                      <View style={styles.profile_img_container}>
+                        <Image
+                          source={require("@/assets/images/profile_img.jpg")}
+                          style={styles.profile_img}
+                        />
+                      </View>
+                    </Pressable>
+                    <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
+                  </View>
+                  <Pressable
+                    style={styles.bell_icon_container}
+                    onPress={() => router.push("/(authenticated)/notification")}
+                  >
+                    <Image
+                      source={require("@/assets/images/bell-icon.png")}
+                      style={styles.bell_icon}
+                    />
+                    <View style={styles.notificationDot} />
+                  </Pressable>
+                </View>
+              </Animated.View>
               <Text
                 style={[
                   styles.hello,

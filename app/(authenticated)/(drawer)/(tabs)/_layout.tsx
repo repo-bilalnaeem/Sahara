@@ -22,7 +22,7 @@ const Layout = () => {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#fff",
-
+        headerShown: false,
         tabBarBackground: () => (
           <BlurView
             intensity={100}
