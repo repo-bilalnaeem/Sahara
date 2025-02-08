@@ -5,8 +5,14 @@ import { SQLiteProvider } from "expo-sqlite";
 import { migrateDbIfNeeded } from "@/utils/Database";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
+import { useAuth } from "@clerk/clerk-expo";
+import NotFoundScreen from "../+not-found";
 
 const Layout = () => {
+  const { isSignedIn } = useAuth();
+
+  if (!isSignedIn) return <NotFoundScreen/>;
+
   return (
     <Provider store={store}>
       <SQLiteProvider databaseName="chats.db" onInit={migrateDbIfNeeded}>

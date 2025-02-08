@@ -50,7 +50,7 @@ const InitialLayout = () => {
   const segments = useSegments();
   const router = useRouter();
 
-  console.log(segments);
+  // console.log(segments);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -75,7 +75,7 @@ const InitialLayout = () => {
     } else if (!isSignedIn && inAuthGroup) {
       router.replace("/");
     }
-  }, [isSignedIn, segments]);
+  }, [isSignedIn]);
 
   if (!loaded || !isLoaded) {
     return (

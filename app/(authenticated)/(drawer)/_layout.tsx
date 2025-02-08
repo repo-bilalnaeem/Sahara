@@ -8,10 +8,7 @@ import DrawerContent from "@/components/DrawerContent";
 import GoBack from "@/components/GoBack";
 
 const Layout = () => {
-  const dimensions = useWindowDimensions();
-  const router = useRouter();
   const segments = useSegments();
-  console.log(segments);
   const isOnTabsScreen = segments[2] === "(tabs)";
 
   return (
@@ -28,9 +25,8 @@ const Layout = () => {
         overlayColor: "rgba(0, 0, 0, 0.2)",
         drawerItemStyle: { borderRadius: 12 },
         // drawerLabelStyle: { marginLeft: -10 },
-        drawerStyle: { width: dimensions.width * 0.86 },
         drawerHideStatusBarOnOpen: true,
-        swipeEnabled: false,
+        // swipeEnabled: false,
       }}
     >
       <Drawer.Screen

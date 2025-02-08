@@ -50,7 +50,7 @@ const Signup = () => {
   };
 
   const handleSignIn = () => {
-    router.navigate("/(authenticated)/userProfile");
+    router.push("/userProfile");
   };
 
   return (

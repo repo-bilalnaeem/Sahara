@@ -7,7 +7,6 @@ const search = () => {
   const items = useMemo(() => doctors as any, []);
   const [category, setCategory] = useState<string>("All");
 
-
   const onDataChanged = (category: string) => {
     console.log("CHANGED: ", category);
     setCategory(category);
@@ -15,7 +14,6 @@ const search = () => {
 
   return (
     <View style={{ flex: 1 }}>
-    
       <FilterList onCategoryChanged={onDataChanged} />
       <Listings listings={items} category={category} />
     </View>
