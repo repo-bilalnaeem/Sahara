@@ -1,8 +1,19 @@
-import { View, KeyboardAvoidingView, Platform, Image } from "react-native";
+import {
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import { defaultStyles } from "@/constants/Styles";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
+import {
+  Redirect,
+  Stack,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router";
 import HeaderDropDown from "@/components/HeaderDropDown";
 import MessageInput from "@/components/MessageInput";
 import MessageIdeas from "@/components/MessageIdeas";
@@ -15,8 +26,12 @@ import { Storage } from "@/utils/Storage";
 import OpenAI from "react-native-openai";
 import { useSQLiteContext } from "expo-sqlite";
 import { addChat, addMessage, getMessages } from "@/utils/Database";
+import { FontAwesome6 } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
+import { DrawerActions } from "@react-navigation/native";
 
 const ChatPage = () => {
+  const navigation = useNavigation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [height, setHeight] = useState(0);
 
@@ -46,13 +61,11 @@ const ChatPage = () => {
       .catch((err) => console.error("Error fetching messages:", err));
   }, [id]);
 
-
-
   const openAI = useMemo(
     () =>
       new OpenAI({
         apiKey: "",
-        organization:"",
+        organization: "",
       }),
     []
   );
@@ -96,7 +109,6 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-
     const handleMessage = (payload: any) => {
       if (!payload.choices || payload.choices.length === 0) return;
 
@@ -162,6 +174,14 @@ const ChatPage = () => {
                 { key: "4", title: "GPT-4", icon: "sparkles" },
               ]}
             />
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
+              style={{ marginLeft: 16 }}
+            >
+              <FontAwesome6 name="grip-lines" size={20} color={Colors.grey} />
+            </TouchableOpacity>
           ),
         }}
       />

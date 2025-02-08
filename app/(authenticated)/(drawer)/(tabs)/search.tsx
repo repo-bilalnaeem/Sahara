@@ -7,6 +7,7 @@ const search = () => {
   const items = useMemo(() => doctors as any, []);
   const [category, setCategory] = useState<string>("All");
 
+
   const onDataChanged = (category: string) => {
     console.log("CHANGED: ", category);
     setCategory(category);

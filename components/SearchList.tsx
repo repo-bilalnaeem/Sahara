@@ -52,7 +52,15 @@ const Listings = ({ listings: data, category }: Props) => {
   console.log(filterData);
 
   const renderRow = ({ item }: any) => (
-    <Pressable onPress={() => router.push(`(doctor)/${item.doctorId}` as Href)}>
+    // <Pressable onPress={() => router.push(`(doctor)/${item.doctorId}` as Href)}>
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: `/(authenticated)/(doctor)/[id]`,
+          params: { id: item.doctorId }
+        })
+      }
+    >
       <Animated.View
         style={{ height: 300 }}
         entering={FadeInRight}

@@ -4,17 +4,6 @@ import SeeMore from "./SeeMore";
 import BookNow from "./BookNow";
 import { doctors } from "@/assets/data/RecentlyViewed";
 
-interface Item {
-  id: string;
-  firstName: string;
-  lastName: string;
-  occupation: string;
-  ratings: number;
-  imageSource: string;
-  about: string;
-  reviews: { patientName: string; reviews: string }[];
-}
-
 const RecentlyViewed = () => {
   return (
     <View style={{ marginBottom: 32 }}>
@@ -26,7 +15,7 @@ const RecentlyViewed = () => {
           renderItem={({ item, index }) => (
             <BookNow item={item} index={index} />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.doctorId}
           showsHorizontalScrollIndicator={false}
           bounces={false}
         />

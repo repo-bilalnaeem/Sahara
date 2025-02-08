@@ -15,23 +15,24 @@ const isAndroid = Platform.OS === "android";
 
 interface Props {
   item: {
-    id: string;
+    doctorId: string;
     firstName: string;
     lastName: string;
-    occupation: string;
-    imageSource: string;
+    department: string;
+    imageUrl: string;
   };
   index: number;
 }
 
 const BookNow = ({ item, index }: Props) => {
-  const { id, firstName, lastName, occupation, imageSource } = item;
+  const { doctorId, firstName, lastName, department, imageUrl } = item;
   return (
     <View
       style={[
         index === 0 ? { paddingLeft: 12 } : undefined,
         isAndroid ? { minWidth: 355 } : null,
       ]}
+      key={doctorId}
     >
       <LinearGradient
         colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
@@ -60,11 +61,11 @@ const BookNow = ({ item, index }: Props) => {
                 isAndroid ? { fontSize: 13, lineHeight: 22 } : null,
               ]}
             >
-              {occupation}
+              {department}
             </Text>
           </View>
           <View style={styles.image_container}>
-            <Image source={{ uri: imageSource }} style={styles.image} />
+            <Image source={{ uri: imageUrl }} style={styles.image} />
           </View>
         </View>
 

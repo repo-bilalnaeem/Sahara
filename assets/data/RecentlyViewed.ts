@@ -1,11 +1,11 @@
 export const doctors = [
   {
-    id: "1",
+    doctorId: "1",
     firstName: "Mathew",
     lastName: "Lewis",
-    occupation: "First Aid",
+    department: "First Aid",
     ratings: 4.9,
-    imageSource:
+    imageUrl:
       "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     about:
       "Welcome to my profile! I am Dr. Mathew Lewis, a highly experienced and board-certified Cardiologist dedicated to providing exceptional cardiovascular care. With over 15 years of clinical experience, I am passionate about ensuring the heart health and well-being of my patients.",
@@ -24,12 +24,12 @@ export const doctors = [
     ],
   },
   {
-    id: "2",
+    doctorId: "2",
     firstName: "Kara",
     lastName: "Thames",
-    occupation: "General Physician",
+    department: "General Physician",
     ratings: 4.2,
-    imageSource:
+    imageUrl:
       "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     about:
       "Welcome to my profile! I am Dr. Kara Tims, a highly experienced and board-certified General Physician dedicated to providing exceptional cardiovascular care. With over 15 years of clinical experience, I am passionate about ensuring the heart health and well-being of my patients.",
@@ -48,12 +48,12 @@ export const doctors = [
     ],
   },
   {
-    id: "3",
+    doctorId: "3",
     firstName: "Sarah",
     lastName: "Ayoubi",
-    occupation: "Neurologist",
+    department: "Neurologist",
     ratings: 4.7,
-    imageSource:
+    imageUrl:
       "https://images.pexels.com/photos/5215017/pexels-photo-5215017.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     about:
       "Welcome to my profile! I am Dr. Sarah Ayoubi, a highly experienced and board-certified General Physician dedicated to providing exceptional cardiovascular care. With over 15 years of clinical experience, I am passionate about ensuring the heart health and well-being of my patients.",

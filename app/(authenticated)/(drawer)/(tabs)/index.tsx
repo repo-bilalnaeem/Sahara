@@ -25,17 +25,10 @@ import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
 import { Link, useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
-import { useAuth } from "@clerk/clerk-expo";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
   const isAndroid = Platform.OS === "android";
-
-  const { signOut } = useAuth();
-
-  const scrollY = useRef(new Animated.Value(0)).current;
-
-
   const navigation = useNavigation();
 
   return (
@@ -107,8 +100,6 @@ const Home = () => {
           </ImageBackground>
         </View>
         <View>
-          <Button title="sign out" onPress={() => signOut()} />
-
           <ServicesList />
           <SeeMore heading={"My Checkup Schedule"} />
           <UpcomingSchedule />

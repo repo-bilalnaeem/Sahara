@@ -12,7 +12,6 @@
 
 // export default Layout;
 
-
 import { Drawer } from "expo-router/drawer";
 import {
   DrawerContentScrollView,
@@ -32,7 +31,7 @@ import {
   Alert,
 } from "react-native";
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import * as ContextMenu from "zeego/context-menu";
@@ -40,6 +39,7 @@ import { Keyboard } from "react-native";
 import { deleteChat, getChats, renameChat } from "@/utils/Database";
 import { Chat } from "@/utils/Interfaces";
 import { useSQLiteContext } from "expo-sqlite";
+import { DrawerActions } from "@react-navigation/native";
 
 export const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
@@ -195,18 +195,18 @@ export const CustomDrawerContent = (props: any) => {
           backgroundColor: Colors.light,
         }}
       >
-          <TouchableOpacity style={styles.footer}>
-            <Image
-              source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-              style={styles.avatar}
-            />
-            <Text style={styles.userName}>Bilal Naeem</Text>
-            <Ionicons
-              name="ellipsis-horizontal"
-              size={24}
-              color={Colors.greyLight}
-            />
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.footer}>
+          <Image
+            source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+            style={styles.avatar}
+          />
+          <Text style={styles.userName}>Bilal Naeem</Text>
+          <Ionicons
+            name="ellipsis-horizontal"
+            size={24}
+            color={Colors.greyLight}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -221,14 +221,6 @@ const Layout = () => {
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
-        // headerLeft: () => (
-        //   <TouchableOpacity
-        //     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
-        //     style={{ marginLeft: 16 }}
-        //   >
-        //     <FontAwesome6 name="grip-lines" size={20} color={Colors.grey} />
-        //   </TouchableOpacity>
-        // ),
         headerStyle: {
           backgroundColor: Colors.light,
         },
@@ -280,7 +272,11 @@ const Layout = () => {
             display: "none",
           },
           headerRight: () => (
-            <Link href={"/(authenticated)/(services)/(consultation)/(chat)"} push asChild>
+            <Link
+              href={"/(authenticated)/(services)/(consultation)/(chat)"}
+              push
+              asChild
+            >
               <TouchableOpacity>
                 <Ionicons
                   name="create-outline"
