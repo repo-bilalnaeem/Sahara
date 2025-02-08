@@ -22,6 +22,7 @@ import { blood_data } from "@/assets/data/PharmacyPageData";
 import { formatTitle, RenderProductTileProps } from "@/components/ProductTile";
 import { useCart } from "@/store/cartStore";
 import { popular_data as products } from "@/assets/data/PharmacyPageData";
+import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get("window");
 const IMG_HEIGHT = 300;
@@ -45,7 +46,7 @@ const Product = () => {
   const [visible, setIsVisible] = useState(false);
 
   // Get the URI from the local image using Image.resolveAssetSource
-  const localImage = require("@/assets/images/medicine_images/img7.jpeg");
+  const localImage = require("@/assets/images/medicine_images/img2.jpeg");
   const imageSource = Image.resolveAssetSource(localImage).uri;
 
   const images = [
@@ -98,6 +99,7 @@ const Product = () => {
         contentContainerStyle={{ paddingBottom: 48 }}
         showsVerticalScrollIndicator={false}
       >
+        <StatusBar />
         {/* <TouchableOpacity
           onPress={router.back}
           style={[styles.closeButton, { marginTop: 52, marginLeft: 18 }]}
@@ -110,7 +112,7 @@ const Product = () => {
         <View style={[styles.profileImage, { paddingTop: top }]}>
           <TouchableOpacity onPress={() => setIsVisible(true)}>
             <Image
-              source={require("@/assets/images/medicine_images/img7.jpeg")}
+              source={require("@/assets/images/medicine_images/img2.jpeg")}
               style={[styles.image, { paddingTop: top }]}
             />
           </TouchableOpacity>
@@ -133,7 +135,7 @@ const Product = () => {
             borderColor: "gray",
           }}
         >
-          <Text style={styles.product_name}>Cerelac 3 Fruits & Wheat 350g</Text>
+          <Text style={styles.product_name}>Panadol Extra Tablets</Text>
           <Text style={styles.product_price}>Rs. {PRICE.toFixed(2)}</Text>
           <TouchableWithoutFeedback onPress={() => addToCart()}>
             <LinearGradient

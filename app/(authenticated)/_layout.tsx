@@ -1,17 +1,20 @@
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { SQLiteProvider } from "expo-sqlite";
 import { migrateDbIfNeeded } from "@/utils/Database";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
 import { useAuth } from "@clerk/clerk-expo";
 import NotFoundScreen from "../+not-found";
+import GoBack from "@/components/GoBack";
 
 const Layout = () => {
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
 
-  if (!isSignedIn) return <NotFoundScreen/>;
+  useEffect(() => {}, [isLoaded, isSignedIn]);
+
+  if (!isSignedIn) return <NotFoundScreen />;
 
   return (
     <Provider store={store}>
@@ -53,6 +56,7 @@ const Layout = () => {
             options={{
               headerTransparent: true,
               headerTitle: "",
+              headerLeft: () => <GoBack />,
             }}
           />
 

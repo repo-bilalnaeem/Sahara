@@ -41,7 +41,7 @@ const chats = () => {
         initialNumToRender={10}
         scrollEventThrottle={16}
       />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           position: "absolute",
           zIndex: 10,
@@ -70,7 +70,7 @@ const chats = () => {
         >
           <Feather name="home" size={20} color={"#fff"} />
         </LinearGradient>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

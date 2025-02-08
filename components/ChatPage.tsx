@@ -42,6 +42,10 @@ const ChatPage = () => {
   const [chatId, setChatId] = useState<string | null>(id);
   const chatIdRef = useRef<string | null>(id);
 
+  const apiKey = "";
+
+  const organization = "";
+
   useEffect(() => {
     if (!id) return;
 
@@ -64,8 +68,8 @@ const ChatPage = () => {
   const openAI = useMemo(
     () =>
       new OpenAI({
-        apiKey: "",
-        organization: "",
+        apiKey,
+        organization,
       }),
     []
   );
