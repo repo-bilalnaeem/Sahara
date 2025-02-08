@@ -2,13 +2,18 @@ import { Drawer } from "expo-router/drawer";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import React from "react";
 import { View, Image } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import { CustomHeader } from "@/components/CustomHeader";
 import DrawerContent from "@/components/DrawerContent";
+import GoBack from "@/components/GoBack";
 
 const Layout = () => {
   const dimensions = useWindowDimensions();
   const router = useRouter();
+  const segments = useSegments();
+  console.log(segments);
+  const isOnTabsScreen = segments[2] === "(tabs)";
+
   return (
     <Drawer
       drawerContent={DrawerContent}
@@ -24,17 +29,25 @@ const Layout = () => {
         drawerItemStyle: { borderRadius: 12 },
         // drawerLabelStyle: { marginLeft: -10 },
         drawerStyle: { width: dimensions.width * 0.86 },
-        // drawerHideStatusBarOnOpen: true,
+        drawerHideStatusBarOnOpen: true,
         swipeEnabled: false,
       }}
     >
       <Drawer.Screen
         name="(tabs)"
         options={{
-          title: undefined,
-          drawerIcon: () => null,
-          drawerLabel: () => null,
-          drawerItemStyle: { display: "none" },
+          title: "Home",
+          // drawerIcon: () => null,
+          // drawerLabel: () => null,
+          drawerIcon: () => (
+            <View style={[styles.item]}>
+              <Image
+                source={require("@/assets/images/discount.png")}
+                style={styles.btnImage}
+              />
+            </View>
+          ),
+          drawerItemStyle: isOnTabsScreen && { display: "none" },
           headerShown: false,
         }}
       />
@@ -51,7 +64,7 @@ const Layout = () => {
               />
             </View>
           ),
-          header: () => <CustomHeader onPress={router.back} heading="Offers" />,
+          // header: () => <CustomHeader onPress={router.back} heading="Offers" />,
         }}
       />
 
@@ -69,9 +82,9 @@ const Layout = () => {
             </View>
           ),
 
-          header: () => (
-            <CustomHeader onPress={router.back} heading="Vouchers & offers" />
-          ),
+          // header: () => (
+          //   <CustomHeader onPress={router.back} heading="Vouchers & offers" />
+          // ),
         }}
       />
 
@@ -88,7 +101,7 @@ const Layout = () => {
               />
             </View>
           ),
-          header: () => <CustomHeader onPress={router.back} heading="Orders" />,
+          // header: () => <CustomHeader onPress={router.back} heading="Orders" />,
         }}
       />
 
@@ -105,9 +118,9 @@ const Layout = () => {
               />
             </View>
           ),
-          header: () => (
-            <CustomHeader onPress={router.back} heading="Addresses" />
-          ),
+          // header: () => (
+          //   <CustomHeader onPress={router.back} heading="Addresses" />
+          // ),
         }}
       />
 
@@ -124,9 +137,9 @@ const Layout = () => {
               />
             </View>
           ),
-          header: () => (
-            <CustomHeader onPress={router.back} heading="Help Center" />
-          ),
+          // header: () => (
+          //   <CustomHeader onPress={router.back} heading="Help Center" />
+          // ),
         }}
       />
     </Drawer>
@@ -180,13 +193,8 @@ const styles = StyleSheet.create({
   },
   btnImage: {
     margin: 6,
-    width: 16,
-    height: 16,
-  },
-  dallEImage: {
-    width: 28,
-    height: 28,
-    resizeMode: "cover",
+    width: 24,
+    height: 24,
   },
 
   lightBackButton: {

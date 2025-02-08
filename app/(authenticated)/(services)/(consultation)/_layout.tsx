@@ -31,7 +31,7 @@ import {
   Alert,
 } from "react-native";
 import Colors from "@/constants/Colors";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import * as ContextMenu from "zeego/context-menu";
@@ -39,13 +39,14 @@ import { Keyboard } from "react-native";
 import { deleteChat, getChats, renameChat } from "@/utils/Database";
 import { Chat } from "@/utils/Interfaces";
 import { useSQLiteContext } from "expo-sqlite";
-import { DrawerActions } from "@react-navigation/native";
+import { useAuth } from "@clerk/clerk-expo";
 
 export const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
   const [history, setHistory] = useState<Chat[]>([]);
   const db = useSQLiteContext();
+  const { signOut } = useAuth();
 
   const router = useRouter();
 
@@ -195,17 +196,23 @@ export const CustomDrawerContent = (props: any) => {
           backgroundColor: Colors.light,
         }}
       >
-        <TouchableOpacity style={styles.footer}>
+        <TouchableOpacity
+          style={styles.footer}
+          onPress={async () => {
+            try {
+              await signOut(); // Ensure signOut completes
+              router.replace("/signin"); // Redirect after signing out
+            } catch (error) {
+              console.error("Sign-out error:", error);
+            }
+          }}
+        >
           <Image
             source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
             style={styles.avatar}
           />
           <Text style={styles.userName}>Bilal Naeem</Text>
-          <Ionicons
-            name="ellipsis-horizontal"
-            size={24}
-            color={Colors.greyLight}
-          />
+          <AntDesign name="logout" size={24} color={Colors.greyLight} />
         </TouchableOpacity>
       </View>
     </View>
@@ -319,6 +326,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    marginRight: 16,
   },
   roundImage: {
     width: 30,

@@ -3,7 +3,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Link, useRouter } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Image,
@@ -17,14 +17,16 @@ import {
 import { useEffect } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import PharmacyHeader from "@/components/PharmacyHeader";
 import { Divider } from "react-native-paper";
 import { CustomHeader } from "@/components/CustomHeader";
+import { useAuth } from "@clerk/clerk-expo";
 
 const DrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
+  const { signOut } = useAuth();
 
   useEffect(() => {
     Keyboard.dismiss();
@@ -69,20 +71,24 @@ const DrawerContent = (props: any) => {
             backgroundColor: "#FFFCFF",
           }}
         >
-          <Link href="/" asChild>
-            <TouchableOpacity style={styles.footer}>
-              <Image
-                source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-                style={styles.avatar}
-              />
-              <Text style={styles.userName}>Bilal Naeem</Text>
-              <Ionicons
-                name="ellipsis-horizontal"
-                size={24}
-                color={"#B8B3BA"}
-              />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            style={styles.footer}
+            onPress={async () => {
+              try {
+                await signOut(); // Ensure signOut completes
+                router.replace("/signin"); // Redirect after signing out
+              } catch (error) {
+                console.error("Sign-out error:", error);
+              }
+            }}
+          >
+            <Image
+              source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+              style={styles.avatar}
+            />
+            <Text style={styles.userName}>Bilal Naeem</Text>
+            <AntDesign name="logout" size={24} color={"#B8B3BA"} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -211,6 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    marginRight: 16,
   },
   roundImage: {
     width: 30,

@@ -1,10 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "@clerk/clerk-expo";
+import { AntDesign } from "@expo/vector-icons";
 import {
   useDrawerStatus,
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Link } from "expo-router";
+import {  router } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Keyboard, View, TouchableOpacity, Image, Text } from "react-native";
@@ -14,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const DrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
+  const { signOut } = useAuth();
 
   useEffect(() => {
     Keyboard.dismiss();
@@ -58,20 +60,24 @@ const DrawerContent = (props: any) => {
             backgroundColor: "#FFFCFF",
           }}
         >
-          <Link href="/" asChild>
-            <TouchableOpacity style={styles.footer}>
-              <Image
-                source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-                style={styles.avatar}
-              />
-              <Text style={styles.userName}>Bilal Naeem</Text>
-              <Ionicons
-                name="ellipsis-horizontal"
-                size={24}
-                color={"#B8B3BA"}
-              />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            style={styles.footer}
+            onPress={async () => {
+              try {
+                await signOut(); // Ensure signOut completes
+                router.replace("/signin"); // Redirect after signing out
+              } catch (error) {
+                console.error("Sign-out error:", error);
+              }
+            }}
+          >
+            <Image
+              source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+              style={styles.avatar}
+            />
+            <Text style={styles.userName}>Bilal Naeem</Text>
+            <AntDesign name="logout" size={24} color={"#B8B3BA"} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -83,6 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    marginRight: 16,
   },
   avatar: {
     width: 40,
