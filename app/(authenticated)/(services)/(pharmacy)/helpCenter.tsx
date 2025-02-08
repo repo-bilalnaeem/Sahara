@@ -1,1 +1,1 @@
-export {default} from "@/components/HelpCenter"
+export {default} from '@/components/HelpCenter'

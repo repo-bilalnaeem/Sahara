@@ -8,15 +8,12 @@ import {
   Pressable,
   useColorScheme,
   Platform,
-  TouchableOpacity,
-  ScrollView,
   Animated,
+  Button,
 } from "react-native";
-import * as SecureStore from "expo-secure-store";
 
 import { LinearGradient } from "expo-linear-gradient";
 import UpcomingSchedule from "@/components/UpcomingSchedule";
-import CustomScrollView from "@/components/CustomScrollView";
 
 import ServicesList from "@/components/ServicesList";
 import DoctorSpecialityList from "@/components/DoctorSpecialityList";
@@ -25,85 +22,28 @@ import RecentlyViewed from "@/components/RecentlyViewed";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
-import { router, Stack, useNavigation } from "expo-router";
+import { Link, router, Stack, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { DrawerActions } from "@react-navigation/native";
+import { useAuth } from "@clerk/clerk-expo";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === "dark";
   const isAndroid = Platform.OS === "android";
-  const { top } = useSafeAreaInsets();
 
-  const navigation = useNavigation(); // Get the navigation object
-
-  const openDrawer = () => {
-    navigation.openDrawer(); // Open the drawer directly
-  };
-
-  const handleLogout = async () => {
-    try {
-      await SecureStore.deleteItemAsync("access_token"); // Clear the access token from SecureStore
-      await SecureStore.deleteItemAsync("user_id"); // Clear the access token from SecureStore
-      router.replace("/signin"); // Redirect to the sign-in screen
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
+  const { signOut } = useAuth();
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const headerTranslate = scrollY.interpolate({
-    inputRange: [0, 250], // Adjust input range based on your scrollable content
-    outputRange: [0, -250], // Move header out of view
+    inputRange: [0, 250],
+    outputRange: [0, -250],
     extrapolate: "clamp",
   });
+  const navigation = useNavigation();
 
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
-      <Stack.Screen
-        options={{
-          header: () => (
-            <Animated.View
-              style={[
-                {
-                  transform: [{ translateY: headerTranslate }],
-                },
-              ]}
-            >
-              <View
-                style={[
-                  styles.profile_greeting_bell,
-                  { paddingTop: top, paddingHorizontal: 20 },
-                ]}
-              >
-                <View style={styles.image_greeting}>
-                  <Pressable onPress={openDrawer}>
-                    <View style={styles.profile_img_container}>
-                      <Image
-                        source={require("@/assets/images/profile_img.jpg")}
-                        style={styles.profile_img}
-                      />
-                    </View>
-                  </Pressable>
-                  <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
-                </View>
-                <Pressable
-                  style={styles.bell_icon_container}
-                  onPress={() => router.push("/(authenticated)/notification")}
-                >
-                  <Image
-                    source={require("@/assets/images/bell-icon.png")}
-                    style={styles.bell_icon}
-                  />
-                  <View style={styles.notificationDot} />
-                </Pressable>
-              </View>
-            </Animated.View>
-          ),
-          headerShadowVisible: false,
-          headerTransparent: true,
-        }}
-      />
-
       <Animated.ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
@@ -130,12 +70,8 @@ const Home = () => {
               style={styles.gradient}
             />
             <View style={styles.content}>
-              <Animated.View
-                style={[
-                  {
-                    transform: [{ translateY: headerTranslate }],
-                  },
-                ]}
+              <View
+              
               >
                 <View
                   style={[
@@ -144,7 +80,11 @@ const Home = () => {
                   ]}
                 >
                   <View style={styles.image_greeting}>
-                    <Pressable onPress={openDrawer}>
+                    <Pressable
+                      onPress={() =>
+                        navigation.dispatch(DrawerActions.toggleDrawer)
+                      }
+                    >
                       <View style={styles.profile_img_container}>
                         <Image
                           source={require("@/assets/images/profile_img.jpg")}
@@ -154,18 +94,17 @@ const Home = () => {
                     </Pressable>
                     <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
                   </View>
-                  <Pressable
-                    style={styles.bell_icon_container}
-                    onPress={() => router.push("/(authenticated)/notification")}
-                  >
-                    <Image
-                      source={require("@/assets/images/bell-icon.png")}
-                      style={styles.bell_icon}
-                    />
-                    <View style={styles.notificationDot} />
-                  </Pressable>
+                  <Link href={"/(authenticated)/notification"} push asChild>
+                    <Pressable style={styles.bell_icon_container}>
+                      <Image
+                        source={require("@/assets/images/bell-icon.png")}
+                        style={styles.bell_icon}
+                      />
+                      <View style={styles.notificationDot} />
+                    </Pressable>
+                  </Link>
                 </View>
-              </Animated.View>
+              </View>
               <Text
                 style={[
                   styles.hello,
@@ -178,6 +117,8 @@ const Home = () => {
           </ImageBackground>
         </View>
         <View>
+          <Button title="sign out" onPress={() => signOut()} />
+
           <ServicesList />
           <SeeMore heading={"My Checkup Schedule"} />
           <UpcomingSchedule />

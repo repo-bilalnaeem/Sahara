@@ -12,11 +12,11 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Href, useRouter } from "expo-router";
-import LoginHook from "@/hooks/LoginHook";
+import LoginHook from "@/components/LoginInput";
 import { CheckBox } from "react-native-elements";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
-import { useAuth } from "@/context/AuthContext";
+import { useSignIn } from "@clerk/clerk-expo";
 
 const signin = () => {
   const router = useRouter();
@@ -24,8 +24,7 @@ const signin = () => {
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { onLogin, onRegister } = useAuth();
+  const { signIn, isLoaded } = useSignIn();
 
   const isDarkMode = useColorScheme() === "dark";
 
@@ -45,23 +44,30 @@ const signin = () => {
     setSelection(!isSelected);
   };
 
-  const handleLogin = () => {
-    router.replace("/(authenticated)/(drawer)/(tabs)");
-  };
-
   // Sign in with email and password
   const onSignInPress = async () => {
     setLoading(true);
 
     try {
-      const result = await onLogin!(email, password);
-      router.navigate("/(authenticated)/(tabs)" as Href);
-    } catch (e) {
-      Alert.alert("Error", "Could not log in");
+      if (!isLoaded) throw new Error("Clerk is not loaded yet");
+
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      if (result.status === "complete") {
+        router.replace("/(authenticated)/(tabs)");
+      } else {
+        throw new Error("Sign-in process not completed");
+      }
+    } catch (error: any) {
+      Alert.alert("Login Error", error.errors?.[0]?.message || error.message);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <View style={styles.lightScreen}>
       <TouchableWithoutFeedback onPress={handlePress}>
@@ -130,7 +136,7 @@ const signin = () => {
           </View>
 
           <View style={styles.loginButton}>
-            <TouchableOpacity activeOpacity={0.9} onPress={handleLogin}>
+            <TouchableOpacity activeOpacity={0.9} onPress={onSignInPress}>
               <LinearGradient
                 colors={["#1661E0", "#478EEF"]}
                 style={styles.linearGradient}

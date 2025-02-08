@@ -1,4 +1,4 @@
-import React from "react";
+import Colors from "@/constants/Colors";
 import {
   Text,
   ScrollView,
@@ -8,11 +8,12 @@ import {
 } from "react-native";
 
 const PredefinedMessages = [
+  { title: "Need Some Medical Advice", text: "Hey, I have a medical query" },
   {
-    title: "Suggest me home remidies",
-    text: "how can i treat fever at home",
+    title: "Suggest me Home Remedies",
+    text: "I have caught the flu",
   },
-  { title: "How late can I sleep", text: "Can sleeping late be dangerous" },
+  { title: "Recommend a health diet", text: "to have a lean body" },
 ];
 
 type Props = {
@@ -40,7 +41,9 @@ const MessageIdeas = ({ onSelectCard }: Props) => {
             <Text style={{ fontSize: 16, fontWeight: "500" }}>
               {item.title}
             </Text>
-            <Text style={{ color: "#242026", fontSize: 14 }}>{item.text}</Text>
+            <Text style={{ color: Colors.grey, fontSize: 14 }}>
+              {item.text}
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -50,7 +53,7 @@ const MessageIdeas = ({ onSelectCard }: Props) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#EEE9F0",
+    backgroundColor: Colors.input,
     padding: 14,
     borderRadius: 10,
   },

@@ -1,36 +1,3 @@
-const GlassmorphicView = () => (
-  <View style={styles.glassContainer}>
-    <Image
-      source={require("@/assets/images/Search-PNG.png")}
-      style={styles.image}
-    />
-  </View>
-);
-
-const NotFound = () => {
-  const isDarkMode = useColorScheme() === "dark";
-  const { top } = useSafeAreaInsets();
-
-  return (
-    <View style={{ flex: 1, justifyContent: "center", top: top }}>
-      <GlassmorphicView />
-      <View style={{ flex: 0.4, justifyContent: "center" }}>
-        <Text style={isDarkMode ? styles.notFoundLight : styles.notFoundDark}>
-          Not Found
-        </Text>
-        <Text
-          style={
-            isDarkMode ? styles.notFoundTextLight : styles.notFoundTextDark
-          }
-        >
-          Sorry, the keyword you entered could not{"\n"}be found, please check
-          again or search{"\n"}with another keyword.
-        </Text>
-      </View>
-    </View>
-  );
-};
-
 import { Href, router } from "expo-router";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import {
@@ -47,7 +14,6 @@ import {
 import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
   listings: any[];
@@ -161,7 +127,20 @@ const Listings = ({ listings: data, category }: Props) => {
   return (
     <View style={{ paddingHorizontal: 13, flex: 1, top: 0 }}>
       {filteredItems.length === 0 ? (
-        <NotFound />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 50,
+          }}
+        >
+          <Image
+            source={require("@/assets/images/Not Found Icon.png")}
+            style={styles.image}
+          />
+          <Text style={styles.notFoundTextDark}>Result not Found!</Text>
+        </View>
       ) : (
         <FlatList
           ref={listRef}
@@ -253,51 +232,25 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  glassContainer: {
-    borderRadius: 40,
-    marginHorizontal: 20,
-    marginTop: 36,
-    padding: 20,
-    paddingBottom: 0,
-    elevation: 5,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
   notFoundLight: {
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "500",
     marginBottom: 10,
     lineHeight: 30,
     color: "#fff",
-  } as TextStyle,
-
-  notFoundDark: {
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: "500",
-    marginBottom: 10,
-    lineHeight: 30,
-  } as TextStyle,
-
-  notFoundTextLight: {
-    color: "#fff",
-    fontSize: 14,
-    textAlign: "center",
-    lineHeight: 24,
   } as TextStyle,
 
   notFoundTextDark: {
-    fontSize: 14,
+    fontSize: 18,
     textAlign: "center",
     lineHeight: 24,
-  } as TextStyle,
-
+    fontWeight: "500",
+  },
   image: {
-    height: 150,
-    resizeMode: "contain",
+    height: 50,
+    width: 50,
+    objectFit: "contain",
   },
 });
 export default Listings;

@@ -2,18 +2,15 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
-  useColorScheme,
   Image,
   Pressable,
-  Platform,
   TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
-const MainScreen = () => {
+const Page = () => {
   return (
     <View style={styles.lightScreen}>
       <View style={styles.imageContainer}>
@@ -220,4 +217,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainScreen;
+export default Page;

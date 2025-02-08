@@ -1,134 +1,122 @@
-import "react-native-gesture-handler";
-import React, { useEffect } from "react";
-import { Href, Stack, useRouter, useSegments } from "expo-router";
-import { useAuth, AuthProvider } from "@/context/AuthContext";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { SQLiteProvider } from "expo-sqlite";
-import { migrateDbIfNeeded } from "@/utils/Database";
-import { LogBox, View, Text, StyleSheet } from "react-native";
-import GoBack from "@/components/GoBack";
-import { Provider } from "react-redux";
-import { store } from "@/store";
-import { StripeProvider } from "@stripe/stripe-react-native";
+import { Slot, SplashScreen, Stack, useRouter, useSegments } from "expo-router";
+import { useEffect } from "react";
+import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
+import * as SecureStore from "expo-secure-store";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+export { ErrorBoundary } from "expo-router";
 
-if (!STRIPE_PUBLISHABLE_KEY) {
-  throw new Error(
-    "Missing Publishable Key. Please set EXPO_STRIPE_PUBLISHABLE_KEY in your .env"
-  );
-}
+const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+// Cache the Clerk JWT
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 
+// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const InitialLayout = () => {
-  LogBox.ignoreAllLogs(true); // Disable all warnings
-
-  const { authState, initialized } = useAuth();
+  const [loaded, error] = useFonts({
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  });
+  const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    Lato700: require("@/assets/fonts/Lato-Bold.ttf"),
-    Lato400: require("@/assets/fonts/Lato-Regular.ttf"),
-  });
+  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+  useEffect(() => {
+    if (error) throw error;
+  }, [error]);
 
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
+  }, [loaded]);
 
-    if (!initialized) return;
+  useEffect(() => {
+    if (!isLoaded) return;
 
     const inAuthGroup = segments[0] === "(authenticated)";
+    console.log(inAuthGroup);
+    console.log(isSignedIn);
 
-    // if (authState?.authenticated && !inAuthGroup) {
-    //   router.replace("/(authenticated)/(tabs)" as Href);
-    // } else if (!authState?.authenticated && inAuthGroup) {
-    //   router.replace("/signin");
-    // }
-  }, [loaded, initialized, authState, segments, router]);
+    if (isSignedIn && !inAuthGroup) {
+      router.replace("/(authenticated)/(drawer)/(tabs)");
+    } else if (!isSignedIn && inAuthGroup) {
+      router.replace("/");
+    }
+  }, [isSignedIn]);
+
+  if (!loaded || !isLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color={"#000"} />
+      </View>
+    );
+  }
 
   return (
-    <Stack
-      screenOptions={{
-        gestureEnabled: false,
-        headerShadowVisible: false,
-      }}
-    >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="signin" options={{ headerShown: false }} />
+    <Stack>
       <Stack.Screen
-        name="signup"
+        name="index"
         options={{
-          headerTitle: "",
-          headerLeft: () => (
-            <View style={styles.titleFlex}>
-              <GoBack />
-            </View>
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen
-        name="resetPassword"
+        name="signin"
         options={{
-          headerLeft: () => <GoBack />,
-          headerTitle: "",
+          headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="forgotPassword"
-        options={{
-          headerLeft: () => <GoBack />,
-          headerTitle: "",
-        }}
-      />
-      <Stack.Screen
-        name="verification"
-        options={{
-          headerTitle: "",
-          headerLeft: () => <GoBack />,
-        }}
-      />
-      <Stack.Screen name="modal" options={{ headerShown: false }} />
+
       <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
     </Stack>
   );
 };
 
 const RootLayoutNav = () => {
+  const colorScheme = useColorScheme();
+
   return (
-    <AuthProvider>
-      <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY!}>
-        <Provider store={store}>
-          <SQLiteProvider databaseName="chat,db" onInit={migrateDbIfNeeded}>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <InitialLayout />
-            </GestureHandlerRootView>
-          </SQLiteProvider>
-        </Provider>
-      </StripeProvider>
-    </AuthProvider>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <ClerkProvider
+        publishableKey={CLERK_PUBLISHABLE_KEY!}
+        tokenCache={tokenCache}
+      >
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </ClerkProvider>
+    </ThemeProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  titleFlex: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 15,
-    alignItems: "center",
-  },
-
-  title: {
-    fontSize: 20,
-    color: "#1E1F22",
-    fontStyle: "normal",
-    fontWeight: "500",
-  },
-});
 
 export default RootLayoutNav;

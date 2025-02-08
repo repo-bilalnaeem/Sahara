@@ -1,4 +1,3 @@
-import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +10,7 @@ import * as Haptics from "expo-haptics";
 import { categories } from "@/assets/data/SearchFilters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Divider } from "react-native-paper";
+import { useRef, useState, createRef } from "react";
 
 interface FilterListProps {
   onCategoryChanged: (category: string) => void;
@@ -18,16 +18,21 @@ interface FilterListProps {
 
 const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
   const scrollRef = useRef<ScrollView>(null);
-  const itemsRef = useRef<Array<TouchableOpacity | null>>([]);
+  const itemsRef = useRef<Array<any>>(categories.map(() => null));
+
   const [activeIndex, setActiveIndex] = useState(0);
   const isDarkMode = useColorScheme() === "dark";
 
   const selectCategory = (index: number) => {
     const selected = itemsRef.current[index];
     setActiveIndex(index);
-    selected?.measure((x: number) => {
-      scrollRef.current?.scrollTo({ x: x - 16, y: 0, animated: true });
-    });
+
+    selected?.measure(
+      (x: number, y: number, width: number, height: number, pageX: number) => {
+        scrollRef.current?.scrollTo({ x: pageX - 16, y: 0, animated: true });
+      }
+    );
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(categories[index].text);
   };
@@ -35,7 +40,7 @@ const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, {   }]}>
+    <View style={styles.container}>
       <ScrollView
         ref={scrollRef}
         horizontal
@@ -82,12 +87,10 @@ const styles = StyleSheet.create({
     zIndex: 2,
     shadowColor: "#000",
     shadowRadius: 3,
-    // elevation: 2,
     shadowOffset: { width: 0, height: 12 },
-    // shadowOpacity: 0.09,
   },
   contentContainer: {
-    paddingHorizontal: 10, // Add some horizontal padding if needed
+    paddingHorizontal: 10,
     paddingBottom: 16,
     paddingTop: 14,
   },
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: "#478EEF",
-    marginHorizontal: 4, // Add horizontal margin for spacing between items
+    marginHorizontal: 4,
     backgroundColor: "#fff",
   },
   categoriesBtnActive: {
@@ -121,7 +124,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 30,
     paddingHorizontal: 16,
-    marginHorizontal: 4, // Ensure the margin is consistent
+    marginHorizontal: 4,
   },
 });
 
