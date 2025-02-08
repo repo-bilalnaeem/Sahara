@@ -10,6 +10,7 @@ import {
   Platform,
   Animated,
   Button,
+  ScrollView,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -22,8 +23,7 @@ import RecentlyViewed from "@/components/RecentlyViewed";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
-import { Link, router, Stack, useNavigation } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Link, useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
 import { useAuth } from "@clerk/clerk-expo";
 
@@ -35,24 +35,16 @@ const Home = () => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  const headerTranslate = scrollY.interpolate({
-    inputRange: [0, 250],
-    outputRange: [0, -250],
-    extrapolate: "clamp",
-  });
+
   const navigation = useNavigation();
 
   return (
     <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
-      <Animated.ScrollView
+      <ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
-        scrollEventThrottle={16} // Ensures smooth updates
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
-        )}
+        scrollEventThrottle={16}
       >
         <View style={styles.container}>
           <Image
@@ -70,9 +62,7 @@ const Home = () => {
               style={styles.gradient}
             />
             <View style={styles.content}>
-              <View
-              
-              >
+              <View>
                 <View
                   style={[
                     styles.profile_greeting_bell,
@@ -136,7 +126,7 @@ const Home = () => {
           <DoctorSpecialityList />
           <SaharaMart />
         </View>
-      </Animated.ScrollView>
+      </ScrollView>
     </View>
   );
 };

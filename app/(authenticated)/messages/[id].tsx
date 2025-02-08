@@ -1,1 +1,1 @@
-export {default} from '@/app/(authenticated)/(drawer)/(tabs)/(chats)/[id]'
+export {default} from '@/app/(authenticated)/(drawer)/(tabs)/chats/[id]'

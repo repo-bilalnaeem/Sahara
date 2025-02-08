@@ -24,7 +24,7 @@ const data = [
     key: "2",
     imageSource: require("@/assets/images/Consultation-PNG.png"),
     text: "Consultation",
-    screen: "/(consultation)/(chat)/new",
+    screen: "/(consultation)",
   },
   {
     key: "3",

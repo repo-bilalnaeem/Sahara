@@ -22,7 +22,7 @@ type Props = {
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
 };
 
-const LoginHook = ({
+const LoginInput = ({
   label,
   placeHolder,
   secureTextEntry,
@@ -81,7 +81,7 @@ const LoginHook = ({
   );
 };
 
-export default LoginHook;
+export default LoginInput;
 
 const styles = StyleSheet.create({
   inputContainer: {

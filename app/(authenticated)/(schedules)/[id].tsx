@@ -75,9 +75,8 @@ const Page = () => {
           <View style={styles.content}>
             <Text style={styles.name}>Dr Mathew Lewis</Text>
             <Text style={styles.occupation}>Heart Specialist</Text>
-            <Button title="Go To Chat" onPress={() => router.push(`/(authenticated)/messages/${id}`)}/>
 
-            {/* <View style={styles.container}>
+            <View style={styles.container}>
               <Text
                 style={styles.aboutDark}
                 numberOfLines={expanded ? undefined : 3}
@@ -89,15 +88,15 @@ const Page = () => {
                 clinical experience, I am passionate about ensuring the heart
                 health and well-being of my patients.
               </Text>
-              <TouchableOpacity onPress={toggleExpansion}>
+              <TouchableOpacity onPressIn={toggleExpansion}>
                 <Text style={styles.viewMore}>
                   {expanded ? "View less" : "View more"}
                 </Text>
               </TouchableOpacity>
-            </View> */}
+            </View>
           </View>
 
-          {/* <Pressable style={styles.actions} onPress={() => router.push(`/(authenticated)/messages/${id}`)}>
+          <Pressable style={styles.actions} onPressIn={() => router.push(`/(authenticated)/messages/${id}`)}>
             <LinearGradient
               colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
               start={{ x: 0, y: 0.5 }}
@@ -108,7 +107,7 @@ const Page = () => {
                 <Text style={styles.cancel_txt}>Go to Chat</Text>
               </View>
             </LinearGradient>
-          </Pressable> */}
+          </Pressable>
         </Animated.ScrollView>
       </View>
     </KeyboardAvoidingView>

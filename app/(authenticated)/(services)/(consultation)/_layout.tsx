@@ -1,3 +1,18 @@
+// import { View, Text } from "react-native";
+// import React from "react";
+// import { Stack } from "expo-router";
+
+// const Layout = () => {
+//   return (
+//     <Stack>
+//       <Stack.Screen name="index" />
+//     </Stack>
+//   );
+// };
+
+// export default Layout;
+
+
 import { Drawer } from "expo-router/drawer";
 import {
   DrawerContentScrollView,
@@ -125,7 +140,7 @@ export const CustomDrawerContent = (props: any) => {
                 inactiveTintColor="#000"
                 onPress={() =>
                   router.push(
-                    `/(authenticated)/(services)/(consultation)/(chat)/${chat.id}`
+                    `/(authenticated)/(services)/(consultation)/${chat.id}`
                   )
                 }
               ></DrawerItem>
@@ -180,7 +195,6 @@ export const CustomDrawerContent = (props: any) => {
           backgroundColor: Colors.light,
         }}
       >
-        <Link href="/(auth)/(modal)/settings" asChild>
           <TouchableOpacity style={styles.footer}>
             <Image
               source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
@@ -193,7 +207,6 @@ export const CustomDrawerContent = (props: any) => {
               color={Colors.greyLight}
             />
           </TouchableOpacity>
-        </Link>
       </View>
     </View>
   );
@@ -230,7 +243,7 @@ const Layout = () => {
       }}
     >
       <Drawer.Screen
-        name="(chat)/new"
+        name="index"
         getId={() => Math.random().toString()}
         options={{
           title: "SaharaBot",
@@ -244,7 +257,7 @@ const Layout = () => {
           ),
           headerRight: () => (
             <Link
-              href={"/(authenticated)/(services)/(consultation)/(chat)/new"}
+              href={"/(authenticated)/(services)/(consultation)/(chat)"}
               push
               asChild
             >
@@ -261,13 +274,13 @@ const Layout = () => {
         }}
       />
       <Drawer.Screen
-        name="(chat)/[id]"
+        name="[id]"
         options={{
           drawerItemStyle: {
             display: "none",
           },
           headerRight: () => (
-            <Link href={"/(authenticated)/(services)/(consultation)/(chat)/new"} push asChild>
+            <Link href={"/(authenticated)/(services)/(consultation)/(chat)"} push asChild>
               <TouchableOpacity>
                 <Ionicons
                   name="create-outline"

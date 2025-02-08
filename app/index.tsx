@@ -76,7 +76,7 @@ const Page = () => {
 
           <View style={styles.signup}>
             <Text style={styles.signupText}>Don’t have an account?</Text>
-            <Pressable onPress={() => router.navigate("/signup")}>
+            <Pressable onPress={() => router.push("/signup")}>
               {/* <Link href={"/signup"}> */}
               <Text style={styles.signupButton}>Sign up</Text>
               {/* </Link> */}

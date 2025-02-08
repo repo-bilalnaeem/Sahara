@@ -87,7 +87,7 @@ const Layout = () => {
       />
 
       <Tabs.Screen
-        name="(chats)"
+        name="chats"
         options={{
           title: "Messages",
           headerShown: false,

@@ -17,12 +17,9 @@ import { useSQLiteContext } from "expo-sqlite";
 import { addChat, addMessage, getMessages } from "@/utils/Database";
 
 const ChatPage = () => {
-  const { signOut } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [height, setHeight] = useState(0);
 
-  const [key] = useMMKVString("apiKey", Storage);
-  const [organization] = useMMKVString("org", Storage);
   const [gptVersion, setGptVersion] = useMMKVString("gptVersion", Storage);
 
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -57,7 +54,7 @@ const ChatPage = () => {
         apiKey: "",
         organization:"",
       }),
-    [key, organization]
+    []
   );
 
   const getCompletion = async (message: string) => {

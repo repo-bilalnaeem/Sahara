@@ -16,6 +16,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import GoBack from "@/components/GoBack";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -64,15 +65,15 @@ const InitialLayout = () => {
     if (!isLoaded) return;
 
     const inAuthGroup = segments[0] === "(authenticated)";
-    console.log(inAuthGroup);
-    console.log(isSignedIn);
+    console.log("In Auth Group:", inAuthGroup);
+    console.log("Is User Authenticated: ", isSignedIn);
 
     if (isSignedIn && !inAuthGroup) {
       router.replace("/(authenticated)/(drawer)/(tabs)");
     } else if (!isSignedIn && inAuthGroup) {
       router.replace("/");
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, segments]);
 
   if (!loaded || !isLoaded) {
     return (
@@ -94,6 +95,51 @@ const InitialLayout = () => {
         name="signin"
         options={{
           headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="signup"
+        options={{
+          headerLeft: () => <GoBack />,
+          headerTitle: "",
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="forgotPassword"
+        options={{
+          headerLeft: () => <GoBack />,
+          headerTitle: "",
+          headerTransparent: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="verification"
+        options={{
+          headerLeft: () => <GoBack />,
+          headerTitle: "",
+          headerTransparent: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="resetPassword"
+        options={{
+          headerLeft: () => <GoBack />,
+          headerTitle: "",
+          headerTransparent: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="modal"
+        options={{
+          presentation: "modal",
+          headerShown: false,
+          sheetGrabberVisible: true,
+          gestureEnabled: false,
         }}
       />
 

@@ -27,9 +27,9 @@ const ChatRow: FC<ChatRowProps> = ({
   return (
     <AppleStyleSwipeableRow>
       <Pressable
-        onPressIn={() => router.push(`/(drawer)/(tabs)/(chats)/${id}`)}
+        onPressIn={() => router.push(`/(drawer)/(tabs)/chats/${id}` as Href)}
       >
-        <View 
+        <View
         // underlayColor={"#DCDCE2"}
         >
           <View
