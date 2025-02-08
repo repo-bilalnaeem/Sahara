@@ -1,178 +1,187 @@
-import { View, KeyboardAvoidingView, Platform, Image } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useAuth } from "@clerk/clerk-expo";
-import { defaultStyles } from "@/constants/Styles";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
 import HeaderDropDown from "@/components/HeaderDropDown";
 import MessageInput from "@/components/MessageInput";
-import MessageIdeas from "@/components/MessageIdeas";
-import { Message, Role } from "@/utils/Interfaces";
-import { StyleSheet } from "react-native";
+import { keyStorage, storage } from "@/utils/Storage";
+import { Link, Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Image,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import axios from 'axios'
+import { useMMKVString } from "react-native-mmkv";
 import { FlashList } from "@shopify/flash-list";
 import ChatMessage from "@/components/ChatMessage";
-import { useMMKVString } from "react-native-mmkv";
-import { Storage } from "@/utils/Storage";
-import OpenAI from "react-native-openai";
-import { useSQLiteContext } from "expo-sqlite";
+import { Message, Role } from "@/utils/Interfaces";
+import MessageIdeas from "@/components/MessageIdeas";
 import { addChat, addMessage, getMessages } from "@/utils/Database";
+import { useSQLiteContext } from "expo-sqlite";
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const ChatPage = () => {
-  const { signOut } = useAuth();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [gptVersion, setGptVersion] = useMMKVString("gptVersion", storage);
   const [height, setHeight] = useState(0);
-
-  const [key] = useMMKVString("apiKey", Storage);
-  const [organization] = useMMKVString("org", Storage);
-  const [gptVersion, setGptVersion] = useMMKVString("gptVersion", Storage);
-
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const [key, setKey] = useMMKVString("apikey", keyStorage);
+  const [organization, setOrganization] = useMMKVString("org", keyStorage);
+  const [messages, setMessages] = useState<Message[]>([]);
   const db = useSQLiteContext();
-  const [chatId, setChatId] = useState<string | null>(id);
-  const chatIdRef = useRef<string | null>(id);
+  let { id } = useLocalSearchParams<{ id: string }>();
+
+
+  const [chatId, _setChatId] = useState(id);
+  const chatIdRef = useRef(chatId);
+  function setChatId(id: string) {
+    chatIdRef.current = id;
+    _setChatId(id);
+  }
 
   useEffect(() => {
-    if (!id) return;
-
-    console.log("Switching to Chat ID:", id);
-
-    setMessages([]); // 🛑 Clear previous messages before fetching new ones
-
-    getMessages(db, parseInt(id))
-      .then((messages) => {
-        if (!Array.isArray(messages)) {
-          console.error("Invalid messages format:", messages);
-          setMessages([]);
-          return;
-        }
-        setMessages(messages.filter((msg) => msg?.content !== undefined));
-      })
-      .catch((err) => console.error("Error fetching messages:", err));
+    if (id) {
+      getMessages(db, parseInt(id)).then((res) => {
+        setMessages(res);
+      });
+    }
   }, [id]);
 
+  const flaskBaseURL = process.env.EXPO_PUBLIC_FLASK_SERVER_URL;
 
+  const [result, setResult] = React.useState("");
 
-  const openAI = useMemo(
-    () =>
-      new OpenAI({
-        apiKey: "",
-        organization:"",
-      }),
-    [key, organization]
-  );
-
-  const getCompletion = async (message: string) => {
-    console.log("Getting completion for:", message);
-    let chatID = chatIdRef.current;
-
-    if (!chatID) {
-      try {
-        const result = await addChat(db, message);
-        chatID = result.lastInsertRowId.toString();
-        setChatId(chatID);
-        chatIdRef.current = chatID;
-        console.log("New Chat ID:", chatID);
-      } catch (error) {
-        console.error("Error creating new chat:", error);
-        return;
-      }
-    }
-
-    const userMessage = { content: message, role: Role.User };
-    const botMessage = { role: Role.Bot, content: "" };
-
-    setMessages((prevMessages) => [...prevMessages, userMessage, botMessage]);
-
-    try {
-      await addMessage(db, parseInt(chatID), userMessage);
-    } catch (error) {
-      console.error("Error saving user message:", error);
-    }
-
-    try {
-      const stream = openAI.chat.stream({
-        messages: [{ role: "user", content: message }],
-        model: gptVersion === "4" ? "gpt-4" : "gpt-3.5-turbo",
-      });
-    } catch (error) {
-      console.error("OpenAI API Error:", error);
-    }
+  const onGptVersionChange = (version: string) => {
+    setGptVersion(version);
   };
-
-  useEffect(() => {
-
-    const handleMessage = (payload: any) => {
-      if (!payload.choices || payload.choices.length === 0) return;
-
-      setMessages((prevMessages) => {
-        if (prevMessages.length === 0) return prevMessages;
-
-        const lastMessageIndex = prevMessages.length - 1;
-        const lastMessage = prevMessages[lastMessageIndex];
-
-        if (!lastMessage || lastMessage.role !== Role.Bot) return prevMessages;
-
-        const newContent = payload.choices[0]?.delta?.content || "";
-
-        if (newContent) {
-          return prevMessages.map((msg, index) =>
-            index === lastMessageIndex
-              ? { ...msg, content: msg.content + newContent }
-              : msg
-          );
-        }
-
-        if (payload.choices[0]?.finishReason) {
-          try {
-            // Ensure message isn't saved twice
-            if (lastMessage.content.trim() !== "") {
-              addMessage(
-                db,
-                parseInt(chatIdRef.current as string),
-                lastMessage
-              );
-            }
-          } catch (error) {
-            console.error("Error saving bot message:", error);
-          }
-        }
-
-        return prevMessages;
-      });
-    };
-
-    openAI.chat.addListener("onChatMessageReceived", handleMessage);
-
-    return () => {
-      openAI.chat.removeListener("onChatMessageReceived");
-    };
-  }, [openAI]);
 
   const onLayout = (event: any) => {
-    setHeight(event.nativeEvent.layout.height);
+    const { height } = event.nativeEvent.layout;
+    setHeight(height);
   };
 
+  // Function to send messages to Flask server
+  const getCompletion = async (text: string) => {
+    // If it's the first message, create a new chat entry in the database
+    if (messages.length === 0) {
+      addChat(db, text).then((res) => {
+        const chatID = res.lastInsertRowId;
+        setChatId(chatID.toString());
+  
+        // Save the user message in the database
+        addMessage(db, chatID, { content: text, role: Role.User });
+  
+        // Add the user message to the state as well
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: Role.User, content: text },
+          { role: Role.Bot, content: "..." }, // Placeholder for bot's response
+        ]);
+      });
+    } else {
+      // If there are existing messages, add the new message directly
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: Role.User, content: text },
+        { role: Role.Bot, content: "..." }, // Placeholder for bot's response
+      ]);
+    }
+  
+    try {
+      // Send the user's message to the Flask server to get the bot's response
+      const response = await axios.post(`${flaskBaseURL}/chat`, {
+        message: text,
+        gptVersion: gptVersion === "4" ? "gpt-4" : "gpt-3.5-turbo",
+      });
+  
+      // Update the last message (the bot's placeholder) with the actual response
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg, index) =>
+          index === prevMessages.length - 1
+            ? { ...msg, content: response.data.response } // Replace placeholder with response
+            : msg
+        );
+      });
+  
+      // Save the bot's response to the database as well
+      if (chatIdRef.current) {
+        addMessage(db, parseInt(chatIdRef.current), {
+          content: response.data.response,
+          role: Role.Bot,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching response from server:", error);
+  
+      // If there's an error, replace the placeholder with an error message
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg, index) =>
+          index === prevMessages.length - 1
+            ? { ...msg, content: "Sorry, something went wrong!" }
+            : msg
+        );
+      });
+  
+      // Optionally, save an error message to the database if needed
+      if (chatIdRef.current) {
+        addMessage(db, parseInt(chatIdRef.current), {
+          content: "Sorry, something went wrong!",
+          role: Role.Bot,
+        });
+      }
+    }
+  };
+  
+  
+  
+
+  
   return (
-    <View style={defaultStyles.pageContainer}>
+    <View style={styles.pageContainer}>
       <Stack.Screen
         options={{
           headerTitle: () => (
-            <HeaderDropDown
-              onSelect={(key) => setGptVersion(key)}
-              selected={gptVersion}
-              title={"SaharaBot"}
-              items={[
-                { key: "3.5", title: "GPT-3.5", icon: "bolt" },
-                { key: "4", title: "GPT-4", icon: "sparkles" },
-              ]}
-            />
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 18,
+              }}
+            >
+              <HeaderDropDown
+                title="SaharaBot"
+                items={[
+                  { key: "3.5", title: "GPT-3.5", icon: "bolt" },
+                  { key: "4", title: "GPT-4", icon: "sparkles" },
+                ]}
+                onSelect={onGptVersionChange}
+                selected={gptVersion}
+                
+              />
+            </View>
+          ),
+
+          headerRight: () => (
+            <Link href={"/(drawer)/(chat)/new"} push asChild>
+              <TouchableOpacity>
+                <Ionicons
+                  name="create-outline"
+                  size={24}
+                  color={"#242026"}
+                  style={{ marginRight: 16 }}
+                />
+              </TouchableOpacity>
+            </Link>
           ),
         }}
       />
-      <View style={{ flex: 1 }} onLayout={onLayout}>
-        {messages.length === 0 && (
+      <View style={styles.page} onLayout={onLayout}>
+        {messages.length == 0 && (
           <View style={[styles.logoContainer, { marginTop: height / 2 - 100 }]}>
             <Image
-              source={require("@/assets/images/Vector.png")}
+              source={require("@/assets/images/my-adaptive-icon.png")}
               style={styles.image}
             />
           </View>
@@ -181,15 +190,20 @@ const ChatPage = () => {
           data={messages}
           renderItem={({ item }) => <ChatMessage {...item} />}
           estimatedItemSize={400}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 30 }}
+          contentContainerStyle={{ paddingTop: 30, paddingBottom: 150 }}
           keyboardDismissMode="on-drag"
         />
       </View>
+
       <KeyboardAvoidingView
-        keyboardVerticalOffset={70}
-        style={{ position: "absolute", bottom: 0, left: 0, width: "100%" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={70}
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+        }}
       >
         {messages.length === 0 && <MessageIdeas onSelectCard={getCompletion} />}
         <MessageInput onShouldSend={getCompletion} />
@@ -203,16 +217,24 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    width: 50,
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 50,
+    // width: 80,
+    // height: 80,
+    // backgroundColor: "#000",
+    // borderRadius: 50,
   },
   image: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
+    width: 80,
+    height: 80,
+    resizeMode: "cover",
+    // tintColor: "gray",
+  },
+  page: {
+    flex: 1,
+  },
+
+  pageContainer: {
+    flex: 1,
+    backgroundColor: "#FFFCFF",
   },
 });
-
 export default ChatPage;

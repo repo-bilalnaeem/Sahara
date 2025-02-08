@@ -1,12 +1,12 @@
-import { View, Text, SafeAreaView } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 
-const Page = () => {
+const Emergency = () => {
   return (
-    <SafeAreaView>
-      <Text>Page</Text>
-    </SafeAreaView>
+    <View>
+      <Text>Emergency</Text>
+    </View>
   )
 }
 
-export default Page
+export default Emergency

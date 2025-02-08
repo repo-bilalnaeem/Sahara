@@ -1,1 +1,1 @@
-export { default } from "@/components/CustomDrawer";
+export { default } from "@/components/Drawer";

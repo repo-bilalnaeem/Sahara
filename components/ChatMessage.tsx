@@ -1,15 +1,20 @@
-import { View, Text, Image, ActivityIndicator, Pressable } from "react-native";
-import React from "react";
-import { Message, Role } from "@/utils/Interfaces";
-import { StyleSheet } from "react-native";
-import Colors from "@/constants/Colors";
-import * as ContextMenu from "zeego/context-menu";
 import {
   copyImageToClipboard,
   downloadAndSaveImage,
   shareImage,
 } from "@/utils/Image";
-import { Link } from "expo-router";
+import { Message, Role } from "@/utils/Interfaces";
+import { Href, Link } from "expo-router";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import * as ContextMenu from "zeego/context-menu";
 
 const ChatMessage = ({
   content,
@@ -35,24 +40,26 @@ const ChatMessage = ({
       action: () => shareImage(imageUrl!),
     },
   ];
+
   return (
     <View style={styles.row}>
       {role === Role.Bot ? (
-        <View style={[styles.item]}>
+        <View style={[styles.item, { backgroundColor: "#000" }]}>
           <Image
-            source={require("@/assets/images/Vector.png")}
+            source={require("@/assets/images/my-adaptive-icon.png")}
             style={styles.btnImage}
           />
         </View>
       ) : (
         <Image
-          source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+          source={ require('@/assets/images/profile_img.jpg')}
           style={styles.avatar}
         />
       )}
+
       {loading ? (
         <View style={styles.loading}>
-          <ActivityIndicator color={Colors.primary} />
+          <ActivityIndicator color={"#20AB6E"} size="small" />
         </View>
       ) : (
         <>
@@ -60,9 +67,9 @@ const ChatMessage = ({
             <ContextMenu.Root>
               <ContextMenu.Trigger>
                 <Link
-                  href={`/(auth)/(modal)/${encodeURIComponent(
+                  href={`/(authenticated)/(modal)/image/${encodeURIComponent(
                     imageUrl
-                  )}?propmpt=${encodeURIComponent(prompt!)}`}
+                  )}?prompt=${encodeURIComponent(prompt!)}`}
                   asChild
                 >
                   <Pressable>
@@ -73,13 +80,18 @@ const ChatMessage = ({
                   </Pressable>
                 </Link>
               </ContextMenu.Trigger>
-              <ContextMenu.Content>
+              <ContextMenu.Content
+                loop={false}
+                alignOffset={0}
+                avoidCollisions={true}
+                collisionPadding={4}
+              >
                 {contextItems.map((item, index) => (
                   <ContextMenu.Item key={item.title} onSelect={item.action}>
                     <ContextMenu.ItemTitle>{item.title}</ContextMenu.ItemTitle>
                     <ContextMenu.ItemIcon
                       ios={{
-                        name: item.systemIcon as any,
+                        name: item.systemIcon,
                         pointSize: 18,
                       }}
                     />
@@ -104,43 +116,40 @@ const styles = StyleSheet.create({
     gap: 14,
     marginVertical: 12,
   },
-
   item: {
     borderRadius: 15,
     overflow: "hidden",
+  },
+  btnImage: {
+    // margin: 6,
+    width: 30,
+    height: 30,
+    objectFit: "contain",
+    borderRadius: 15,
+
     backgroundColor: "#ffffff",
   },
-
   avatar: {
     width: 30,
     height: 30,
     borderRadius: 15,
+    backgroundColor: "#000",
   },
-
-  btnImage: {
-    margin: 2,
-    width: 24,
-    height: 24,
-    objectFit:"contain"
-  },
-
   text: {
     padding: 4,
     fontSize: 16,
     flexWrap: "wrap",
     flex: 1,
   },
-
-  loading: {
-    justifyContent: "center",
-    height: 26,
-    marginLeft: 14,
-  },
-
   previewImage: {
     width: 240,
     height: 240,
     borderRadius: 10,
+  },
+  loading: {
+    justifyContent: "center",
+    height: 26,
+    marginLeft: 14,
   },
 });
 

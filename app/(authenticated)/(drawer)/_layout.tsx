@@ -1,17 +1,42 @@
 import { Drawer } from "expo-router/drawer";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import { Href, Link, useNavigation, useRouter, useSegments } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  TextInput,
+  Alert,
+  Keyboard,
+  useColorScheme,
+  Platform,
+} from "react-native";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useState } from "react";
+import { useDrawerStatus } from "@react-navigation/drawer";
+import { Chat } from "@/utils/Interfaces";
+import * as ContextMenu from "zeego/context-menu";
+import { getChats, renameChat } from "@/utils/Database";
 import React from "react";
-import { View, Image } from "react-native";
-import { useRouter } from "expo-router";
-import { CustomHeader } from "@/components/CustomHeader";
-import DrawerContent from "@/components/DrawerContent";
+import { Ionicons } from "@expo/vector-icons";
+import { CustomDrawerContent, CustomHeader } from "@/components/Drawer";
 
 const Layout = () => {
   const dimensions = useWindowDimensions();
+  const segments = useSegments();
   const router = useRouter();
+
   return (
     <Drawer
-      drawerContent={DrawerContent}
+      drawerContent={CustomDrawerContent}
       screenOptions={{
         headerStyle: {
           backgroundColor: "#FFFCFF",
@@ -22,10 +47,9 @@ const Layout = () => {
         drawerInactiveTintColor: "#000",
         overlayColor: "rgba(0, 0, 0, 0.2)",
         drawerItemStyle: { borderRadius: 12 },
-        // drawerLabelStyle: { marginLeft: -10 },
+        drawerLabelStyle: { marginLeft: -10 },
         drawerStyle: { width: dimensions.width * 0.86 },
-        // drawerHideStatusBarOnOpen: true,
-        swipeEnabled: false,
+        drawerHideStatusBarOnOpen: true,
       }}
     >
       <Drawer.Screen
@@ -39,10 +63,13 @@ const Layout = () => {
         }}
       />
 
-      <Drawer.Screen
+<Drawer.Screen
         name="offers"
+        // getId={() => Math.random().toString()}
+        
         options={{
           title: "Offers",
+          
           drawerIcon: () => (
             <View style={[styles.item]}>
               <Image
@@ -51,7 +78,9 @@ const Layout = () => {
               />
             </View>
           ),
-          header: () => <CustomHeader onPress={router.back} heading="Offers" />,
+          header: () => (
+            <CustomHeader onPress={router.back} heading="Offers" />
+          ),
         }}
       />
 
@@ -129,6 +158,8 @@ const Layout = () => {
           ),
         }}
       />
+
+     
     </Drawer>
   );
 };

@@ -1,21 +1,19 @@
-import { View, Text } from "react-native";
 import React from "react";
+import { Text, View } from "react-native";
 import * as DropdownMenu from "zeego/dropdown-menu";
-import Colors from "@/constants/Colors";
 
-export type HeaderDropDownProps = {
+export type Props = {
   title: string;
+  items: Array<{
+    key: string;
+    title: string;
+    icon: string;
+  }>;
   selected?: string;
   onSelect: (key: string) => void;
-  items: Array<{ key: string; title: string; icon: string }>;
 };
 
-const HeaderDropDown = ({
-  title,
-  selected,
-  items,
-  onSelect,
-}: HeaderDropDownProps) => {
+const HeaderDropDown = ({ title, selected, items, onSelect }: Props) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
@@ -25,9 +23,9 @@ const HeaderDropDown = ({
             <Text
               style={{
                 marginLeft: 10,
-                color: Colors.greyLight,
-                fontWeight: "500",
                 fontSize: 16,
+                fontWeight: "500",
+                color: "#B8B3BA",
               }}
             >
               {selected}
@@ -35,26 +33,29 @@ const HeaderDropDown = ({
           )}
         </View>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content
+        loop={false}
+        side="bottom"
+        align="start"
+        alignOffset={0}
+        avoidCollisions={true}
+        collisionPadding={4}
+        sideOffset={0}
+      >
         {items.map((item) => (
-          <DropdownMenu.Item
-            key={item.key}
-            onSelect={() => onSelect(item.key)}
-            // selected={item.key === selected}
-            // icon={item.key}
-          >
+          <DropdownMenu.Item key={item.key} onSelect={() => onSelect(item.key)}>
             <DropdownMenu.ItemTitle>{item.title}</DropdownMenu.ItemTitle>
             <DropdownMenu.ItemIcon
               ios={{
-                name: item.icon as any,
+                name: item.icon,
                 pointSize: 18,
               }}
-            ></DropdownMenu.ItemIcon>
+            />
           </DropdownMenu.Item>
         ))}
       </DropdownMenu.Content>
+      
     </DropdownMenu.Root>
   );
 };
-
 export default HeaderDropDown;

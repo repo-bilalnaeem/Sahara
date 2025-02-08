@@ -1,16 +1,8 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import DateTimePicker from "react-native-ui-datepicker";
 import BookSlider from "./BookSlider";
-import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
 
 const generateTimeSlots = (
   startHour: number,
@@ -54,7 +46,7 @@ const TimeSlots = () => {
           <Text style={styles.slotsHeading}>Available Slots</Text>
 
           <View style={styles.slotsContainer}>
-            {timeSlots.map((slot: any, index) => (
+            {timeSlots.map((slot, index) => (
               <Pressable
                 key={index}
                 onPress={() => setSelectedSlot(slot)}
@@ -76,23 +68,10 @@ const TimeSlots = () => {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.actions}
-          activeOpacity={0.8}
-          onPress={() => router.push("/(authenticated)/(booking)")}
-        >
-          <LinearGradient
-            colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={[styles.cancel_btn]}
-          >
-            <View style={{ width: "100%" }}>
-              <Text style={styles.cancel_txt}>Book Appointment</Text>
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
+        {/* <View style={styles.slider}> */}
+        {/* </View> */}
       </View>
+        <BookSlider name={"Book Appointment"} />
     </View>
   );
 };
@@ -146,29 +125,14 @@ const styles = StyleSheet.create({
     color: "#FFF",
   },
 
-  cancel_txt: {
-    color: "#fff",
-    textAlign: "center",
-    fontFamily: "Lato400",
-    fontSize: 17,
-    fontStyle: "normal",
-    fontWeight: "400",
-    lineHeight: 22,
-    marginHorizontal: 4,
-  },
-
-  cancel_btn: {
-    width: "100%",
-    height: 66,
-    borderRadius: 40,
-    padding: 4,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  actions: {
+  slider: {
+    // position: "absolute",
+    // bottom: 32,
+    // width: "100%",
+    // paddingHorizontal: 10,
     marginTop: 32,
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 

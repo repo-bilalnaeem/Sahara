@@ -4,7 +4,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { Link, useNavigation, useRouter } from "expo-router";
+import { Href, Link, useNavigation, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Image,
@@ -15,36 +15,34 @@ import {
   useWindowDimensions,
   TextInput,
   Alert,
+  Keyboard,
+  useColorScheme,
+  Platform,
 } from "react-native";
-import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
-import * as ContextMenu from "zeego/context-menu";
-import { Keyboard } from "react-native";
-import { deleteChat, getChats, renameChat } from "@/utils/Database";
 import { Chat } from "@/utils/Interfaces";
-import { useSQLiteContext } from "expo-sqlite";
+import * as ContextMenu from "zeego/context-menu";
+import { getChats, renameChat } from "@/utils/Database";
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 
-export const CustomDrawerContent = (props: any) => {
+const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
+  const db = useSQLiteContext();
   const isDrawerOpen = useDrawerStatus() === "open";
   const [history, setHistory] = useState<Chat[]>([]);
-  const db = useSQLiteContext();
-
   const router = useRouter();
 
   useEffect(() => {
-    if (isDrawerOpen) {
-      loadChats();
-    }
+    loadChats();
     Keyboard.dismiss();
   }, [isDrawerOpen]);
 
   const loadChats = async () => {
-    console.log("Loading Chats");
-    const result = await getChats(db);
-    console.log("Got Chats:", result);
+    // Load chats from SQLite
+    const result = (await getChats(db)) as Chat[];
     setHistory(result);
   };
 
@@ -57,8 +55,9 @@ export const CustomDrawerContent = (props: any) => {
       {
         text: "Delete",
         onPress: async () => {
-          await deleteChat(db, chatId); // Ensure messages are also deleted
-          loadChats(); // Refresh chat list after deletion
+          // Delete the chat
+          await db.runAsync("DELETE FROM chats WHERE id = ?", chatId);
+          loadChats();
         },
       },
     ]);
@@ -86,7 +85,7 @@ export const CustomDrawerContent = (props: any) => {
             style={styles.searchIcon}
             name="search"
             size={20}
-            color={Colors.greyLight}
+            color={"#B8B3BA"}
           />
           <TextInput
             style={styles.input}
@@ -101,36 +100,54 @@ export const CustomDrawerContent = (props: any) => {
         contentContainerStyle={{ backgroundColor: "#fff", paddingTop: 0 }}
       >
         <DrawerItemList {...props} />
+
         <DrawerItem
           label="Home"
+          onPress={() => {
+            router.replace("/(authenticated)/(tabs)");
+          }}
           inactiveTintColor="#000"
-          onPress={() => router.replace("/(authenticated)/(drawer)/(tabs)")}
+          activeBackgroundColor="#F7F2F9"
+          labelStyle={{
+            marginLeft: -5,
+            borderRadius: 12,
+            // overlayColor: "rgba(0, 0, 0, 0.2)",
+            marginHorizontal: 13,
+          }}
+          activeTintColor="#000"
+          pressColor="rgba(0,0,0,0.2)"
           icon={() => (
-            <Ionicons
-              name="home-outline"
-              size={20}
-              color={"#000"}
-              style={{
-                margin: 5,
-              }}
-            />
+            <View
+              style={[
+                styles.item,
+                {
+                  backgroundColor: "#fff",
+                  width: 28,
+                  height: 28,
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+              ]}
+            >
+              <Ionicons name="home" size={18} color="#000" />
+            </View>
           )}
         />
-
         {history.map((chat) => (
           <ContextMenu.Root key={chat.id}>
             <ContextMenu.Trigger>
               <DrawerItem
                 label={chat.title}
+                onPress={() => router.push(`/(chat)/${chat.id}`)}
                 inactiveTintColor="#000"
-                onPress={() =>
-                  router.push(
-                    `/(authenticated)/(services)/(consultation)/(chat)/${chat.id}`
-                  )
-                }
-              ></DrawerItem>
+              />
             </ContextMenu.Trigger>
-            <ContextMenu.Content>
+            <ContextMenu.Content
+              loop={false}
+              alignOffset={0}
+              avoidCollisions={true}
+              collisionPadding={10}
+            >
               <ContextMenu.Preview>
                 {() => (
                   <View
@@ -144,8 +161,9 @@ export const CustomDrawerContent = (props: any) => {
                   </View>
                 )}
               </ContextMenu.Preview>
+
               <ContextMenu.Item
-                key="rename"
+                key={"rename"}
                 onSelect={() => onRenameChat(chat.id)}
               >
                 <ContextMenu.ItemTitle>Rename</ContextMenu.ItemTitle>
@@ -157,8 +175,9 @@ export const CustomDrawerContent = (props: any) => {
                 />
               </ContextMenu.Item>
               <ContextMenu.Item
-                key="delete"
+                key={"delete"}
                 onSelect={() => onDeleteChat(chat.id)}
+                destructive
               >
                 <ContextMenu.ItemTitle>Delete</ContextMenu.ItemTitle>
                 <ContextMenu.ItemIcon
@@ -177,21 +196,17 @@ export const CustomDrawerContent = (props: any) => {
         style={{
           padding: 16,
           paddingBottom: 10 + bottom,
-          backgroundColor: Colors.light,
+          backgroundColor: "#FFFCFF",
         }}
       >
-        <Link href="/(auth)/(modal)/settings" asChild>
+        <Link href="/" asChild>
           <TouchableOpacity style={styles.footer}>
             <Image
               source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
               style={styles.avatar}
             />
             <Text style={styles.userName}>Bilal Naeem</Text>
-            <Ionicons
-              name="ellipsis-horizontal"
-              size={24}
-              color={Colors.greyLight}
-            />
+            <Ionicons name="ellipsis-horizontal" size={24} color={"#B8B3BA"} />
           </TouchableOpacity>
         </Link>
       </View>
@@ -200,32 +215,22 @@ export const CustomDrawerContent = (props: any) => {
 };
 
 const Layout = () => {
-  const navigation = useNavigation();
   const dimensions = useWindowDimensions();
-  const router = useRouter();
 
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
-        // headerLeft: () => (
-        //   <TouchableOpacity
-        //     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
-        //     style={{ marginLeft: 16 }}
-        //   >
-        //     <FontAwesome6 name="grip-lines" size={20} color={Colors.grey} />
-        //   </TouchableOpacity>
-        // ),
         headerStyle: {
-          backgroundColor: Colors.light,
+          backgroundColor: "#FFFCFF",
         },
         headerShadowVisible: false,
-        drawerActiveBackgroundColor: Colors.selected,
+        drawerActiveBackgroundColor: "#F7F2F9",
         drawerActiveTintColor: "#000",
         drawerInactiveTintColor: "#000",
         overlayColor: "rgba(0, 0, 0, 0.2)",
         drawerItemStyle: { borderRadius: 12 },
-        // drawerLabelStyle: { marginLeft: -20 },
+        drawerLabelStyle: { marginLeft: -5 },
         drawerStyle: { width: dimensions.width * 0.86 },
       }}
     >
@@ -235,29 +240,19 @@ const Layout = () => {
         options={{
           title: "SaharaBot",
           drawerIcon: () => (
-            <View style={[styles.item, { backgroundColor: "#fff" }]}>
+            <View style={[styles.item, { backgroundColor: "#000" }]}>
               <Image
-                source={require("@/assets/images/Vector.png")}
+                source={require("@/assets/images/logo-white.png")}
                 style={styles.btnImage}
               />
             </View>
           ),
-          headerRight: () => (
-            <Link
-              href={"/(authenticated)/(services)/(consultation)/(chat)/new"}
-              push
-              asChild
-            >
-              <TouchableOpacity>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color={Colors.grey}
-                  style={{ marginRight: 16 }}
-                />
-              </TouchableOpacity>
-            </Link>
-          ),
+
+          ...(Platform.OS === "android" && {
+            headerTitleContainerStyle: { paddingTop: 20 },
+            headerLeftContainerStyle: { paddingTop: 20 },
+            headerRightContainerStyle: { paddingTop: 20 },
+          }),
         }}
       />
       <Drawer.Screen
@@ -266,18 +261,6 @@ const Layout = () => {
           drawerItemStyle: {
             display: "none",
           },
-          headerRight: () => (
-            <Link href={"/(authenticated)/(services)/(consultation)/(chat)/new"} push asChild>
-              <TouchableOpacity>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color={Colors.grey}
-                  style={{ marginRight: 16 }}
-                />
-              </TouchableOpacity>
-            </Link>
-          ),
         }}
       />
     </Drawer>
@@ -292,7 +275,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.input,
+    backgroundColor: "#EEE9F0",
   },
   searchIcon: {
     padding: 6,
@@ -333,6 +316,31 @@ const styles = StyleSheet.create({
     margin: 6,
     width: 16,
     height: 16,
+  },
+  dallEImage: {
+    width: 28,
+    height: 28,
+    resizeMode: "cover",
+  },
+
+  lightBackButton: {
+    borderRadius: 24,
+    width: 42,
+    height: 42,
+    backgroundColor: "#D9D9D9",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
+  },
+
+  darkBackButton: {
+    borderRadius: 24,
+    width: 42,
+    height: 42,
+    backgroundColor: "#1E1F22",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
   },
 });
 

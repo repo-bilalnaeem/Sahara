@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React, { useMemo, useState } from "react";
 import Listings from "@/components/SearchList";
-import { doctors } from "@/assets/data/RecentlyViewed";
+import {doctors} from "@/assets/data/RecentlyViewed";
 import FilterList from "@/components/SearchFilter";
 const search = () => {
   const items = useMemo(() => doctors as any, []);
@@ -14,7 +14,6 @@ const search = () => {
 
   return (
     <View style={{ flex: 1 }}>
-    
       <FilterList onCategoryChanged={onDataChanged} />
       <Listings listings={items} category={category} />
     </View>

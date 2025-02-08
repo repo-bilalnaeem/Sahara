@@ -1,12 +1,10 @@
-import { Chat, Message, Role } from '@/utils/Interfaces';
+import { Message, Role } from '@/utils/Interfaces';
 import { type SQLiteDatabase } from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   // Log DB path for debugging
-  console.log(FileSystem.documentDirectory);
-
-
+  // console.log(FileSystem.documentDirectory);
   const DATABASE_VERSION = 1;
   let result = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
 
@@ -48,23 +46,27 @@ export const addChat = async (db: SQLiteDatabase, title: string) => {
 };
 
 export const getChats = async (db: SQLiteDatabase) => {
-  return await db.getAllAsync<Chat>('SELECT * FROM chats');
+  return await db.getAllAsync('SELECT * FROM chats');
 };
 
 export const getMessages = async (db: SQLiteDatabase, chatId: number): Promise<Message[]> => {
-  return (await db.getAllAsync<Message>('SELECT * FROM messages WHERE chat_id = ?', chatId)).map(
-    (message) => ({
-      ...message,
-      role: '' + message.role === 'bot' ? Role.Bot : Role.User,
-    })
-  );
+  console.log("Fetching messages for chatId:", chatId);  // Debug log
+  const messages = await db.getAllAsync<Message>('SELECT * FROM messages WHERE chat_id = ?', chatId);
+  console.log("Fetched messages:", messages);  // Debug log
+  return messages.map((message) => ({
+    ...message,
+    role: message.role === 'bot' ? Role.Bot : Role.User,
+  }));
 };
+
+
 
 export const addMessage = async (
   db: SQLiteDatabase,
   chatId: number,
   { content, role, imageUrl, prompt }: Message
 ) => {
+  console.log(`Inserting message: chatId=${chatId}, content=${content}, role=${role}`);
   return await db.runAsync(
     'INSERT INTO messages (chat_id, content, role, imageUrl, prompt) VALUES (?, ?, ?, ?, ?)',
     chatId,
@@ -75,9 +77,10 @@ export const addMessage = async (
   );
 };
 
+
 export const deleteChat = async (db: SQLiteDatabase, chatId: number) => {
-  await db.runAsync('DELETE FROM messages WHERE chat_id = ?', chatId); // Delete messages first
-  return await db.runAsync('DELETE FROM chats WHERE id = ?', chatId); // Then delete chat
+  console.log(`Deleting chat with chatId: ${chatId}`);  // Debug log
+  return await db.runAsync('DELETE FROM chats WHERE id = ?', chatId);
 };
 
 
