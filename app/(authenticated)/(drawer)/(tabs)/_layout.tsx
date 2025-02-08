@@ -22,7 +22,6 @@ const Layout = () => {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#fff",
-        headerShown: false,
         tabBarBackground: () => (
           <BlurView
             intensity={100}
@@ -59,6 +58,7 @@ const Layout = () => {
             <Feather name="home" size={size} color={color} />
           ),
           tabBarShowLabel: false,
+          headerShown: false,
         }}
       />
 
@@ -85,19 +85,16 @@ const Layout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="(chats)"
         options={{
           title: "Messages",
           headerShown: false,
-          tabBarShowLabel: false,
-
           tabBarStyle: { display: "none" },
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="chatbubbles-outline" size={size} color={color} />
-            // <MessageIconLight />
           ),
-          // headerTransparent: true,
         }}
       />
     </Tabs>

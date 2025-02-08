@@ -21,6 +21,8 @@ const chats = () => {
     <View
       style={{
         position: "relative",
+        flex: 1,
+        backgroundColor: "#fff",
       }}
     >
       <FlatList
@@ -48,7 +50,7 @@ const chats = () => {
           // backgroundColor: "#3d74c2",
         }}
         activeOpacity={0.95}
-        onPress={() => router.back()}
+        onPressIn={() => router.back()}
       >
         <LinearGradient
           colors={["#3d547b", "rgb(12, 95, 144)"]}

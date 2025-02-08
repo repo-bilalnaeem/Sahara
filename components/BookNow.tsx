@@ -69,7 +69,7 @@ const BookNow = ({ item, index }: Props) => {
         </View>
 
         <View style={styles.book_and_nav}>
-          <BookSlider name={"Book Now"} data={undefined} />
+          <BookSlider name={"Book Now"} />
 
           <View style={[styles.navigation_button]}>
             <TouchableOpacity onPress={() => router.navigate("/(doctor)/1")}>

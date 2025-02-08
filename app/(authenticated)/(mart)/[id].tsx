@@ -29,8 +29,8 @@ const PRICE = 47.5;
 const Product = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const addProduct = useCart((state) => state.addProduct);
-  const cartItems = useCart((state) => state.items);
+  const addProduct = useCart((state: any) => state.addProduct);
+  const cartItems = useCart((state: any) => state.items);
   //   console.log(JSON.stringify(cartItems, null, 2))
 
   const product = products.find((p) => p.key === id);

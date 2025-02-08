@@ -1,8 +1,8 @@
 import { format } from "date-fns";
-import { Href, Link } from "expo-router";
+import { Href, Link, router } from "expo-router";
 import React from "react";
 import { FC } from "react";
-import { View, Text, Image, TouchableHighlight } from "react-native";
+import { View, Text, Image, TouchableHighlight, Pressable } from "react-native";
 import AppleStyleSwipeableRow from "./Swipeable";
 
 export interface ChatRowProps {
@@ -26,8 +26,12 @@ const ChatRow: FC<ChatRowProps> = ({
 }) => {
   return (
     <AppleStyleSwipeableRow>
-      <Link href={`/(authenticated)/(chats)/${id}` as Href} asChild>
-        <TouchableHighlight activeOpacity={0.8} underlayColor={"#DCDCE2"}>
+      <Pressable
+        onPressIn={() => router.push(`/(drawer)/(tabs)/(chats)/${id}`)}
+      >
+        <View 
+        // underlayColor={"#DCDCE2"}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -57,8 +61,8 @@ const ChatRow: FC<ChatRowProps> = ({
               {format(date, "MM.dd.yy")}
             </Text>
           </View>
-        </TouchableHighlight>
-      </Link>
+        </View>
+      </Pressable>
     </AppleStyleSwipeableRow>
   );
 };

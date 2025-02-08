@@ -1,12 +1,12 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
+import React from "react";
 
-const Offers = () => {
+const offers = () => {
   return (
     <View>
-      <Text>Offers</Text>
+      <Text>offers</Text>
     </View>
-  )
-}
+  );
+};
 
-export default Offers
+export default offers;

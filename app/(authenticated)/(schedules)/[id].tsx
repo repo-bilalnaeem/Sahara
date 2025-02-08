@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  Button,
 } from "react-native";
 import Animated, {
   interpolate,
@@ -22,6 +24,8 @@ const IMG_HEIGHT = 485;
 
 const Page = () => {
   const { id } = useLocalSearchParams();
+
+  console.log(id);
 
   const router = useRouter();
 
@@ -71,8 +75,9 @@ const Page = () => {
           <View style={styles.content}>
             <Text style={styles.name}>Dr Mathew Lewis</Text>
             <Text style={styles.occupation}>Heart Specialist</Text>
+            <Button title="Go To Chat" onPress={() => router.push(`/(authenticated)/messages/${id}`)}/>
 
-            <View style={styles.container}>
+            {/* <View style={styles.container}>
               <Text
                 style={styles.aboutDark}
                 numberOfLines={expanded ? undefined : 3}
@@ -89,11 +94,10 @@ const Page = () => {
                   {expanded ? "View less" : "View more"}
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
-        </Animated.ScrollView>
-        <View style={styles.actions}>
-          <TouchableOpacity activeOpacity={0.8}>
+
+          {/* <Pressable style={styles.actions} onPress={() => router.push(`/(authenticated)/messages/${id}`)}>
             <LinearGradient
               colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
               start={{ x: 0, y: 0.5 }}
@@ -104,8 +108,8 @@ const Page = () => {
                 <Text style={styles.cancel_txt}>Go to Chat</Text>
               </View>
             </LinearGradient>
-          </TouchableOpacity>
-        </View>
+          </Pressable> */}
+        </Animated.ScrollView>
       </View>
     </KeyboardAvoidingView>
   );
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     paddingHorizontal: 13,
     marginBottom: 100,
-    height:"100%"
+    height: "100%",
   },
 
   name: {
