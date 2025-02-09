@@ -47,6 +47,7 @@ import {
   const styles = StyleSheet.create({
     screen: {
       flex: 1,
+      backgroundColor:"#fff"
     },
   
     notification_img: {

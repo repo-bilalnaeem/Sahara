@@ -6,6 +6,7 @@ import { useRouter, useSegments } from "expo-router";
 import { CustomHeader } from "@/components/CustomHeader";
 import DrawerContent from "@/components/DrawerContent";
 import GoBack from "@/components/GoBack";
+import { AntDesign } from "@expo/vector-icons";
 
 const Layout = () => {
   const segments = useSegments();
@@ -36,11 +37,8 @@ const Layout = () => {
           // drawerIcon: () => null,
           // drawerLabel: () => null,
           drawerIcon: () => (
-            <View style={[styles.item]}>
-              <Image
-                source={require("@/assets/images/discount.png")}
-                style={styles.btnImage}
-              />
+            <View style={[styles.item, { margin: 6 }]}>
+              <AntDesign name="home" size={24} color={"#4e4e4e"}/>
             </View>
           ),
           drawerItemStyle: isOnTabsScreen && { display: "none" },
@@ -88,7 +86,7 @@ const Layout = () => {
         name="orders"
         // getId={() => Math.random().toString()}
         options={{
-          title: "Orders & reordering",
+          title: "Orders",
           drawerIcon: () => (
             <View style={[styles.item]}>
               <Image

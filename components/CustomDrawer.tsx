@@ -161,7 +161,7 @@ const CutsomDrawer = () => {
       <Drawer.Screen
         name="orders"
         options={{
-          title: "Orders & reordering",
+          title: "Orders",
           drawerIcon: () => (
             <View style={[styles.item]}>
               <Image
