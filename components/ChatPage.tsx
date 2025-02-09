@@ -42,9 +42,9 @@ const ChatPage = () => {
   const [chatId, setChatId] = useState<string | null>(id);
   const chatIdRef = useRef<string | null>(id);
 
-  const apiKey = "";
+  const apiKey = "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";
 
-  const organization = "";
+  const organization = "org-4zqKW8XE9vBUyJH2LJl3mqdd";
 
   useEffect(() => {
     if (!id) return;

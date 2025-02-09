@@ -121,7 +121,7 @@ const Cart = () => {
                 <View style={styles.card}>
                   <View>
                     <Image
-                      source={require("@/assets/images/medicine_images/img7.jpeg")}
+                      source={require("@/assets/images/medicine_images/img2.jpeg")}
                       style={styles.thumbnail}
                     />
                   </View>

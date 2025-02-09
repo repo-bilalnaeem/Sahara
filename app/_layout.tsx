@@ -19,6 +19,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import GoBack from "@/components/GoBack";
 
 export { ErrorBoundary } from "expo-router";
+import { LogBox } from "react-native";
+
+LogBox.ignoreAllLogs();
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 // Cache the Clerk JWT
@@ -86,8 +89,7 @@ const InitialLayout = () => {
   }
 
   return (
-    <Stack >
-
+    <Stack>
       <Stack.Screen
         name="index"
         options={{

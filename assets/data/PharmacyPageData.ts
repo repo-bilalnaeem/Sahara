@@ -67,24 +67,30 @@ export const data = [
     },
     {
       key: "2",
+      imageSource: require("@/assets/images/medicine_images/img2.jpeg"),
+      title: "Panadol Extra Tablets",
+      price: 47.5,
+    },
+    {
+      key: "3",
       imageSource: require("@/assets/images/medicine_images/img7.jpeg"),
       title: "Cerelac 3 Fruits & Wheat 350g",
       price: 47.5,
     },
     {
-      key: "3",
+      key: "4",
       imageSource: require("@/assets/images/medicine_images/img8.png"),
       title: "Cerealc Rice 175g",
       price: 95.0,
     },
     {
-      key: "4",
+      key: "5",
       imageSource: require("@/assets/images/medicine_images/img9.jpeg"),
       title: "Cerelac Nature Roa 175 Grams",
       price: 601.0,
     },
     {
-      key: "5",
+      key: "6",
       imageSource: require("@/assets/images/medicine_images/img10.jpeg"),
       title:
         "Nestle Cerelac Natures Selection Multigrain, Pomegranate, Cherries & Apples 350G",

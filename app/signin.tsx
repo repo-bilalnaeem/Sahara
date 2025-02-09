@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Href, useRouter } from "expo-router";
-import LoginHook from "@/components/LoginInput";
+import LoginInput from "@/components/LoginInput";
 import { CheckBox } from "react-native-elements";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
@@ -81,7 +81,7 @@ const signin = () => {
           <Text style={styles.heading}>Login to your account</Text>
 
           <View style={styles.input}>
-            <LoginHook
+            <LoginInput
               label="Email"
               placeHolder="mail@example.com"
               keyboardType="email-address"
@@ -94,7 +94,7 @@ const signin = () => {
           </View>
 
           <View style={styles.input}>
-            <LoginHook
+            <LoginInput
               label="password"
               placeHolder="Enter Password"
               secureTextEntry={true}

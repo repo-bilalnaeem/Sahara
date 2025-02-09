@@ -45,6 +45,7 @@ const LoginInput = ({
       <View style={styles.passwordContainer}>
         {imageSource && <Image source={imageSource} style={styles.image} />}
         <TextInput
+        
           placeholder={placeHolder}
           value={value}
           secureTextEntry={secureTextEntry && !showPassword}
@@ -68,6 +69,7 @@ const LoginInput = ({
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeIcon}
+            
           >
             <MaterialIcons
               name={showPassword ? "visibility" : "visibility-off"}

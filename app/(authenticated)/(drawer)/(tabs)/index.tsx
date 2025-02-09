@@ -70,12 +70,16 @@ const Home = () => {
                     >
                       <View style={styles.profile_img_container}>
                         <Image
-                          source={require("@/assets/images/profile_img.jpg")}
+                          source={{
+                            uri: "https://galaxies.dev/img/meerkat_2.jpg",
+                          }}
                           style={styles.profile_img}
                         />
                       </View>
                     </Pressable>
-                    <Text style={[styles.name]}>Good Morning,{"\n"}Lizzy</Text>
+                    <Text style={[styles.name]}>
+                      Good Morning,{"\n"}Bilal Naeem
+                    </Text>
                   </View>
                   <Link href={"/(authenticated)/notification"} push asChild>
                     <Pressable style={styles.bell_icon_container}>
