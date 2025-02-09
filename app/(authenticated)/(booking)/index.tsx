@@ -360,7 +360,7 @@ const Booking = () => {
                   flexGrow: 1,
                 }}
               >
-                Visa
+                Stripe Payment
               </Text>
             </View>
           </View>

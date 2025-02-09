@@ -86,7 +86,8 @@ const InitialLayout = () => {
   }
 
   return (
-    <Stack>
+    <Stack >
+
       <Stack.Screen
         name="index"
         options={{
