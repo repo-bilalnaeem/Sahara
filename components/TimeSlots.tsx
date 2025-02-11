@@ -33,7 +33,7 @@ const TimeSlots = () => {
   const [date, setDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-  const timeSlots = generateTimeSlots(14, 17, 15);
+  const timeSlots = generateTimeSlots(14, 15, 30);
 
   return (
     <View>
@@ -79,7 +79,7 @@ const TimeSlots = () => {
         <TouchableOpacity
           style={styles.actions}
           activeOpacity={0.8}
-          onPress={() => router.push("/(authenticated)/(booking)")}
+          onPressIn={() => router.navigate("/(authenticated)/(booking)")}
         >
           <LinearGradient
             colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     borderColor: "gray",
     flexGrow: 0,
     flexShrink: 1,
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     rowGap: 10,
     paddingHorizontal: 8,
+    marginBottom: 20
   },
 
   selectedTimeBtn: {
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   },
 
   actions: {
-    marginTop: 32,
+    // marginTop: ,
   },
 });
 

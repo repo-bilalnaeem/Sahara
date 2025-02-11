@@ -10,6 +10,7 @@ const Layout = () => {
       <Stack.Screen
         name="index"
         options={{
+          gestureEnabled: false,
           header: () => (
             <View
               style={{

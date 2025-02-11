@@ -15,7 +15,11 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.anonymous.sahara"
+      "bundleIdentifier": "com.anonymous.sahara",
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleLocalizations": ["fr"]
+      }
     },
     "android": {
       "adaptiveIcon": {

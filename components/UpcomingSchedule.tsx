@@ -72,7 +72,7 @@ const UpcomingSchedule = () => {
                 <Text
                   style={[styles.time, isAndroid ? { fontSize: 13 } : null]}
                 >
-                  Sun, Jun 10, 08:00 am - 10:00 am
+                  Wed, Feb 12, 10:00 am - 10:30 am
                 </Text>
               </LinearGradient>
             </View>
