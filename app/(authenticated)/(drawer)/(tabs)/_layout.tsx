@@ -92,8 +92,7 @@ const Layout = () => {
           title: "Messages",
           headerShown: false,
           tabBarShowLabel: false,
-
-          // tabBarStyle: { display: "none" },
+          tabBarStyle: { display: "none" },
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="chatbubbles-outline" size={size} color={color} />
           ),
