@@ -1,35 +1,28 @@
 import React from "react";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  useColorScheme,
-} from "react-native";
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-
+import { PixelRatio } from "react-native";
 interface TitleProps {
   title: string | undefined;
 }
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 const GoBack = () => {
-  const { top } = useSafeAreaInsets();
-  const isDarkMode = useColorScheme() === "dark";
   const router = useRouter();
 
   return (
-    <TouchableOpacity
-      onPress={router.back}
-      style={styles.darkBackButton}
-    >
+    <TouchableOpacity onPressIn={router.back} style={[styles.darkBackButton]}>
       <Image
         style={[
-          { width: 20 },
-          { height: 20 },
-         { tintColor: "#fff" },
+          { width: wp("3.5%") },
+          { height: hp("3%") },
+          { tintColor: "#fff", objectFit: "contain" },
         ]}
         source={require("@/assets/images/arrow.png")}
       />
@@ -38,44 +31,21 @@ const GoBack = () => {
 };
 
 const styles = StyleSheet.create({
-  lightBackButton: {
-    borderRadius: 24,
-    width: 42,
-    height: 42,
-    backgroundColor: "#D9D9D9",
-    alignItems: "center",
-    justifyContent: "center",
-    // marginVertical: 22,
-  },
-
   darkBackButton: {
     borderRadius: 24,
-    width: 42,
-    height: 42,
+    width: wp("8.5%"),
+    height: hp("4%"),
     backgroundColor: "#1E1F22",
     alignItems: "center",
     justifyContent: "center",
     // marginVertical: 22,
   },
 
-  screenNameLight: {
-    // color: "#000",
-    color: "#FFF",
-    // font-family: Lato;
-    fontSize: 20,
-    fontStyle: "normal",
-    fontWeight: "500",
-    // marginTop: 10,
-  },
   screenNameDark: {
-    // color: "#000",
     color: "#1E1F22",
-
-    // font-family: Lato;
-    fontSize: 20,
+    fontSize: scaleFont(20),
     fontStyle: "normal",
     fontWeight: "500",
-    // marginTop: 10,
   },
 });
 

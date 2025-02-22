@@ -68,10 +68,8 @@ const forgotPassword = () => {
       )}
       <TouchableWithoutFeedback onPress={handlePress}>
         <View style={isDarkMode ? styles.darkScreen : styles.lightScreen}>
-          <Text style={isDarkMode ? styles.lightHeading : styles.darkHeading}>
-            Forgot Your Password?
-          </Text>
-          <Text style={isDarkMode ? styles.lightText : styles.darkText}>
+          <Text style={styles.darkHeading}>Forgot Your Password?</Text>
+          <Text style={styles.darkText}>
             Enter your email or your phone number, we will send you confirmation
             code
           </Text>
@@ -84,7 +82,7 @@ const forgotPassword = () => {
                   ? { borderColor: "#7593BD" }
                   : { borderColor: "transparent" },
               ]}
-              onPress={() => handleOptionPress("email")}
+              onPressIn={() => handleOptionPress("email")}
             >
               <Text
                 style={
@@ -105,7 +103,7 @@ const forgotPassword = () => {
                   ? { borderColor: "#7593BD" }
                   : { borderColor: "transparent" },
               ]}
-              onPress={() => handleOptionPress("phone")}
+              onPressIn={() => handleOptionPress("phone")}
             >
               <Text
                 style={
@@ -156,7 +154,7 @@ const forgotPassword = () => {
 
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => router.push("/verification")}
+            onPressIn={() => router.push("/verification")}
           >
             <LinearGradient
               colors={["#1661E0", "#478EEF"]}
@@ -184,50 +182,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     backgroundColor: "#1E1F22",
   },
-  darkBackButton: {
-    borderRadius: 24,
-    width: 48,
-    height: 48,
-    backgroundColor: "#1E1F22",
-    marginTop: 33,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  lightBackButton: {
-    borderRadius: 24,
-    width: 48,
-    height: 48,
-    backgroundColor: "#D9D9D9",
-    marginTop: 33,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
   darkHeading: {
     color: "#1E1F22",
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "500",
-    marginTop: 98,
-    marginBottom: 28,
-  },
-  lightHeading: {
-    color: "#FFF",
-    fontSize: 32,
-    fontWeight: "500",
-    marginTop: 98,
-    marginBottom: 28,
+    marginTop: 58,
+    marginBottom: 24,
   },
 
   darkText: {
     color: "rgba(30, 31, 34, 0.80)",
-    fontSize: 16,
-    marginBottom: 30,
-    fontWeight: "400",
-    // width: "90%",
-    lineHeight: 24,
-  },
-  lightText: {
-    color: "#A1A8B0",
     fontSize: 16,
     marginBottom: 30,
     fontWeight: "400",

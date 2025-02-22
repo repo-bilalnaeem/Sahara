@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   gif: {
-    width: 140,
-    height: 140,
+    width: 120,
+    height: 120,
     marginTop: "75%",
-    marginBottom: "35%",
+    // marginBottom: "35%",
   },
   successDark: {
     color: "#4878C9",

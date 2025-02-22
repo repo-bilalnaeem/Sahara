@@ -54,7 +54,7 @@ const VerificationCode = () => {
   const [code, setCode] = useState("");
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  const CELL_COUNT = 4;
+  const CELL_COUNT = 5
 
   const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -122,9 +122,7 @@ const VerificationCode = () => {
             paddingHorizontal: 13,
           }}
         >
-          <Text style={isDarkMode ? styles.lightHeading : styles.darkHeading}>
-            Enter Verification Code
-          </Text>
+          <Text style={styles.darkHeading}>Enter Verification Code</Text>
           <Text style={isDarkMode ? styles.lightText : styles.darkText}>
             Enter code that we have sent to your number{" "}
             <Text
@@ -163,13 +161,13 @@ const VerificationCode = () => {
           <View style={styles.resend}>
             <Text style={styles.color_light}>Didn’t receive the code?</Text>
             {timer > 0 ? (
-              <Text style={isDarkMode ? styles.resendLight : styles.resendDark}>
+              <Text style={ styles.resendDark}>
                 {formatTimer(timer)}
               </Text>
             ) : (
               <TouchableOpacity onPress={handleResend}>
                 <Text
-                  style={isDarkMode ? styles.resendLight : styles.resendDark}
+                  style={ styles.resendDark}
                 >
                   Resend
                 </Text>
@@ -179,7 +177,7 @@ const VerificationCode = () => {
 
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={handleVerificationCode}
+            onPressOut={handleVerificationCode}
           >
             <LinearGradient
               colors={["#1661E0", "#478EEF"]}
@@ -197,20 +195,12 @@ const VerificationCode = () => {
 };
 
 const styles = StyleSheet.create({
-
   darkHeading: {
     color: "#1E1F22",
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "500",
-    marginTop: 98,
-    marginBottom: 28,
-  },
-  lightHeading: {
-    color: "#FFF",
-    fontSize: 32,
-    fontWeight: "500",
-    marginTop: 98,
-    marginBottom: 28,
+    marginTop: 58,
+    marginBottom: 24,
   },
   lightScreen: {
     flex: 1,
@@ -221,22 +211,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 13,
     backgroundColor: "#1E1F22",
-  },
-  darkBackButton: {
-    borderRadius: 24,
-    width: 42,
-    height: 42,
-    backgroundColor: "#1E1F22",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  lightBackButton: {
-    borderRadius: 24,
-    width: 42,
-    height: 42,
-    backgroundColor: "#D9D9D9",
-    alignItems: "center",
-    justifyContent: "center",
   },
 
   darkText: {
@@ -257,19 +231,17 @@ const styles = StyleSheet.create({
   },
 
   verifycodes: {
-    flexDirection: "row",
-    marginBottom: 28,
-    marginHorizontal: 10,
+    // flexDirection: "row",
+    marginBottom: 24,
+    // marginHorizontal: 16,
   },
 
   active: {
-    // width: 64,
-    // height: 64,
     backgroundColor: "#fff",
     borderColor: "#7593BD",
     borderWidth: 2.2,
     borderRadius: 16,
-    marginRight: 24,
+    marginRight: 18,
     fontWeight: "600",
     textAlign: "center",
     fontSize: 26,
@@ -314,11 +286,7 @@ const styles = StyleSheet.create({
     color: "#1E1F22",
     fontWeight: "600",
   },
-  resendLight: {
-    fontSize: 15,
-    color: "#FFF",
-    fontWeight: "600",
-  },
+
 
   not_active: {
     shadowColor: "#000",
@@ -330,54 +298,17 @@ const styles = StyleSheet.create({
     shadowRadius: 2.4,
     elevation: 2,
     backgroundColor: "#FDFDFD",
-    width: 64,
-    height: 64,
+    width: 54,
+    height: 54,
     borderRadius: 16,
     borderWidth: 1,
-    marginRight: 24,
+    marginRight: 18,
     borderColor: "#adadad",
     fontWeight: "600",
     textAlign: "center",
     fontSize: 26,
     justifyContent: "center",
     alignItems: "center",
-  },
-
-  nameBackDark: {
-    flexDirection: "row",
-    alignItems: "center",
-    // paddingLeft: 25,
-    marginRight: 26,
-  },
-
-  backButton: {
-    borderRadius: 24,
-    width: 42,
-    height: 42,
-    backgroundColor: "#FFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  screenNameLight: {
-    // color: "#000",
-    color: "#FFF",
-    // font-family: Lato;
-    fontSize: 20,
-    fontStyle: "normal",
-    fontWeight: "500",
-    // marginTop: 10,
-  },
-
-  screenNameDark: {
-    // color: "#000",
-    color: "#1E1F22",
-
-    // font-family: Lato;
-    fontSize: 20,
-    fontStyle: "normal",
-    fontWeight: "500",
-    // marginTop: 10,
   },
 
   linearGradient: {
@@ -393,7 +324,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
     fontStyle: "normal",
-    // marginLeft: 10,
   },
 });
 

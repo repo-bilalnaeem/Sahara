@@ -54,27 +54,14 @@ const NewPassword = () => {
     return unsubscribe;
   }, [navigation, previousRoute]);
 
-  const handleResetPassword = () => {
-    router.replace("/modal");
-  };
-
-  const isDarkMode = useColorScheme() === "dark";
-
   return (
-    <SafeAreaView
-      style={[
-        isDarkMode ? styles.darkScreen : styles.lightScreen,
-        { paddingTop: headerHeight },
-      ]}
-    >
+    <SafeAreaView style={[styles.lightScreen, { paddingTop: headerHeight }]}>
       <TouchableWithoutFeedback onPress={handlePress}>
-        <View style={isDarkMode ? styles.darkScreen : styles.lightScreen}>
+        <View style={styles.lightScreen}>
           <View style={{ flex: 1 }}>
-            <Text style={isDarkMode ? styles.lightHeading : styles.darkHeading}>
-              Create New Password
-            </Text>
+            <Text style={styles.darkHeading}>Create New Password</Text>
 
-            <Text style={isDarkMode ? styles.lightText : styles.darkText}>
+            <Text style={styles.darkText}>
               Create your new password to login
             </Text>
             <View style={styles.password}>
@@ -125,42 +112,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     backgroundColor: "#fff",
   },
-  darkScreen: {
-    flex: 1,
-    paddingHorizontal: 13,
-    backgroundColor: "#1E1F22",
-  },
-  darkBackButton: {
-    borderRadius: 24,
-    width: 48,
-    height: 48,
-    backgroundColor: "#1E1F22",
-    marginTop: 33,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  lightBackButton: {
-    borderRadius: 24,
-    width: 48,
-    height: 48,
-    backgroundColor: "#D9D9D9",
-    marginTop: 33,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   darkHeading: {
     color: "#1E1F22",
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "500",
-    marginTop: 98,
-    marginBottom: 28,
-  },
-  lightHeading: {
-    color: "#FFF",
-    fontSize: 32,
-    fontWeight: "500",
-    marginTop: 98,
-    marginBottom: 28,
+    marginTop: 58,
+    marginBottom: 24,
   },
   darkText: {
     color: "rgba(30, 31, 34, 0.80)",
@@ -170,20 +127,12 @@ const styles = StyleSheet.create({
     // width: "90%",
     lineHeight: 24,
   },
-  lightText: {
-    color: "#A1A8B0",
-    fontSize: 16,
-    marginBottom: 30,
-    fontWeight: "400",
-    // width: "90%",
-    lineHeight: 24,
-  },
 
   password: {
-    marginBottom: 20,
+    marginBottom: 28,
   },
   confirm_password: {
-    marginBottom: 20,
+    marginBottom: 28,
   },
 
   modal: {
@@ -198,49 +147,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
   },
-  gif: {
-    width: 140,
-    height: 140,
-    marginTop: "75%",
-    marginBottom: "35%",
-  },
-  success: {
-    color: "#4878C9",
-    textAlign: "center",
-    fontSize: 26,
-    fontStyle: "normal",
-    fontWeight: "500",
-    marginBottom: 32,
-  },
-  modal_text: {
-    color: "#7B6161",
-    textAlign: "center",
-    // font-family: Inter,
-    fontSize: 15,
-    fontStyle: "normal",
-    fontWeight: "300",
-    lineHeight: 28 /* 24px */,
-    letterSpacing: 0.5,
-    marginBottom: "15%",
-    marginHorizontal: 18,
-  },
 
-  nameBackDark: {
-    flexDirection: "row",
-    alignItems: "center",
-    // paddingLeft: 25,
-    marginRight: 26,
-  },
-
-  screenNameLight: {
-    // color: "#000",
-    color: "#FFF",
-    // font-family: Lato;
-    fontSize: 20,
-    fontStyle: "normal",
-    fontWeight: "500",
-    // marginTop: 10,
-  },
   screenNameDark: {
     // color: "#000",
     color: "#1E1F22",

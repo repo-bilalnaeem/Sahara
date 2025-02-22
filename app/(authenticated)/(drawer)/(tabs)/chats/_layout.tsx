@@ -1,6 +1,8 @@
+import GoBack from "@/components/GoBack";
 import { useUser } from "@clerk/clerk-expo";
 import { Slot, Stack } from "expo-router";
 import { useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import { StreamChat, User } from "stream-chat";
 import { OverlayProvider, Chat } from "stream-chat-expo";
 
@@ -23,6 +25,10 @@ const Layout = () => {
     };
 
     connect();
+
+    return () => {
+      client.disconnectUser();
+    };
   });
 
   return (
@@ -32,15 +38,17 @@ const Layout = () => {
           <Stack.Screen
             name="index"
             options={{
-              title:"Messages"
-              // headerShown: false,
+              title: "Messages",
+              headerLeft: () => <GoBack />,
             }}
           />
           <Stack.Screen
             name="[cid]"
-            // options={{
-            //   headerShown: false,
-            // }}
+            options={{
+              title: "channel",
+              headerBackButtonDisplayMode: "minimal",
+              //   headerShown: false,
+            }}
           />
         </Stack>
       </Chat>

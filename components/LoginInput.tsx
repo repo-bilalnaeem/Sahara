@@ -8,8 +8,16 @@ import {
   useColorScheme,
   StyleSheet,
   KeyboardTypeOptions,
+  PixelRatio,
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 import { MaterialIcons } from "@expo/vector-icons";
+
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 type Props = {
   label: string;
@@ -35,17 +43,12 @@ const LoginInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const isDarkMode = useColorScheme() === "dark";
-
   return (
     <View style={styles.inputContainer}>
-      <Text style={isDarkMode ? styles.darkLabelTag : styles.lightLabelTag}>
-        {label}
-      </Text>
+      <Text style={styles.lightLabelTag}>{label}</Text>
       <View style={styles.passwordContainer}>
         {imageSource && <Image source={imageSource} style={styles.image} />}
         <TextInput
-        
           placeholder={placeHolder}
           value={value}
           secureTextEntry={secureTextEntry && !showPassword}
@@ -56,24 +59,19 @@ const LoginInput = ({
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           style={[
-            isDarkMode ? styles.darkTextInput : styles.lightTextInput,
-            isFocused
-              ? isDarkMode
-                ? styles.darkInputFocus
-                : styles.lightInputFocus
-              : null,
-            imageSource ? { paddingLeft: 60 } : null,
+            styles.lightTextInput,
+            isFocused ? styles.lightInputFocus : null,
+            imageSource ? { paddingLeft: wp("18%") } : null,
           ]}
         />
         {secureTextEntry && (
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeIcon}
-            
           >
             <MaterialIcons
               name={showPassword ? "visibility" : "visibility-off"}
-              size={24}
+              size={22}
               color="#8E8E8E"
             />
           </TouchableOpacity>
@@ -87,51 +85,36 @@ export default LoginInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: hp("1%"),
   },
   lightLabelTag: {
-    fontSize: 15,
+    fontSize: scaleFont(15),
     backgroundColor: "#fff",
-    paddingHorizontal: 5,
+    paddingHorizontal: wp("0.5%"),
     zIndex: 1,
     position: "absolute",
     top: -10,
     left: 30,
     color: "#3B3939",
   },
-  darkLabelTag: {
-    fontSize: 15,
-    backgroundColor: "#1E1F22",
-    paddingHorizontal: 5,
-    zIndex: 1,
-    position: "absolute",
-    top: -10,
-    left: 30,
-    color: "#9A9A9A",
-  },
+
   passwordContainer: {
     position: "relative",
   },
-  darkTextInput: {
-    borderRadius: 17,
-    borderWidth: 1.5,
-    borderColor: "#CCC",
-    height: 60,
-    paddingHorizontal: 26,
-  },
+
   lightTextInput: {
     borderRadius: 17,
     borderWidth: 1.5,
     borderColor: "#CCC",
-    height: 60,
-    paddingHorizontal: 26,
+    height: hp("7%"),
+    paddingHorizontal: wp("6%"),
     backgroundColor: "transparent",
     color: "#000",
   },
   lightInputFocus: {
     borderColor: "#7593BD",
     borderWidth: 2,
-    fontSize: 16,
+    fontSize: scaleFont(16),
   },
   darkInputFocus: {
     borderColor: "#E2E2E2",
@@ -144,11 +127,12 @@ const styles = StyleSheet.create({
     right: 20,
   },
   image: {
-    width: 20,
-    height: 20,
+    width: wp("6%"),
+    height: hp("7%"),
+    objectFit: "contain",
     position: "absolute",
-    top: 20,
-    left: 24,
+    top: 2,
+    left: 28,
     tintColor: "#AEAEAE",
   },
 });

@@ -5,10 +5,17 @@ import {
   Image,
   Pressable,
   TouchableOpacity,
+  PixelRatio,
 } from "react-native";
 import React from "react";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 const Page = () => {
   return (
@@ -19,12 +26,12 @@ const Page = () => {
           style={styles.image}
         />
         <View>
-          <Text style={styles.heading}>Let’s you In</Text>
+          <Text style={styles.heading}>Let's you In</Text>
 
           <Pressable style={[styles.button, styles.AppleButton]}>
             <View style={styles.buttonContent}>
               <Image
-                style={{ width: 28, height: 28, tintColor: "white" }}
+                style={{ width: wp('6%'), height: hp('3%'), tintColor: "white", objectFit:"contain" }}
                 source={require("@/assets/images/Apple-Icon.png")}
               />
               <Text style={styles.buttonText}>Continue with Apple</Text>
@@ -34,21 +41,13 @@ const Page = () => {
           <Pressable style={[styles.button, styles.GoogleButton]}>
             <View style={styles.buttonContent}>
               <Image
-                style={[{ width: 26 }, { height: 26 }]}
+                style={{width: wp('6%'), height: hp('3%')}}
                 source={require("../assets/images/Google-Icon.png")}
               />
               <Text style={styles.buttonTextDark}>Continue with Google</Text>
             </View>
           </Pressable>
-          <Pressable style={[styles.button, styles.FacebookButton]}>
-            <View style={styles.buttonContent}>
-              <Image
-                style={{ width: 28, height: 28, tintColor: "white" }}
-                source={require("@/assets/images/Facebook-Icon.png")}
-              />
-              <Text style={[styles.buttonText]}>Continue with Facebook</Text>
-            </View>
-          </Pressable>
+
 
           <View style={styles.lines}>
             <View style={styles.line} />
@@ -102,24 +101,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 106,
-    height: 99,
+    // width: 106,
+    width: wp('28%'),
+    height: hp('10%'),
     objectFit: "contain",
-    marginBottom: 50,
-    marginTop: 50,
+    marginBottom: wp('10%'),
+    marginTop: hp('5%'),
   },
 
   heading: {
     fontFamily: "Lato700",
     fontWeight: "500",
-    fontSize: 28,
+    fontSize: scaleFont(26),
     textAlign: "center",
     marginBottom: 53,
   },
 
   button: {
-    // flexGrow:1,
-    // width: "100%",
     height: 60,
     borderRadius: 40,
     marginBottom: 12,
@@ -164,11 +162,11 @@ const styles = StyleSheet.create({
   },
 
   lines: {
-    marginTop: 26,
+    marginTop: hp('2%'),
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 26,
+    marginBottom: hp('3%'),
   },
 
   line: {

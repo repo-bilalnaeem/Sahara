@@ -20,6 +20,7 @@ import GoBack from "@/components/GoBack";
 
 export { ErrorBoundary } from "expo-router";
 import { LogBox } from "react-native";
+import VideoProvider from "@/provider/VideoProvider";
 
 LogBox.ignoreAllLogs();
 

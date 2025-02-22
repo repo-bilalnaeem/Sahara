@@ -9,7 +9,16 @@ import {
   TouchableOpacity,
   useColorScheme,
   Alert,
+  PixelRatio,
+  ScrollView,
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
+
 import { LinearGradient } from "expo-linear-gradient";
 import { Href, useRouter } from "expo-router";
 import LoginInput from "@/components/LoginInput";
@@ -69,83 +78,89 @@ const signin = () => {
   };
 
   return (
-    <View style={styles.lightScreen}>
-      <TouchableWithoutFeedback onPress={handlePress}>
+    <TouchableWithoutFeedback onPress={handlePress}>
+      <View style={styles.lightScreen}>
+        <View style={styles.logo}>
+          <Image
+            source={require("@/assets/images/Vector.png")}
+            style={styles.image}
+          />
+        </View>
+        <Text style={styles.heading}>Login to your account</Text>
+
         <View>
-          <View style={styles.logo}>
-            <Image
-              source={require("@/assets/images/Vector.png")}
-              style={styles.image}
-            />
-          </View>
-          <Text style={styles.heading}>Login to your account</Text>
-
-          <View style={styles.input}>
-            <LoginInput
-              label="Email"
-              placeHolder="mail@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={handleEmailChange}
-              secureTextEntry={false}
-              imageSource={undefined} // any other props you need
-            />
-          </View>
-
-          <View style={styles.input}>
-            <LoginInput
-              label="password"
-              placeHolder="Enter Password"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={handlePasswordChange}
-              imageSource={undefined}
-            />
-          </View>
-
-          <View style={styles.checkContainer}>
-            <View style={styles.checkboxContainer}>
-              <CheckBox
-                checked={isSelected}
-                onPress={handleCheckBoxChange}
-                checkedColor="#1661E0"
-                uncheckedColor={"transparent"}
-                checkedIcon={
-                  <View style={styles.checkedIcon}>
-                    <Text style={styles.checkmark}>✓</Text>
-                  </View>
-                }
-                uncheckedIcon={
-                  <View
-                    style={
-                      isDarkMode
-                        ? styles.lightUncheckedIcon
-                        : styles.darkUncheckedIcon
-                    }
-                  />
-                }
-                containerStyle={
-                  isDarkMode ? styles.lightCheckbox : styles.darkCheckbox
-                }
+          <View>
+            <View style={styles.input}>
+              <LoginInput
+                label="Email"
+                placeHolder="mail@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={handleEmailChange}
+                secureTextEntry={false}
+                imageSource={undefined} // any other props you need
               />
-              <Text style={isDarkMode ? styles.lightLabel : styles.darkLabel}>
-                Remember me
-              </Text>
+            </View>
+
+            <View style={styles.input}>
+              <LoginInput
+                label="Password"
+                placeHolder="Enter Password"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={handlePasswordChange}
+                imageSource={undefined}
+              />
             </View>
           </View>
 
-          <View style={styles.loginButton}>
-            <TouchableOpacity activeOpacity={0.9} onPress={onSignInPress}>
-              <LinearGradient
-                colors={["#1661E0", "#478EEF"]}
-                style={styles.linearGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-              >
-                <Text style={styles.LightText}>Sign in with email address</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+          <View>
+            <View style={styles.checkContainer}>
+              <View style={styles.checkboxContainer}>
+                <CheckBox
+                  checked={isSelected}
+                  onPress={handleCheckBoxChange}
+                  checkedColor="#1661E0"
+                  uncheckedColor={"transparent"}
+                  checkedIcon={
+                    <View style={styles.checkedIcon}>
+                      <Text style={styles.checkmark}>✓</Text>
+                    </View>
+                  }
+                  uncheckedIcon={
+                    <View
+                      style={
+                        isDarkMode
+                          ? styles.lightUncheckedIcon
+                          : styles.darkUncheckedIcon
+                      }
+                    />
+                  }
+                  containerStyle={
+                    isDarkMode ? styles.lightCheckbox : styles.darkCheckbox
+                  }
+                />
+                <Text style={isDarkMode ? styles.lightLabel : styles.darkLabel}>
+                  Remember me
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.loginButton}>
+              <TouchableOpacity activeOpacity={0.9} onPress={onSignInPress}>
+                <LinearGradient
+                  colors={["#1661E0", "#478EEF"]}
+                  style={styles.linearGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={styles.LightText}>
+                    Sign in with email address
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <TouchableOpacity
@@ -158,11 +173,10 @@ const signin = () => {
           <View style={styles.continue}>
             <Continue>Or Continue with</Continue>
           </View>
-
           <MediaIcons />
         </View>
-      </TouchableWithoutFeedback>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -174,25 +188,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
   },
   logo: {
-    marginTop: 50,
-    marginBottom: 50,
     alignItems: "center",
   },
 
   image: {
-    width: 106,
-    height: 99,
+    width: wp("28%"),
+    height: hp("10%"),
     objectFit: "contain",
-    // marginBottom: 50,
-    // marginTop: 50,
+    // marginBottom: wp('10%'),
+    marginTop: hp("10%"),
   },
 
   heading: {
     textAlign: "center",
     color: "#2C2C2C",
-    fontSize: 24,
-    fontWeight: "400",
-    marginBottom: 38,
+    fontSize: scaleFont(24),
+    fontWeight: "500",
+    // marginBottom: 38,
     fontFamily: "Lato400",
   },
 
@@ -201,7 +213,7 @@ const styles = StyleSheet.create({
   },
 
   checkContainer: {
-    marginBottom: 18,
+    marginBottom: 24,
   },
 
   checkboxContainer: {
