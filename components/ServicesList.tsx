@@ -6,10 +6,19 @@ import {
   FlatList,
   StyleSheet,
   Platform,
+  PixelRatio
 } from "react-native";
 import SeeMore from "@/components/SeeMore";
 import React from "react";
 import { useRouter } from "expo-router";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
+
 
 const isAndroid = Platform.OS === "android";
 
@@ -54,7 +63,7 @@ const ServicesList = () => {
           source={item.imageSource}
           style={[styles.service_icons, { resizeMode: "contain" }]}
         />
-        <Text style={[styles.service_text, isAndroid ? { fontSize: 12 } : {}]}>
+        <Text style={[styles.service_text, isAndroid ? { fontSize: scaleFont(12) } : {}]}>
           {item.text}
         </Text>
       </View>
@@ -80,7 +89,7 @@ const styles = StyleSheet.create({
   doctorServiceBtn: {
     justifyContent: "center",
     alignItems: "center",
-    width: 108,
+    width: wp("27%"),
     paddingVertical: 12,
     borderRadius: 14,
     backgroundColor: "#F6F6F6",
@@ -88,15 +97,15 @@ const styles = StyleSheet.create({
   },
 
   service_icons: {
-    width: 30,
-    height: 30,
-    resizeMode: "contain",
+    width: wp("6%"),
+    height: hp("3.5%"),
+    resizeMode: "cover",
   },
 
   service_text: {
     color: "#333",
     // font-family: Lato;
-    fontSize: 14,
+    fontSize: scaleFont(12),
     fontStyle: "normal",
     fontWeight: "500",
     lineHeight: 22 /* 157.143% */,

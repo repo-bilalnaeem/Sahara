@@ -8,15 +8,24 @@ import {
   Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { router } from "expo-router";
 
 const isAndroid = Platform.OS === "android";
 
 const UpcomingSchedule = () => {
   return (
-    <View>
-      <Pressable onPress={() => router.push("/(authenticated)/(schedules)/9a1b0bf5-6cac-4ea6-a0fb-bf139df9a2cf")}>
+    <View style={{ marginBottom: 24 }}>
+      <Pressable
+        onPress={() =>
+          router.push(
+            "/(authenticated)/(schedules)/9a1b0bf5-6cac-4ea6-a0fb-bf139df9a2cf"
+          )
+        }
+      >
         <View style={styles.container}>
           <LinearGradient
             colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
@@ -32,7 +41,7 @@ const UpcomingSchedule = () => {
                   style={styles.doctor_img}
                 />
               </View>
-              <View>
+              <View style={{ flexGrow: 1 }}>
                 <Text
                   style={[
                     styles.doctor_name,
@@ -88,34 +97,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   linearGradient: {
-    height: 210,
     marginHorizontal: 12,
-    borderRadius: 32,
-    marginBottom: 30,
-    paddingHorizontal: 15,
-    paddingTop: 20,
-    paddingBottom: 17,
-    // justifyContent: "center",
-    // alignItems: "center",
+    borderRadius: 28,
+    paddingHorizontal: 14,
+    paddingTop: 16,
+    paddingBottom: 10,
   },
   doctor_img: {
-    width: 90,
-    height: 125,
-    resizeMode: "cover",
+    width: wp("20%"),
+    height: hp("13%"),
     borderRadius: 13,
+    objectFit: "cover",
   },
 
   img_container: {
     borderRadius: 13,
-    width: 85,
-    height: 85,
+    width: wp("20%"),
+    height: hp("9%"),
     overflow: "hidden",
-    marginRight: 8,
   },
 
   camera_holder: {
-    width: 37,
-    height: 37,
+    width: 32,
+    height: 32,
     backgroundColor: "#fff",
     borderRadius: 100,
     justifyContent: "center",
@@ -124,49 +128,43 @@ const styles = StyleSheet.create({
   },
 
   camera_icon: {
-    width: 22,
-    height: 22,
+    width: 20,
+    height: 20,
+    objectFit: "contain",
   },
 
   doctor_name: {
     color: "#FFF",
-    // font-family: Lato;
     fontSize: 18,
     fontStyle: "normal",
     fontWeight: "400",
-    lineHeight: 23.68 /* 23.68px */,
+    lineHeight: 23.68,
   },
 
   occupation: {
     color: "rgba(255, 255, 255, 0.75)",
-    // font-family: Lato;
-
-    marginTop: 6,
-    fontSize: 16,
+    fontSize: 14,
     fontStyle: "normal",
     fontWeight: "400",
-    lineHeight: 20.72 /* 20.72px */,
+    lineHeight: 20.72,
   },
 
   flex_items: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 16,
     alignItems: "center",
   },
 
   schedule: {
     borderRadius: 25,
-    marginTop: 15,
-    // backgroundColor: "#fff",
+    marginTop: 16,
     width: "100%",
-    height: 77,
     justifyContent: "center",
   },
 
   time: {
     color: "#fff",
-    // fontFamily: Lato,
-    fontSize: 15,
+    fontSize: 13,
     fontStyle: "normal",
     fontWeight: "500",
     lineHeight: 22.2,
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
 
   innerGradient: {
     width: "100%",
-    height: 77,
+    paddingVertical: 24,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 25,

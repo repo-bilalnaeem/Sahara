@@ -24,7 +24,7 @@ export interface RenderProductTileProps {
   index: number;
 }
 
-export function formatTitle(title: string, maxLength = 25) {
+export function formatTitle(title: string, maxLength = 20) {
   if (title.length > maxLength) {
     return title.substring(0, maxLength) + " ...";
   }
@@ -38,13 +38,13 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
           <View style={styles.productTile}>
             <Image
               source={item.imageSource}
-              style={[{ resizeMode: "contain", width: 110, height: 100 }]}
+              style={[{ resizeMode: "contain", width: "auto", height: 100 }]}
             />
-            <TouchableWithoutFeedback>
+            {/* <TouchableWithoutFeedback>
               <View style={styles.add_button}>
                 <Ionicons name="add" size={20} color={"#494848"} />
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback> */}
           </View>
           <Text
             style={[
@@ -52,16 +52,15 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
                 fontSize: 14,
                 fontWeight: "500",
                 marginBottom: 4,
-                width: 110,
+                width: 100,
               },
-              isAndroid ? { fontSize: 12 } : null,
             ]}
           >
             Rs. {item.price}
           </Text>
           <Text
             style={[
-              { width: 115, fontSize: 14, fontWeight: "400", color: "gray" },
+              { width: 110, fontSize: 14, fontWeight: "400", color: "gray" },
               isAndroid ? { fontSize: 12 } : null,
             ]}
           >
@@ -75,8 +74,8 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
 
 const styles = StyleSheet.create({
   productTile: {
-    width: 110,
-    marginRight: 12,
+    width: 100,
+    // marginRight: 10,
     // justifyContent: "center",
     // alignItems: "center",
     height: 100,

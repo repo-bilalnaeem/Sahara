@@ -5,12 +5,9 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { PixelRatio } from "react-native";
-interface TitleProps {
-  title: string | undefined;
-}
+
 const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 const GoBack = () => {
@@ -20,8 +17,8 @@ const GoBack = () => {
     <TouchableOpacity onPressIn={router.back} style={[styles.darkBackButton]}>
       <Image
         style={[
-          { width: wp("3.5%") },
-          { height: hp("3%") },
+          { width: wp("4%") },
+          { height: hp("4%") },
           { tintColor: "#fff", objectFit: "contain" },
         ]}
         source={require("@/assets/images/arrow.png")}
@@ -33,8 +30,8 @@ const GoBack = () => {
 const styles = StyleSheet.create({
   darkBackButton: {
     borderRadius: 24,
-    width: wp("8.5%"),
-    height: hp("4%"),
+    width: wp("9.5%"),
+    height: hp("4.5%"),
     backgroundColor: "#1E1F22",
     alignItems: "center",
     justifyContent: "center",

@@ -71,7 +71,7 @@ const PharmacySponserAd: React.FC<PharmacySponserAdProps> = ({
           <Text
             style={[
               { fontSize: 12, color: "#999999", marginBottom: 8 },
-              { fontSize: 10 },
+              { fontSize: 11 },
             ]}
           >
             {description}

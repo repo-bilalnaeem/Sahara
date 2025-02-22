@@ -1,17 +1,12 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import BookSlider from "./BookSlider";
-import { Link, router } from "expo-router";
-
-const isAndroid = Platform.OS === "android";
+import { router } from "expo-router";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface Props {
   item: {
@@ -28,10 +23,7 @@ const BookNow = ({ item, index }: Props) => {
   const { doctorId, firstName, lastName, department, imageUrl } = item;
   return (
     <View
-      style={[
-        index === 0 ? { paddingLeft: 12 } : undefined,
-        isAndroid ? { minWidth: 355 } : null,
-      ]}
+      style={[index === 0 ? { paddingLeft: 12 } : undefined]}
       key={doctorId}
     >
       <LinearGradient
@@ -46,23 +38,13 @@ const BookNow = ({ item, index }: Props) => {
       >
         <View style={styles.name_image}>
           <View>
-            <Text
-              style={[
-                styles.doctor_name,
-                isAndroid ? { fontSize: 16, lineHeight: 24 } : null,
-              ]}
-            >
-              Dr {firstName} {lastName}
+            <Text style={[styles.doctor_name]}>
+              Dr {firstName}
+              {"\n"}
+              {lastName}
             </Text>
 
-            <Text
-              style={[
-                styles.occupation,
-                isAndroid ? { fontSize: 13, lineHeight: 22 } : null,
-              ]}
-            >
-              {department}
-            </Text>
+            <Text style={[styles.occupation]}>{department}</Text>
           </View>
           <View style={styles.image_container}>
             <Image source={{ uri: imageUrl }} style={styles.image} />
@@ -94,6 +76,7 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 14,
     marginRight: 12,
+    width: wp("75%"),
   },
 
   name_image: {
@@ -105,47 +88,48 @@ const styles = StyleSheet.create({
   doctor_name: {
     color: "#FFF",
     // font-family: Lato;
-    fontSize: 20,
+    fontSize: 18,
     fontStyle: "normal",
     fontWeight: "500",
-    lineHeight: 36.24 /* 36.24px */,
+    lineHeight: 28,
     marginBottom: 10,
     marginTop: 10,
     marginLeft: 10,
-    width: 140,
+    // width: "50%",
   },
 
   occupation: {
     marginLeft: 10,
     color: "#FFF",
     // font-family: Lato,
-    fontSize: 15,
+    fontSize: 14,
     fontStyle: "normal",
     fontWeight: "400",
     lineHeight: 30.2 /* 30.2px */,
   },
 
   image_container: {
-    width: 129,
-    height: 129,
+    width: wp("30%"),
+    height: hp("13%"),
     borderRadius: 29,
     overflow: "hidden",
   },
 
   image: {
-    width: 129,
-    height: 175,
-    // objectFit: "contain",
+    width: wp("30%"),
+    height: hp("20%"),
+    objectFit: "cover",
   },
 
   book_and_nav: {
     flexDirection: "row",
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   navigation_button: {
-    width: 61,
-    height: 61,
+    width: 50,
+    height: 50,
     backgroundColor: "#fff",
     borderRadius: 100,
     justifyContent: "center",
@@ -156,8 +140,8 @@ const styles = StyleSheet.create({
   },
 
   nav: {
-    width: 30,
-    height: 30,
+    width: 24,
+    height: 24,
   },
 });
 

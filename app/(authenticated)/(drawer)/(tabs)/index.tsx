@@ -6,33 +6,39 @@ import {
   Image,
   Text,
   Pressable,
-  useColorScheme,
-  Platform,
-  Animated,
-  Button,
   ScrollView,
+  PixelRatio,
 } from "react-native";
 
+import { Link, useNavigation } from "expo-router";
+import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import UpcomingSchedule from "@/components/UpcomingSchedule";
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
+
+// Components
+import UpcomingSchedule from "@/components/UpcomingSchedule";
 import ServicesList from "@/components/ServicesList";
 import DoctorSpecialityList from "@/components/DoctorSpecialityList";
 import RecentlyViewed from "@/components/RecentlyViewed";
-
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
-import { Link, useNavigation } from "expo-router";
-import { DrawerActions } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
-  const isDarkMode = useColorScheme() === "dark";
-  const isAndroid = Platform.OS === "android";
   const navigation = useNavigation();
+  const { top } = useSafeAreaInsets();
+
+  console.log(top);
 
   return (
-    <View style={[isDarkMode ? styles.darkScreen : styles.lightScreen]}>
+    <View style={[styles.lightScreen]}>
       <ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
@@ -40,10 +46,10 @@ const Home = () => {
         scrollEventThrottle={16}
       >
         <View style={styles.container}>
-          <Image
+          {/* <Image
             source={require("@/assets/images/Circle.png")}
             style={styles.circle}
-          />
+          /> */}
           <ImageBackground
             source={require("@/assets/images/back_img.jpg")}
             style={styles.imageBackground}
@@ -54,32 +60,22 @@ const Home = () => {
               end={{ x: 0.25, y: 1 }}
               style={styles.gradient}
             />
-            <View style={styles.content}>
+            <View style={[{ marginTop: top + 30, marginHorizontal: 16 }]}>
               <View>
-                <View
-                  style={[
-                    styles.profile_greeting_bell,
-                    // { paddingTop: top, paddingHorizontal: 20 },
-                  ]}
-                >
+                <View style={[styles.profile_greeting_bell]}>
                   <View style={styles.image_greeting}>
                     <Pressable
                       onPress={() =>
                         navigation.dispatch(DrawerActions.toggleDrawer)
                       }
                     >
-                      <View style={styles.profile_img_container}>
+                      <View>
                         <Image
-                          source={{
-                            uri: "https://galaxies.dev/img/meerkat_2.jpg",
-                          }}
+                          source={require("@/assets/images/Vector.png")}
                           style={styles.profile_img}
                         />
                       </View>
                     </Pressable>
-                    <Text style={[styles.name]}>
-                      Good Morning,{"\n"}Bilal Naeem
-                    </Text>
                   </View>
                   <Link href={"/(authenticated)/notification"} push asChild>
                     <Pressable style={styles.bell_icon_container}>
@@ -92,12 +88,7 @@ const Home = () => {
                   </Link>
                 </View>
               </View>
-              <Text
-                style={[
-                  styles.hello,
-                  isAndroid ? { fontSize: 28, lineHeight: 46 } : {},
-                ]}
-              >
+              <Text style={[styles.hello]}>
                 How are you{"\n"}feeling today?
               </Text>
             </View>
@@ -128,12 +119,8 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   lightScreen: {
+    flex: 1,
     backgroundColor: "#ffffff",
-    overflow: "hidden",
-    position: "relative",
-  },
-  darkScreen: {
-    backgroundColor: "#1E1F22",
     overflow: "hidden",
     position: "relative",
   },
@@ -144,11 +131,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
     shadowColor: "#131313",
-    borderRadius: 50,
-    backgroundColor: "#fff",
-    marginHorizontal: 5,
-    marginTop: 7,
-
+    backgroundColor: "transparent",
     position: "relative",
   },
 
@@ -157,65 +140,44 @@ const styles = StyleSheet.create({
     objectFit: "cover",
     resizeMode: "cover",
     overflow: "hidden",
-    borderRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
     width: "100%",
+    height: hp("42%"),
   },
 
   gradient: {
     ...StyleSheet.absoluteFillObject,
   },
-  circle: {
-    width: "200%",
-    height: "200%",
-    top: -350,
-    position: "absolute",
-    transform: [{ translateX: -250 }],
-  },
 
   hello: {
     color: "#FFF",
-    fontSize: 36,
+    fontSize: scaleFont(36),
     fontStyle: "normal",
     fontWeight: "400",
     lineHeight: 53.28,
     textShadowColor: "rgba(0, 0, 0, 0.25)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 7,
-    marginLeft: 10,
-    marginVertical: 40,
-    marginBottom: 80,
+    marginVertical: wp("10%"),
     flexGrow: 1,
   },
 
   profile_img: {
-    width: "100%",
-    height: "130%",
-    resizeMode: "cover",
-  },
-
-  profile_img_container: {
-    borderColor: "#fff",
-    overflow: "hidden",
-    borderWidth: 3,
-    width: 60,
-    height: 60,
-    borderRadius: 200,
+    width: 36,
+    height: 32,
+    objectFit: "contain",
   },
 
   bell_icon_container: {
     justifyContent: "center",
     borderColor: "#fff",
     borderWidth: 3,
-    padding: 10,
+    padding: 18,
     borderRadius: 200,
-    width: 45,
-    height: 45,
+    width: 36,
+    height: 36,
     alignItems: "center",
-  },
-
-  content: {
-    marginTop: 90,
-    marginHorizontal: 19,
   },
 
   doctorSearch: {
@@ -238,15 +200,15 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    color: "#FFF",
-    fontSize: 16,
+    color: "#000000",
+    fontSize: 14,
     fontStyle: "normal",
     fontWeight: "500",
     lineHeight: 23.68,
     marginLeft: 15,
-    textShadowColor: "rgba(0,0,0,0.4)",
-    textShadowRadius: 4,
-    textShadowOffset: { width: 4, height: 4 },
+    // textShadowColor: "rgba(0,0,0,0.4)",
+    // textShadowRadius: 4,
+    // textShadowOffset: { width: 4, height: 4 },
   },
 
   bell_icon: {

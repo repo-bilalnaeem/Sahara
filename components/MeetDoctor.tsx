@@ -10,6 +10,10 @@ import React from "react";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 const isAndroid = Platform.OS === "android";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const MeetDoctor = () => {
   return (
@@ -20,8 +24,6 @@ const MeetDoctor = () => {
           paddingVertical: 8,
           borderRadius: 18,
           backgroundColor: "#f9f9f9",
-          //   borderWidth: StyleSheet.hairlineWidth,
-          //   borderColor: "gray",
         }}
       >
         <View
@@ -45,7 +47,7 @@ const MeetDoctor = () => {
             >
               <Text
                 style={[
-                  { fontWeight: "400", fontSize: 18, marginBottom: 6 },
+                  { fontWeight: "400", fontSize: 16, marginBottom: 6 },
                   isAndroid ? { fontSize: 14 } : null,
                 ]}
               >
@@ -133,9 +135,8 @@ const MeetDoctor = () => {
                     textAlign: "center",
                     color: "#fff",
                     fontWeight: "500",
-                    fontSize: 15,
+                    fontSize: 14,
                   },
-                  isAndroid ? { fontSize: 12 } : null,
                 ]}
               >
                 Book an appointment
@@ -175,7 +176,7 @@ const MeetDoctor = () => {
             >
               <Text
                 style={[
-                  { fontWeight: "400", fontSize: 18, marginBottom: 6 },
+                  { fontWeight: "400", fontSize: 16, marginBottom: 6 },
                   isAndroid ? { fontSize: 14 } : null,
                 ]}
               >
@@ -263,9 +264,8 @@ const MeetDoctor = () => {
                     textAlign: "center",
                     color: "#fff",
                     fontWeight: "500",
-                    fontSize: 15,
+                    fontSize: 14,
                   },
-                  isAndroid ? { fontSize: 12 } : null,
                 ]}
               >
                 Book an appointment

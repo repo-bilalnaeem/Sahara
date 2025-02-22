@@ -7,17 +7,16 @@ const isAndroid = Platform.OS === "android";
 
 const SaharaMart = () => {
   return (
-    <View style={{ marginVertical: 38 }}>
+    <View style={{ marginVertical: 36 }}>
       <View>
         <Text
           style={[
             {
-              marginHorizontal: 23,
+              marginHorizontal: 16,
               fontWeight: "500",
               fontSize: 20,
               marginBottom: 24,
             },
-            isAndroid ? { fontSize: 18 } : null,
           ]}
         >
           SaharaMart

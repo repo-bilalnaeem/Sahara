@@ -15,7 +15,6 @@ import { doctorTypes } from "@/assets/data/HomePageData";
 import { router } from "expo-router";
 import MeetDoctor from "./MeetDoctor";
 
-const isAndroid = Platform.OS === "android";
 
 const renderDoctorFields = ({ item, index }: any) => {
   return (
@@ -27,14 +26,7 @@ const renderDoctorFields = ({ item, index }: any) => {
         ]}
       >
         <Image source={item.imageSource} style={styles.service_icons} />
-        <Text
-          style={[
-            styles.doctorServiceText,
-            isAndroid ? { fontSize: 11 } : null,
-          ]}
-        >
-          {item.text}
-        </Text>
+        <Text style={[styles.doctorServiceText]}>{item.text}</Text>
       </View>
     </Pressable>
   );
@@ -46,14 +38,7 @@ const DoctorSpecialityList = () => {
   return (
     <>
       <View style={[styles.services]}>
-        <Text
-          style={[
-            isDarkMode ? styles.discountLight : styles.discountDark,
-            isAndroid ? { fontSize: 14 } : null,
-          ]}
-        >
-          Doctor's Speciality
-        </Text>
+        <Text style={[styles.discountDark]}>Doctor's Speciality</Text>
         <Pressable>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <FlatList
@@ -87,8 +72,8 @@ const styles = StyleSheet.create({
   },
 
   service_icons: {
-    width: 30,
-    height: 30,
+    width: 24,
+    height: 24,
   },
 
   doctorServiceText: {
@@ -108,14 +93,14 @@ const styles = StyleSheet.create({
   },
 
   meetDoctorHeadingWhite: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "500",
     marginBottom: 18,
     color: "#fff",
   },
 
   meetDoctorHeadingDark: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "500",
     marginBottom: 18,
   },
@@ -153,23 +138,6 @@ const styles = StyleSheet.create({
 
   discountDark: {
     color: "#000",
-    // font-family: Lato;
-    // fontSize: 18,
-    // fontWeight: "500",
-    // lineHeight: 22 /* 110% */,
-    marginHorizontal: 23,
-    marginBottom: 27,
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "500",
-    lineHeight: 22,
-  },
-  discountLight: {
-    color: "#FFF",
-    // font-family: Lato;
-    // fontSize: 18,
-    // fontWeight: "500",
-    // lineHeight: 22 /* 110% */,
     marginHorizontal: 23,
     marginBottom: 27,
     fontSize: 16,

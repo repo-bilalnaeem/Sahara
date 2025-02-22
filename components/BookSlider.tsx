@@ -95,8 +95,8 @@ const BookSlider = ({ name }: SliderProps) => {
 
 const styles = StyleSheet.create({
   black_tick: {
-    width: 54,
-    height: 54,
+    width: 40,
+    height: 40,
     borderRadius: 100,
     backgroundColor: "#000",
     justifyContent: "center",
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
 
   checkmark: {
     tintColor: "#fff",
-    width: 30,
-    height: 30,
+    width: 24,
+    height: 24,
   },
 
   container: {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
 
   slide_btn_container: {
-    paddingVertical: 12,
+    paddingVertical: 8,
     borderRadius: 40,
     padding: 4,
     alignItems: "stretch",
@@ -133,14 +133,14 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     // font-family: Lato;
-    fontSize: 17,
+    fontSize: 15,
     fontStyle: "normal",
     fontWeight: "400",
     lineHeight: 22 /* 110% */,
     marginHorizontal: 4,
     position: "absolute",
     // justifyContent:"center"
-    top: 8,
+    top: 5,
     flexGrow: 1,
     width: "100%",
     height: "100%",
@@ -153,16 +153,17 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "-180deg" }],
     flexDirection: "row",
     // marginRight: 10,
+    gap: 3,
     position: "absolute",
-    paddingVertical: 12,
-    top: 10,
-    right: 18,
+    paddingVertical: 14,
+    top: 7,
+    right: 16,
     zIndex: -1,
   },
 
   arrow: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
   },
 });
 
