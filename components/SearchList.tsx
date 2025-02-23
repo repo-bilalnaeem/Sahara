@@ -29,7 +29,7 @@ interface Props {
 }
 
 const Listings = ({ listings: data, category }: Props) => {
-  console.log("category:", category);
+  // console.log("category:", category);
   const [loading, setLoading] = useState(false);
   const listRef = useRef<FlatList>(null);
 
@@ -45,7 +45,7 @@ const Listings = ({ listings: data, category }: Props) => {
   }, [items, category]);
 
   useEffect(() => {
-    console.log("RELOAD LISTINGS", items.length);
+    // console.log("RELOAD LISTINGS", items.length);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -57,7 +57,7 @@ const Listings = ({ listings: data, category }: Props) => {
   const filterData = items.filter(
     (department: string) => department === category
   );
-  console.log(filterData);
+  // console.log(filterData);
 
   const renderRow = ({ item }: any) => (
     // <Pressable onPress={() => router.push(`(doctor)/${item.doctorId}` as Href)}>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   listitems: {
     gap: 16,
     paddingBottom: 320,
-    marginTop: 120,
+    marginTop: 20,
   },
   name: {
     color: "#FFF",

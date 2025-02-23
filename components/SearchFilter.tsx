@@ -1,57 +1,73 @@
+
+import { useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  useColorScheme,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { categories } from "@/assets/data/SearchFilters";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Divider } from "react-native-paper";
-import { useRef, useState, createRef } from "react";
 
 interface FilterListProps {
   onCategoryChanged: (category: string) => void;
+  selectedCategory?: string;
 }
 
-const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
+const FilterList: React.FC<FilterListProps> = ({
+  onCategoryChanged,
+  selectedCategory,
+}) => {
   const scrollRef = useRef<ScrollView>(null);
   const itemsRef = useRef<Array<any>>(categories.map(() => null));
-
   const [activeIndex, setActiveIndex] = useState(0);
-  const isDarkMode = useColorScheme() === "dark";
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const index = categories.findIndex(
+        (item) => item.text === selectedCategory
+      );
+      if (index !== -1) {
+        setActiveIndex(index);
+        scrollToIndex(index); // Smoothly scroll to the selected category
+      }
+    }
+  }, [selectedCategory]);
+
+  const scrollToIndex = (index: number) => {
+    const selected = itemsRef.current[index];
+    if (selected) {
+      selected.measure(
+        (x: any, y: any, width: any, height: any, pageX: number) => {
+          scrollRef.current?.scrollTo({ x: pageX - 16, y: 0, animated: true });
+        }
+      );
+    }
+  };
 
   const selectCategory = (index: number) => {
-    const selected = itemsRef.current[index];
     setActiveIndex(index);
-
-    selected?.measure(
-      (x: number, y: number, width: number, height: number, pageX: number) => {
-        scrollRef.current?.scrollTo({ x: pageX - 16, y: 0, animated: true });
-      }
-    );
+    scrollToIndex(index);
 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(categories[index].text);
   };
 
-  const { top } = useSafeAreaInsets();
-
   return (
-    <View style={styles.container}>
+    <View style={{}}>
       <ScrollView
         ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
+        bounces={false}
       >
         {categories.map((item, index) => (
           <TouchableOpacity
-            onPress={() => selectCategory(index)}
             key={index}
             ref={(el) => (itemsRef.current[index] = el)}
+            onPress={() => selectCategory(index)}
             style={
               activeIndex === index
                 ? styles.categoriesBtnActive
@@ -62,8 +78,6 @@ const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
               style={
                 activeIndex === index
                   ? styles.categoryTextActive
-                  : isDarkMode
-                  ? styles.categoryText
                   : styles.categoryTextDark
               }
             >
@@ -72,27 +86,15 @@ const FilterList: React.FC<FilterListProps> = ({ onCategoryChanged }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <Divider />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    marginTop: 0,
-    marginVertical: 14,
-    marginBottom: 20,
-    position: "absolute",
-    zIndex: 2,
-    shadowColor: "#000",
-    shadowRadius: 3,
-    shadowOffset: { width: 0, height: 12 },
-  },
   contentContainer: {
     paddingHorizontal: 10,
-    paddingBottom: 16,
-    paddingTop: 14,
+    backgroundColor: "#fff",
+    paddingVertical: 12,
   },
   categoryText: {
     fontSize: 12,

@@ -15,10 +15,9 @@ import { doctorTypes } from "@/assets/data/HomePageData";
 import { router } from "expo-router";
 import MeetDoctor from "./MeetDoctor";
 
-
 const renderDoctorFields = ({ item, index }: any) => {
   return (
-    <Pressable onPress={() => router.navigate("/")}>
+    <Pressable onPress={() => router.navigate(`/search?query=${item.text}`)}>
       <View
         style={[
           styles.doctorService,
@@ -33,25 +32,21 @@ const renderDoctorFields = ({ item, index }: any) => {
 };
 
 const DoctorSpecialityList = () => {
-  const isDarkMode = useColorScheme() === "dark";
-
   return (
     <>
       <View style={[styles.services]}>
         <Text style={[styles.discountDark]}>Doctor's Speciality</Text>
-        <Pressable>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <FlatList
-              bounces={false}
-              numColumns={6}
-              ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-              data={doctorTypes}
-              renderItem={renderDoctorFields}
-              keyExtractor={(item) => item.key}
-              showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
-            />
-          </ScrollView>
-        </Pressable>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <FlatList
+            bounces={false}
+            numColumns={6}
+            ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+            data={doctorTypes}
+            renderItem={renderDoctorFields}
+            keyExtractor={(item) => item.key}
+            showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
+          />
+        </ScrollView>
       </View>
       <MeetDoctor />
     </>
