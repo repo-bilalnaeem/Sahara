@@ -1,23 +1,4 @@
-// import React from "react";
-// import { ChannelList } from "stream-chat-expo";
-// import { router } from "expo-router";
-// import { useUser } from "@clerk/clerk-expo";
 
-// const index = () => {
-//   const { user } = useUser();
-
-//   return (
-//     <ChannelList
-//       filters={{ members: { $in: [user!.id] } }}
-//       onSelect={(channel) => {
-//         console.log('Hello')
-//         router.push(`/_sitemap`);
-//       }}
-//     />
-//   );
-// };
-
-// export default index;
 import React from "react";
 import { ChannelList } from "stream-chat-expo";
 import { Link, Redirect, router, Stack } from "expo-router";
@@ -43,9 +24,7 @@ const Index = () => {
           flex: 1,
         }}
       >
-        {/* <Redirect href={"/(drawer)/(tabs)/chats/call"} /> */}
-        {/* <Link href={"/(drawer)/(tabs)/chats/call/123"}>Go to call screen</Link> */}
-        <Stack.Screen
+        {/* <Stack.Screen
           options={{
             headerRight: () => (
               <Link href={"/(drawer)/(tabs)/chats/users"} asChild>
@@ -58,7 +37,7 @@ const Index = () => {
               </Link>
             ),
           }}
-        />
+        /> */}
         <ChannelList
           filters={{ members: { $in: [user!.id] } }}
           onSelect={(channel) => {

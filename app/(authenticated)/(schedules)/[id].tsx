@@ -1,17 +1,15 @@
+import { useUser } from "@clerk/clerk-expo";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
-  TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
-  Button,
 } from "react-native";
+import { Divider } from "react-native-elements";
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -19,18 +17,42 @@ import Animated, {
   useScrollViewOffset,
 } from "react-native-reanimated";
 
-const { width } = Dimensions.get("window");
-const IMG_HEIGHT = 485;
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { StreamChat } from "stream-chat";
 
+const client = StreamChat.getInstance(
+  process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
+);
+const IMG_HEIGHT = hp("75%");
+
+const navigateToChat = async (
+  userId: string,
+  doctorId: string,
+  router: any
+) => {
+  try {
+    // Check if a chat already exists
+    const channels = await client.queryChannels({
+      type: "messaging",
+      members: { $in: [userId, doctorId] },
+    });
+
+    const channel = channels[0];
+
+    // Navigate to the chat
+    router.push(`/(authenticated)/(drawer)/(tabs)/chats/${channel.cid}`);
+  } catch (error) {
+    console.error("Error navigating to chat:", error);
+  }
+};
 const Page = () => {
-  const { id } = useLocalSearchParams();
-
-  console.log(id);
-
   const router = useRouter();
-
+  const { user, isLoaded } = useUser(); // Check if user is loaded
+  const doctorId = "f380df06-50f6-4bac-8866-32920a5e05cb";
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const [expanded, setExpanded] = useState(false);
 
   const scrollOffset = useScrollViewOffset(scrollRef);
   const imageAnimatedStyle = useAnimatedStyle(() => {
@@ -54,10 +76,6 @@ const Page = () => {
     };
   });
 
-  const toggleExpansion = () => {
-    setExpanded(!expanded);
-  };
-
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={0}>
       <View style={styles.screen}>
@@ -75,11 +93,11 @@ const Page = () => {
           <View style={styles.content}>
             <Text style={styles.name}>Dr Mathew Lewis</Text>
             <Text style={styles.occupation}>Heart Specialist</Text>
-
+            <Divider />
             <View style={styles.container}>
               <Text
                 style={styles.aboutDark}
-                numberOfLines={expanded ? undefined : 3}
+                // numberOfLines={expanded ? undefined : 3}
                 ellipsizeMode="tail"
               >
                 Welcome to my profile! I am Dr. Mathew Lewis, a highly
@@ -88,26 +106,23 @@ const Page = () => {
                 clinical experience, I am passionate about ensuring the heart
                 health and well-being of my patients.
               </Text>
-              <TouchableOpacity onPressIn={toggleExpansion}>
-                <Text style={styles.viewMore}>
-                  {expanded ? "View less" : "View more"}
-                </Text>
-              </TouchableOpacity>
             </View>
-          </View>
 
-          <Pressable style={styles.actions} onPressIn={() => router.push(`/(authenticated)/messages/${id}`)}>
-            <LinearGradient
-              colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              style={[styles.cancel_btn]}
+            <Pressable
+              onPressIn={() => navigateToChat(user!.id, doctorId, router)}
             >
-              <View style={{ width: "100%" }}>
-                <Text style={styles.cancel_txt}>Go to Chat</Text>
-              </View>
-            </LinearGradient>
-          </Pressable>
+              <LinearGradient
+                colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={[styles.book_btn]}
+              >
+                <View style={{ width: "100%" }}>
+                  <Text style={styles.book_txt}>Go to Chat</Text>
+                </View>
+              </LinearGradient>
+            </Pressable>
+          </View>
         </Animated.ScrollView>
       </View>
     </KeyboardAvoidingView>
@@ -121,13 +136,13 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    height: IMG_HEIGHT,
-    width,
+    width: wp("100%"),
+    height: hp("52%"),
   },
 
   image: {
-    width,
-    height: 680,
+    width: wp("100%"),
+    height: hp("75%"),
   },
 
   content: {
@@ -136,10 +151,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     marginBottom: 100,
     height: "100%",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
   },
 
   name: {
-    fontSize: 24,
+    fontSize: 20,
     color: "#1E1F22",
     fontWeight: "500",
     marginTop: 10,
@@ -148,7 +165,7 @@ const styles = StyleSheet.create({
   },
 
   occupation: {
-    fontSize: 15,
+    fontSize: 16,
     fontStyle: "normal",
     fontWeight: "400",
     lineHeight: 22,
@@ -169,66 +186,20 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
 
-  viewMore: {
-    color: "#478EEF",
-  },
-
-  actions: {
-    position: "absolute",
-    bottom: 0,
+  book_btn: {
     width: "100%",
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
-  },
-
-  cancel_btn: {
-    width: "100%",
-    height: 66,
+    height: 55,
     borderRadius: 40,
-    padding: 4,
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
-    bottom: Platform.OS === "android" ? 0 : 25,
   },
 
-  cancel_txt: {
+  book_txt: {
+    width: "100%",
     color: "#fff",
     textAlign: "center",
-    fontFamily: "Lato400",
-    fontSize: 17,
-    fontStyle: "normal",
-    fontWeight: "400",
-    lineHeight: 22,
-    marginHorizontal: 4,
-  },
-
-  message_btn: {
-    width: 66,
-    height: 66,
-    borderRadius: 100,
-    borderBlockColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    padding: 10,
-    shadowOpacity: 1,
-  },
-
-  input: {
-    marginTop: 8,
-    marginHorizontal: 16,
-    marginBottom: 10,
-    borderRadius: 10,
     fontSize: 16,
-    lineHeight: 20,
-    padding: 8,
-    backgroundColor: "rgba(151, 151, 151, 0.25)",
-    color: "#000",
+    fontWeight: "500",
   },
 });
 

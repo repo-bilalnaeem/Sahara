@@ -40,6 +40,7 @@ const Layout = () => {
             options={{
               title: "Messages",
               headerLeft: () => <GoBack />,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -47,6 +48,8 @@ const Layout = () => {
             options={{
               title: "channel",
               headerBackButtonDisplayMode: "minimal",
+              headerLeft: () => <GoBack />,
+
               //   headerShown: false,
             }}
           />

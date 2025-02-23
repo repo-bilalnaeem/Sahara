@@ -16,25 +16,7 @@ import { router, useLocalSearchParams } from "expo-router";
 const CallScreen = () => {
   const calls = useCalls();
   const call = calls[0];
-  // const [call, setCall] = useState<Call>();
-  // console.log(id);
 
-  // useEffect(() => {
-  //   const fetchCall = async () => {
-  //     const call = client!.call("default", id);
-  //     console.log(call.state);
-
-  //     await call.get();
-  //     setCall(call);
-  //   };
-  //   fetchCall();
-
-  //   return () => {
-  //     if (call) {
-  //       call.leave();
-  //     }
-  //   };
-  // }, [id]);
 
   if (!call) {
     if (router.canGoBack()) {

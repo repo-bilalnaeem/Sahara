@@ -38,7 +38,14 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
           <View style={styles.productTile}>
             <Image
               source={item.imageSource}
-              style={[{ resizeMode: "contain", width: "auto", height: 100 }]}
+              style={[
+                {
+                  resizeMode: "contain",
+                  width: "auto",
+                  height: 80,
+                  backgroundColor: "#fff",
+                },
+              ]}
             />
             {/* <TouchableWithoutFeedback>
               <View style={styles.add_button}>
@@ -49,7 +56,8 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
           <Text
             style={[
               {
-                fontSize: 14,
+                marginTop: 6,
+                fontSize: 13,
                 fontWeight: "500",
                 marginBottom: 4,
                 width: 100,
@@ -75,21 +83,14 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
 const styles = StyleSheet.create({
   productTile: {
     width: 100,
-    // marginRight: 10,
-    // justifyContent: "center",
-    // alignItems: "center",
     height: 100,
     borderRadius: 14,
-    backgroundColor: "#F6F6F6",
+    backgroundColor: "#ffffff",
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#a0a0a0",
-    // elevation: 3,
-    // shadowColor: "#8d8d8d7a",
-    // shadowOpacity: 0.8,
-    // shadowRadius: 3,
-    position: "relative",
     overflow: "hidden",
     marginBottom: 8,
+    justifyContent: "center",
   },
 
   add_button: {
@@ -97,8 +98,6 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     width: 24,
     height: 24,
-    // borderColor: "#000",
-    // borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
     elevation: 3,

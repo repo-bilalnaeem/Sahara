@@ -3,9 +3,7 @@ import {
   Text,
   StyleSheet,
   Image,
-  Pressable,
   Alert,
-  Platform,
   TouchableWithoutFeedback,
   useColorScheme,
   TouchableOpacity,
@@ -26,6 +24,11 @@ import {
   useStripe,
 } from "@stripe/stripe-react-native";
 import { useRouter } from "expo-router";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const SERVICE_CHARGES = 200;
 const SUBTOTAL = 1000;
@@ -77,10 +80,9 @@ const Booking = () => {
   const [createAppointmentIntent] = useCreateAppointmentIntentMutation();
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
   const [creatAppointmentEntry] = useConfirmAppointmentMutation();
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onCheckout = async () => {
-    // console.log("Pressed!");
     const amountInDollars = Number(
       ((SERVICE_CHARGES + SUBTOTAL) / USD).toFixed(2)
     ); // Ensures 2 decimal precision
@@ -179,18 +181,22 @@ const Booking = () => {
           >
             <View
               style={{
-                width: 150,
-                height: 150,
+                width: wp("30%"),
+                height: hp("14%"),
                 borderRadius: 12,
                 overflow: "hidden",
               }}
             >
               <Image
                 source={require("@/assets/images/doctor.jpg")}
-                style={{ width: 150, height: 210, resizeMode: "cover" }}
+                style={{
+                  width: wp("30%"),
+                  height: hp("20%"),
+                  resizeMode: "cover",
+                }}
               />
             </View>
-            <View style={{ marginTop: 36, flexGrow: 1, marginRight: 16 }}>
+            <View style={{ marginTop: 24, flexGrow: 1, marginRight: 16 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -198,7 +204,7 @@ const Booking = () => {
                 }}
               >
                 <Text
-                  style={{ fontWeight: "400", fontSize: 18, marginBottom: 6 }}
+                  style={{ fontWeight: "400", fontSize: 16, marginBottom: 6 }}
                 >
                   Dr. Mathew Lewis
                 </Text>
@@ -287,10 +293,9 @@ const Booking = () => {
 
                 <Text
                   style={{
-                    fontSize: 15,
+                    fontSize: 14,
                     color: "gray",
                     fontWeight: "500",
-                    marginRight: 16,
                     flexGrow: 1,
                   }}
                 >
@@ -299,55 +304,12 @@ const Booking = () => {
               </View>
               <Divider />
             </View>
-            {/* <View style={{ marginBottom: 16 }}>
-            <Text
-              style={{
-                marginLeft: 8,
-                fontSize: 16,
-                fontWeight: "600",
-                marginBottom: 16,
-              }}
-            >
-              Reason
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 12,
-                marginHorizontal: 10,
-                gap: 28,
-              }}
-            >
-              <Image
-                source={require("@/assets/images/edit.png")}
-                style={{
-                  width: 26,
-                  height: 26,
-                  resizeMode: "contain",
-                  marginLeft: 2,
-                }}
-              />
 
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: "gray",
-                  fontWeight: "500",
-                  marginRight: 16,
-                  flexGrow: 1,
-                }}
-              >
-                Chest Pain
-              </Text>
-            </View>
-            <Divider />
-          </View> */}
             <View style={{ marginBottom: 16 }}>
               <Text
                 style={{
                   marginLeft: 8,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "600",
                   marginBottom: 16,
                 }}
@@ -360,7 +322,6 @@ const Booking = () => {
                   alignItems: "center",
                   marginBottom: 12,
                   marginHorizontal: 10,
-                  gap: 28,
                   justifyContent: "space-between",
                 }}
               >
@@ -397,7 +358,7 @@ const Booking = () => {
               <Text
                 style={{
                   marginLeft: 8,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "600",
                   marginBottom: 16,
                 }}
@@ -543,7 +504,7 @@ const Booking = () => {
 
 const styles = StyleSheet.create({
   paymentTags: {
-    fontSize: 15,
+    fontSize: 14,
     color: "gray",
     fontWeight: "500",
     marginRight: 16,
@@ -551,7 +512,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   paymentPrice: {
-    fontSize: 15,
+    fontSize: 14,
     color: "gray",
     fontWeight: "500",
     marginRight: 16,
@@ -560,21 +521,14 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   linearGradient: {
-    // height: 210,
-    marginLeft: 12,
     borderRadius: 32,
-    // marginBottom: 30,
     paddingHorizontal: 40,
     paddingVertical: 15,
-    // paddingTop: 20,
-    // paddingBottom: 17,
-    // justifyContent: "center",
-    // alignItems: "center",
   },
 
   total: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
     marginBottom: 20,
   },
 
@@ -680,149 +634,3 @@ const styles = StyleSheet.create({
 });
 
 export default Booking;
-// import {
-//   View,
-//   Text,
-//   SafeAreaView,
-//   StyleSheet,
-//   Pressable,
-//   Alert,
-// } from "react-native";
-// import React from "react";
-// import { Link, router, useLocalSearchParams } from "expo-router";
-// import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-// import {
-//   PaymentSheet,
-//   presentPaymentSheet,
-//   useStripe,
-// } from "@stripe/stripe-react-native";
-// import {
-//   useCreatePaymentIntentMutation,
-//   useCreateAppointmentIntentMutation,
-// } from "@/slices/apiSlice";
-
-// const Payment = () => {
-//   const { top } = useSafeAreaInsets();
-//   const { id } = useLocalSearchParams();
-//   const { initPaymentSheet } = useStripe();
-//   const [createPaymentIntent] = useCreatePaymentIntentMutation();
-//   const [createAppointmentIntent] = useCreateAppointmentIntentMutation();
-
-//   const onCheckout = async () => {
-//     // 1. Create a payment intent
-//     console.log("Pressed!");
-//     const response = await createPaymentIntent({
-//       amount: 100 * 100 * 1,
-//       currency: "usd",
-//     });
-
-//     console.log("response:", response);
-
-//     if (response.error) {
-//       console.log(response.error);
-//       Alert.alert("Something went wrong!");
-//       return;
-//     }
-
-//     // 2. Initialize the payment sheet
-//     const initResponse = await initPaymentSheet({
-//       merchantDisplayName: "Sadaa Air",
-//       paymentIntentClientSecret: response.data.clientSecret,
-//     });
-
-//     console.log("initResponse", initResponse);
-
-//     if (initResponse.error) {
-//       console.log(initResponse.error.message);
-//       Alert.alert("Something wnet wring!");
-//       return;
-//     }
-
-//     // 3. Present the Payment Sheet from Stripe
-//     const paymentResponse = await presentPaymentSheet();
-//     if (paymentResponse.error) {
-//       Alert.alert(
-//         `Error code: ${paymentResponse.error.code}`,
-//         paymentResponse.error.message
-//       );
-//       return;
-//     }
-
-//     // 4. If payment ok -> create the order
-//     PaymentSheet;
-//   };
-
-//   return (
-//     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-//       <View style={[styles.screen, { paddingTop: top }]}>
-//         <Pressable style={styles.button} onPress={() => onCheckout()}>
-//           <Text style={styles.button_text}>Confirm</Text>
-//         </Pressable>
-
-//         <Pressable
-//           style={styles.button_outline}
-//           onPressIn={() => router.replace("/")}
-//         >
-//           <Text style={[styles.button_text, { color: "#000" }]}>Cancel</Text>
-//         </Pressable>
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   screen: {
-//     flex: 1,
-//     marginHorizontal: 16,
-//   },
-
-//   button: {
-//     backgroundColor: "#255257",
-//     paddingHorizontal: 16,
-//     paddingVertical: 12,
-//     borderRadius: 8,
-//     marginTop: 16,
-//   },
-
-//   button_outline: {
-//     borderWidth: StyleSheet.hairlineWidth,
-//     backgroundColor: "#fff",
-//     borderColor: "#255257",
-//     paddingHorizontal: 16,
-//     paddingVertical: 12,
-//     borderRadius: 8,
-//     marginTop: 16,
-//   },
-
-//   button_text: {
-//     textAlign: "center",
-//     color: "#fff",
-//     fontSize: 16,
-//     fontStyle: "normal",
-//     fontWeight: "500",
-//     lineHeight: 16,
-//   },
-
-//   amount: {
-//     color: "#191919",
-//     textAlign: "right",
-//     fontSize: 24,
-//     fontWeight: "600",
-//     lineHeight: 24,
-//   },
-
-//   total: {
-//     color: "#555",
-//     fontSize: 16,
-//     fontWeight: "300",
-//     lineHeight: 24,
-//   },
-
-//   container: {
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
-
-// export default Payment;

@@ -1,4 +1,4 @@
-import { Href, router } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import {
   FlatList,
@@ -8,12 +8,20 @@ import {
   View,
   Image,
   Text,
-  useColorScheme,
   TextStyle,
+  PixelRatio
 } from "react-native";
 import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
+
 
 interface Props {
   listings: any[];

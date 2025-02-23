@@ -25,7 +25,6 @@ import VideoProvider from "@/provider/VideoProvider";
 LogBox.ignoreAllLogs();
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-// Cache the Clerk JWT
 const tokenCache = {
   async getToken(key: string) {
     try {
@@ -43,7 +42,6 @@ const tokenCache = {
   },
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const InitialLayout = () => {
@@ -54,9 +52,7 @@ const InitialLayout = () => {
   const segments = useSegments();
   const router = useRouter();
 
-  // console.log(segments);
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -71,8 +67,6 @@ const InitialLayout = () => {
     if (!isLoaded) return;
 
     const inAuthGroup = segments[0] === "(authenticated)";
-    // console.log("In Auth Group:", inAuthGroup);
-    // console.log("Is User Authenticated: ", isSignedIn);
 
     if (isSignedIn && !inAuthGroup) {
       router.replace("/(authenticated)/(drawer)/(tabs)");
@@ -84,7 +78,7 @@ const InitialLayout = () => {
   if (!loaded || !isLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color={"#000"} />
+        <ActivityIndicator size={"small"} color={"#000"} />
       </View>
     );
   }

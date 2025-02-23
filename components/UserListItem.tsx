@@ -16,7 +16,7 @@ const UserListItem = ({ user }) => {
         members: [me.id, user.doctorId],
       });
 
-      console.log("Channel ID is:", channel.cid);
+      // console.log("Channel ID is:", channel.cid);
 
       await channel.create();
       router.replace(`/(drawer)/(tabs)/chats/${channel.cid}`);

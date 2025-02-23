@@ -27,7 +27,7 @@ const Layout = () => {
         drawerItemStyle: { borderRadius: 12 },
         // drawerLabelStyle: { marginLeft: -10 },
         drawerHideStatusBarOnOpen: true,
-        // swipeEnabled: false,
+        swipeEnabled: false,
       }}
     >
       <Drawer.Screen

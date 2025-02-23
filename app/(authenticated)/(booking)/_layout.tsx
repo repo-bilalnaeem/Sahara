@@ -2,9 +2,12 @@ import React from "react";
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import GoBack from "@/components/GoBack";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Layout = () => {
   const router = useRouter();
+  const { top } = useSafeAreaInsets();
   return (
     <Stack>
       <Stack.Screen
@@ -15,25 +18,18 @@ const Layout = () => {
             <View
               style={{
                 flexDirection: "row",
-                paddingTop: 52,
-                paddingLeft: 18,
+                paddingTop: top + 10,
+                paddingLeft: 16,
                 gap: 18,
                 alignItems: "center",
                 backgroundColor: "#fff",
                 paddingBottom: 10,
               }}
             >
-              <TouchableOpacity
-                onPress={router.back}
-                style={[styles.closeButton, {}]}
-              >
-                <Ionicons name="close" size={24} color={"#000000"} />
-              </TouchableOpacity>
+              <GoBack />
+
               <View>
                 <Text style={{ fontWeight: "600", fontSize: 16 }}>Booking</Text>
-                {/* <Text style={{ fontWeight: "300", fontSize: 13 }}>
-                  Doctor Appointment
-                </Text> */}
               </View>
             </View>
           ),

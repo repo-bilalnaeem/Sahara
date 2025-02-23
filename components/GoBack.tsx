@@ -30,8 +30,8 @@ const GoBack = () => {
 const styles = StyleSheet.create({
   darkBackButton: {
     borderRadius: 24,
-    width: wp("9.5%"),
-    height: hp("4.5%"),
+    width: wp("8%"),
+    height: hp("3.5%"),
     backgroundColor: "#1E1F22",
     alignItems: "center",
     justifyContent: "center",

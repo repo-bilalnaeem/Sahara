@@ -16,6 +16,7 @@ import * as Crypto from "expo-crypto";
 const ChannelId = () => {
   const [channel, SetChannel] = useState<ChannelType | null>(null);
   const { cid } = useLocalSearchParams<{ cid: string }>();
+  // console.log(cid);
   const router = useRouter();
   const { client } = useChatContext();
   const videoClient = useStreamVideoClient();
@@ -46,7 +47,7 @@ const ChannelId = () => {
       }))
       .filter((member) => member.user_id !== "");
 
-    console.log(members);
+    // console.log(members);
 
     // create a call using the channel members
     const call = videoClient.call("default", Crypto.randomUUID());
@@ -61,7 +62,7 @@ const ChannelId = () => {
   if (!channel) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator />
+        <ActivityIndicator size={"small"} />
       </View>
     );
   }

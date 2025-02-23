@@ -35,7 +35,6 @@ const Home = () => {
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  console.log(top);
 
   return (
     <View style={[styles.lightScreen]}>

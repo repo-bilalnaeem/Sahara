@@ -6,12 +6,12 @@ import { Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const CallProvider = ({ children }: PropsWithChildren) => {
-  console.warn("Call Provider");
+  // console.warn("Call Provider");
   const calls = useCalls();
   const call = calls[0];
   const { top } = useSafeAreaInsets();
   const segments = useSegments();
-  console.log(segments);
+  // console.log(segments);
   const isOnCallScreen = segments[1] === "call";
 
   useEffect(() => {

@@ -1,22 +1,25 @@
 import GoBack from "@/components/GoBack";
 import { Stack } from "expo-router";
 import React from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Layout = () => {
+  const { top } = useSafeAreaInsets();
   return (
-    <GestureHandlerRootView>
-      <Stack>
-        <Stack.Screen
-          name="[id]"
-          options={{
-            headerLeft: () => <GoBack />,
-            headerTransparent: true,
-            headerTitle: "",
-          }}
-        />
-      </Stack>
-    </GestureHandlerRootView>
+    <Stack>
+      <Stack.Screen
+        name="[id]"
+        options={{
+          headerTitle: "",
+          header: () => (
+            <View style={{ position: "absolute", left: 16, top }}>
+              <GoBack />
+            </View>
+          ),
+        }}
+      />
+    </Stack>
   );
 };
 

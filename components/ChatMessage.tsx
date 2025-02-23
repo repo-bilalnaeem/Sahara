@@ -52,7 +52,7 @@ const ChatMessage = ({
       )}
       {loading ? (
         <View style={styles.loading}>
-          <ActivityIndicator color={Colors.primary} />
+          <ActivityIndicator color={Colors.primary} size={"small"} />
         </View>
       ) : (
         <>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     margin: 2,
     width: 24,
     height: 24,
-    objectFit:"contain"
+    objectFit: "contain",
   },
 
   text: {
