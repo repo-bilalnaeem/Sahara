@@ -23,7 +23,7 @@ import {
   presentPaymentSheet,
   useStripe,
 } from "@stripe/stripe-react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import {
   widthPercentageToDP as wp,
@@ -75,29 +75,51 @@ const CustomModal = () => {
 };
 
 const Booking = () => {
-  const router = useRouter();
   const { initPaymentSheet } = useStripe();
   const [createAppointmentIntent] = useCreateAppointmentIntentMutation();
-  const [createPaymentIntent] = useCreatePaymentIntentMutation();
-  const [creatAppointmentEntry] = useConfirmAppointmentMutation();
+  const [confirmAppointment] = useConfirmAppointmentMutation();
   const [modalVisible, setModalVisible] = useState(false);
+  const { date, timeSlot } = useLocalSearchParams();
+  const amountInDollars = Number(
+    ((SERVICE_CHARGES + SUBTOTAL) / USD).toFixed(2)
+  );
+  const amountInCents = Math.round(amountInDollars * 100);
+
+  console.log(date);
+  console.log(timeSlot);
+
+  // Ensure date is always a string
+  const selectedDate = new Date(date as string);
+
+  // Extract year, month, and day as numbers
+  const year = selectedDate.getUTCFullYear();
+  const month = selectedDate.getUTCMonth() + 1; // getUTCMonth() is zero-based
+  const day = selectedDate.getUTCDate();
+
+  // Ensure timeSlot is always a string
+  const [hours, minutes] = (timeSlot as string).split(":").map(Number);
+
+  // Construct the selectedSlot with proper numeric values
+  const selectedSlot = new Date(
+    Date.UTC(year, month - 1, day, hours, minutes, 0)
+  ).toISOString();
+
+  console.log("Formatted Selected Slot:");
+
+  console.log(selectedSlot);
 
   const onCheckout = async () => {
-    const amountInDollars = Number(
-      ((SERVICE_CHARGES + SUBTOTAL) / USD).toFixed(2)
-    ); // Ensures 2 decimal precision
-    const amountInCents = Math.round(amountInDollars * 100);
     const response = await createAppointmentIntent({
-      id: "5db8c0f6-cdf9-4466-a91c-4d1da27255e7",
-      doctorId: "f380df06-50f6-4bac-8866-32920a5e05cb",
+      // id: "5db8c0f6-cdf9-4466-a91c-4d1da27255e7",
+      id: "f380df06-50f6-4bac-8866-32920a5e05cb",
       data: {
         amount: amountInCents,
         currency: "usd",
-        selectedSlot: "2025-02-11T16:30:00.000Z",
+        selectedSlot,
       },
     });
 
-    console.log("response:", response);
+    console.log("response:", JSON.stringify(response, null, 2));
 
     if (response.error) {
       console.log(response.error);
@@ -131,14 +153,18 @@ const Booking = () => {
 
     // Step 4: Confirm the appointment after successful payment
     const paymentIntentId = response.data.paymentIntentId;
+    const { customerId, doctorId, slotId } = response.data.appointment;
     console.log("paymentIntentId", paymentIntentId);
+    console.log("userId: ", customerId);
+    console.log("doctorId: ", doctorId);
+    console.log("slotId: ", slotId);
 
-    const confirmResponse = await creatAppointmentEntry({
+    const confirmResponse = await confirmAppointment({
       data: {
         paymentIntentId,
-        doctorId: "f380df06-50f6-4bac-8866-32920a5e05cb",
-        userId: "5db8c0f6-cdf9-4466-a91c-4d1da27255e7",
-        slotId: 10,
+        doctorId,
+        userId: customerId,
+        slotId,
       },
     });
 
@@ -607,7 +633,7 @@ const styles = StyleSheet.create({
     // marginLeft: 10,
   },
 
-  container: { flex: 1, alignItems: "center", justifyContent: "center" },
+  // container: { flex: 1, alignItems: "center", justifyContent: "center" },
   button: { backgroundColor: "#007AFF", padding: 15, borderRadius: 8 },
   buttonText: { color: "#FFF", fontSize: 16, fontWeight: "bold" },
   modalOverlay: {

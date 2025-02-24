@@ -99,7 +99,7 @@ const Page = () => {
               onChange={(params) => {
                 // console.log("Date selected:", params.date);
                 if (params.date) {
-                  setDate(params.date);
+                  setDate(params.date as any);
                 }
               }}
               minDate={new Date(new Date().setHours(0, 0, 0, 0))} // Ensure today is selectable
@@ -120,7 +120,7 @@ const Page = () => {
               contentContainerStyle={styles.slotContainer}
               renderItem={({ item }) => (
                 <Pressable
-                  onPress={() => setSelectedSlot(item)}
+                  onPress={() => setSelectedSlot(item as any)}
                   style={[
                     styles.timeBtn,
                     selectedSlot === item && styles.selectedTimeBtn,
@@ -142,11 +142,26 @@ const Page = () => {
               colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
-              style={[styles.book_btn]}
+              style={[
+                styles.book_btn,
+                (!date || !selectedSlot) && { opacity: 0.75 },
+              ]}
             >
               <TouchableOpacity
                 activeOpacity={0.95}
-                onPress={() => router.navigate("/(authenticated)/(booking)")}
+                disabled={!date || !selectedSlot}
+                onPress={() => {
+                  console.log("Date selected:", date);
+                  console.log("Time slot selected:", selectedSlot);
+
+                  router.navigate({
+                    pathname: "/(authenticated)/(booking)",
+                    params: {
+                      date: date.toISOString(),
+                      timeSlot: selectedSlot,
+                    },
+                  });
+                }}
                 style={{ width: "100%" }}
               >
                 <Text style={styles.book_txt}>Book Appointment</Text>
