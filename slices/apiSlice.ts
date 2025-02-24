@@ -31,6 +31,25 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+
+    // Get Popular Products
+    getPopularProducts: builder.query({
+      query: ({ tag, limit }) => ({
+        url: `products?limit=${limit}&tag=${tag}`,
+        method: "GET",
+      }),
+    }),
+
+    // Get GENEREAL Products
+    getGeneralProducts: builder.query({
+      query: ({ category, tag }) => ({
+        url: `products?category=${category}&tag=${tag}`,
+      }),
+    }),
+
+    getProductById: builder.query({
+      query: (id) => `products/${id}`,
+    }),
   }),
 });
 
@@ -38,4 +57,7 @@ export const {
   useCreatePaymentIntentMutation,
   useCreateAppointmentIntentMutation,
   useConfirmAppointmentMutation,
+  useGetPopularProductsQuery,
+  useGetGeneralProductsQuery,
+  useGetProductByIdQuery,
 } = apiSlice;

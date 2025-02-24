@@ -4,7 +4,6 @@ import React from "react";
 import {
   Pressable,
   View,
-  TouchableWithoutFeedback,
   Image,
   StyleSheet,
   Text,
@@ -13,10 +12,10 @@ import {
 const isAndroid = Platform.OS === "android";
 
 interface ProductItem {
-  key: string;
-  imageSource: any;
+  id: string;
+  imageUrl: any;
   price: number;
-  title: string;
+  name: string;
 }
 
 export interface RenderProductTileProps {
@@ -24,20 +23,20 @@ export interface RenderProductTileProps {
   index: number;
 }
 
-export function formatTitle(title: string, maxLength = 20) {
-  if (title.length > maxLength) {
-    return title.substring(0, maxLength) + " ...";
-  }
-  return title;
+export function formatTitle(name?: string, maxLength = 20) {
+  if (!name) return "";
+  return name.length > maxLength ? name.substring(0, maxLength) + " ..." : name;
 }
-const ProductTile = ({ item, index }: RenderProductTileProps) => {
+
+export const ProductTile = ({ item, index }: RenderProductTileProps) => {
+  // console.log(item.id);
   return (
-    <Link href={`/(mart)/${item.key}`} asChild>
+    <Link href={`/(mart)/${item.id}`} asChild key={item.id}>
       <Pressable>
         <View style={[index === 0 ? { marginLeft: 16 } : null]}>
           <View style={styles.productTile}>
             <Image
-              source={item.imageSource}
+              source={{ uri: item.imageUrl }}
               style={[
                 {
                   resizeMode: "contain",
@@ -47,11 +46,6 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
                 },
               ]}
             />
-            {/* <TouchableWithoutFeedback>
-              <View style={styles.add_button}>
-                <Ionicons name="add" size={20} color={"#494848"} />
-              </View>
-            </TouchableWithoutFeedback> */}
           </View>
           <Text
             style={[
@@ -72,7 +66,7 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
               isAndroid ? { fontSize: 12 } : null,
             ]}
           >
-            {formatTitle(item.title)}
+            {formatTitle(item.name)}
           </Text>
         </View>
       </Pressable>
@@ -82,7 +76,7 @@ const ProductTile = ({ item, index }: RenderProductTileProps) => {
 
 const styles = StyleSheet.create({
   productTile: {
-    width: 100,
+    width: 110,
     height: 100,
     borderRadius: 14,
     backgroundColor: "#ffffff",

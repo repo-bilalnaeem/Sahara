@@ -1,11 +1,37 @@
 import { View, Text, FlatList, Pressable, Platform } from "react-native";
-import React from "react";
-import { blood_data, popular_data } from "@/assets/data/PharmacyPageData";
+import React, { useEffect, useState } from "react";
 import ProductTile from "./ProductTile";
 import SeeMore from "./SeeMore";
-const isAndroid = Platform.OS === "android";
+import {
+  useGetGeneralProductsQuery,
+  useGetPopularProductsQuery,
+} from "@/slices/apiSlice";
 
 const SaharaMart = () => {
+  const { data, isLoading } = useGetPopularProductsQuery({
+    limit: 8,
+    tag: "POPULAR_PRODUCT",
+  });
+  const { data: general, isLoading: loading_general } =
+    useGetGeneralProductsQuery({ category: "GENERAL", tag: "NULL" });
+
+  const [products, setProducts] = useState([]);
+
+  const [generalProducts, setGeneralProducts] = useState([]);
+
+  useEffect(() => {
+    if (data && data?.products) {
+      setProducts(data.products);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (general && general?.products) {
+      // console.log(JSON.stringify(general, null, 2));
+      setGeneralProducts(general.products);
+    }
+  }, [general]);
+
   return (
     <View style={{ marginVertical: 36 }}>
       <View>
@@ -27,10 +53,16 @@ const SaharaMart = () => {
         <Pressable>
           <FlatList
             horizontal
-            data={popular_data}
-            renderItem={ProductTile}
-            keyExtractor={(item) => item.key}
+            data={products}
+            renderItem={({ item, index }) => (
+              <ProductTile item={item} index={index} />
+            )}
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              gap: 10,
+              paddingRight: 16,
+            }}
+            // scrollEnabled={isBottomSheetOpen === false}
           />
         </Pressable>
       </View>
@@ -40,11 +72,15 @@ const SaharaMart = () => {
       <Pressable>
         <FlatList
           horizontal
-          data={blood_data}
-          renderItem={ProductTile}
-          keyExtractor={(item) => item.key}
+          data={generalProducts}
+          renderItem={({ item, index }) => (
+            <ProductTile item={item} index={index} />
+          )}
+          contentContainerStyle={{
+            gap: 10,
+            paddingRight: 16,
+          }}
           showsHorizontalScrollIndicator={false}
-          // scrollEnabled={isBottomSheetOpen === false}
         />
       </Pressable>
     </View>

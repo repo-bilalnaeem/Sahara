@@ -10,6 +10,7 @@ import {
   Pressable,
   FlatList,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Href, useLocalSearchParams } from "expo-router";
@@ -18,80 +19,111 @@ import { useRouter } from "expo-router";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ImageView from "react-native-image-viewing";
-import { blood_data } from "@/assets/data/PharmacyPageData";
-import { formatTitle, RenderProductTileProps } from "@/components/ProductTile";
+
 import { useCart } from "@/store/cartStore";
-import { popular_data as products } from "@/assets/data/PharmacyPageData";
 import { StatusBar } from "expo-status-bar";
+import {
+  useGetGeneralProductsQuery,
+  useGetProductByIdQuery,
+} from "@/slices/apiSlice";
+import ProductTile from "@/components/ProductTile";
+
+type Product = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  discountPrice: number | null;
+  discountPrecentage: number | null;
+  tag: string;
+  stock: number;
+  imageUrl: string;
+  category: string;
+  createdAt: string;
+};
 
 const { width } = Dimensions.get("window");
 const IMG_HEIGHT = 300;
-const PRICE = 47.5;
 const Product = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams();
+  const { data, isLoading, error } = useGetProductByIdQuery(id);
+
+  const [product, setProduct] = useState<Product>();
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    if (data && data?.product) {
+      setProduct(data.product);
+    }
+  }, [data]);
+
+  const { data: products, isLoading: loading_products } =
+    useGetGeneralProductsQuery({ category: "GENERAL", tag: "NULL" });
+
+  useEffect(() => {
+    if (products && products?.products) {
+      setProductList(products.products);
+    }
+  }, [data]);
+  // console.log(JSON.stringify(product, null, 2));
 
   const addProduct = useCart((state: any) => state.addProduct);
   const cartItems = useCart((state: any) => state.items);
-  //   console.log(JSON.stringify(cartItems, null, 2))
-
-  const product = products.find((p) => p.key === id);
+  // //   console.log(JSON.stringify(cartItems, null, 2))
 
   const router = useRouter();
-  // Log the product ID
-  useEffect(() => {}, [id]);
 
   const { top } = useSafeAreaInsets();
-  const isDarkMode = useColorScheme() === "dark";
 
   const [visible, setIsVisible] = useState(false);
 
-  // Get the URI from the local image using Image.resolveAssetSource
-  const localImage = require("@/assets/images/medicine_images/img2.jpeg");
-  const imageSource = Image.resolveAssetSource(localImage).uri;
-
-  const images = [
-    {
-      uri: imageSource,
-    },
-  ];
-
-  const renderProductTile = ({ item, index }: RenderProductTileProps) => (
-    <Pressable onPress={() => router.push(`/(product)/${item.key}` as Href)}>
-      <View style={[index === 0 ? { marginLeft: 16 } : null]}>
-        <View style={styles.productTile}>
-          <Image
-            source={item.imageSource}
-            style={[{ resizeMode: "contain", width: 120, height: 120 }]}
-          />
-          <TouchableWithoutFeedback>
-            <View style={styles.add_button}>
-              <Ionicons name="add" size={20} color={"#494848"} />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: "500",
-            marginBottom: 4,
-            width: 120,
-          }}
-        >
-          Rs. {item.price}
-        </Text>
-        <Text
-          style={{ width: 120, fontSize: 14, fontWeight: "400", color: "gray" }}
-        >
-          {formatTitle(item.title)}
-        </Text>
-      </View>
-    </Pressable>
-  );
+  // const renderProductTile = ({ item, index }: RenderProductTileProps) => (
+  //   <Pressable onPress={() => router.push(`/(product)/${item.id}` as Href)}>
+  //     <View style={[index === 0 ? { marginLeft: 16 } : null]}>
+  //       <View style={styles.productTile}>
+  //         <Image
+  //           source={item.imageSource}
+  //           style={[{ resizeMode: "contain", width: 120, height: 120 }]}
+  //         />
+  //         <TouchableWithoutFeedback>
+  //           <View style={styles.add_button}>
+  //             <Ionicons name="add" size={20} color={"#494848"} />
+  //           </View>
+  //         </TouchableWithoutFeedback>
+  //       </View>
+  //       <Text
+  //         style={{
+  //           fontSize: 14,
+  //           fontWeight: "500",
+  //           marginBottom: 4,
+  //           width: 120,
+  //         }}
+  //       >
+  //         Rs. {item.price}
+  //       </Text>
+  //       <Text
+  //         style={{ width: 120, fontSize: 14, fontWeight: "400", color: "gray" }}
+  //       >
+  //         {formatTitle(item.name)}
+  //       </Text>
+  //     </View>
+  //   </Pressable>
+  // );
 
   const addToCart = () => {
     console.log("pressed");
     addProduct(product);
   };
+
+  if (!id)
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"small"} />
+      </View>
+    );
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error fetching product</Text>;
+
   return (
     <View style={{ flex: 1, backgroundColor: "#f7f7f7" }}>
       <ScrollView
@@ -100,26 +132,24 @@ const Product = () => {
         showsVerticalScrollIndicator={false}
       >
         <StatusBar />
-        {/* <TouchableOpacity
-          onPress={router.back}
-          style={[styles.closeButton, { marginTop: 52, marginLeft: 18 }]}
-        >
-          <Ionicons name="close" size={24} color={"#636363"} />
-        </TouchableOpacity> */}
-        {/* <Text>{id}</Text> */}
 
-        {/* Product Image with Full-Screen Viewing */}
         <View style={[styles.profileImage, { paddingTop: top }]}>
           <TouchableOpacity onPress={() => setIsVisible(true)}>
             <Image
-              source={require("@/assets/images/medicine_images/img2.jpeg")}
-              style={[styles.image, { paddingTop: top }]}
+              source={{
+                uri: product?.imageUrl,
+              }}
+              style={{
+                height: 180,
+                width: 180,
+                objectFit: "contain",
+              }}
             />
           </TouchableOpacity>
         </View>
 
         <ImageView
-          images={images}
+          images={[{ uri: product?.imageUrl }]}
           imageIndex={0}
           visible={visible}
           onRequestClose={() => setIsVisible(false)}
@@ -128,16 +158,20 @@ const Product = () => {
         <View
           style={{
             paddingHorizontal: 12,
-            // marginTop: 24,
             borderBottomWidth: StyleSheet.hairlineWidth,
-            // borderTopWidth: StyleSheet.hairlineWidth,
             paddingTop: 48,
             borderColor: "gray",
           }}
         >
-          <Text style={styles.product_name}>Panadol Extra Tablets</Text>
-          <Text style={styles.product_price}>Rs. {PRICE.toFixed(2)}</Text>
-          <TouchableWithoutFeedback onPress={() => addToCart()}>
+          <Text style={styles.product_name}>{product?.name}</Text>
+          <Text style={styles.product_price}>
+            Rs. {product?.price.toFixed(2)}
+          </Text>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              addToCart();
+            }}
+          >
             <LinearGradient
               colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
               start={{ x: 0, y: 0 }}
@@ -180,20 +214,20 @@ const Product = () => {
         </View>
 
         <View style={{ marginTop: 38 }}>
-          <Text
-            style={[
-              styles.flex_headings,
-              isDarkMode ? styles.lightHeading : styles.darkHeading,
-            ]}
-          >
+          <Text style={[styles.flex_headings, styles.darkHeading]}>
             Recommended for you
           </Text>
           <Pressable>
             <FlatList
               horizontal
-              data={blood_data}
-              renderItem={renderProductTile}
-              keyExtractor={(item) => item.key}
+              data={productList}
+              renderItem={({ item, index }) => (
+                <ProductTile item={item} index={index} />
+              )}
+              contentContainerStyle={{
+                gap: 10,
+                paddingRight: 16,
+              }}
               showsHorizontalScrollIndicator={false}
               // scrollEnabled={isBottomSheetOpen === false}
             />
