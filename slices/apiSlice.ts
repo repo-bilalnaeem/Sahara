@@ -50,6 +50,32 @@ export const apiSlice = createApi({
     getProductById: builder.query({
       query: (id) => `products/${id}`,
     }),
+
+    getDoctorSchedule: builder.query({
+      query: (doctorId) => ({
+        url: `schedules/${doctorId}`,
+      }),
+    }),
+
+    // Get USERS ALL Appointmnets
+    getAllAppointments: builder.query({
+      query: () => ({
+        url: "appointments",
+      }),
+    }),
+
+    // Get RECENTLY VIEWED Doctors
+    getRecentlyViewed: builder.query({
+      query: () => ({
+        url: "/users/recently-viewed",
+      }),
+    }),
+
+    getDoctorById: builder.query({
+      query: ({ id, date }) => ({
+        url: `doctors/${id}?date=${date}`,
+      }),
+    }),
   }),
 });
 
@@ -60,4 +86,8 @@ export const {
   useGetPopularProductsQuery,
   useGetGeneralProductsQuery,
   useGetProductByIdQuery,
+  useGetAllAppointmentsQuery,
+  useGetDoctorScheduleQuery,
+  useGetRecentlyViewedQuery,
+  useGetDoctorByIdQuery,
 } = apiSlice;

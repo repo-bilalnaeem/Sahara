@@ -85,37 +85,16 @@ const Booking = () => {
   );
   const amountInCents = Math.round(amountInDollars * 100);
 
-  console.log(date);
   console.log(timeSlot);
-
-  // Ensure date is always a string
-  const selectedDate = new Date(date as string);
-
-  // Extract year, month, and day as numbers
-  const year = selectedDate.getUTCFullYear();
-  const month = selectedDate.getUTCMonth() + 1; // getUTCMonth() is zero-based
-  const day = selectedDate.getUTCDate();
-
-  // Ensure timeSlot is always a string
-  const [hours, minutes] = (timeSlot as string).split(":").map(Number);
-
-  // Construct the selectedSlot with proper numeric values
-  const selectedSlot = new Date(
-    Date.UTC(year, month - 1, day, hours, minutes, 0)
-  ).toISOString();
-
-  console.log("Formatted Selected Slot:");
-
-  console.log(selectedSlot);
 
   const onCheckout = async () => {
     const response = await createAppointmentIntent({
       // id: "5db8c0f6-cdf9-4466-a91c-4d1da27255e7",
-      id: "f380df06-50f6-4bac-8866-32920a5e05cb",
+      id: "bcaeb6a5-26bd-477b-a0f1-5c5384da3cb3",
       data: {
         amount: amountInCents,
         currency: "usd",
-        selectedSlot,
+        selectedSlot: timeSlot,
       },
     });
 

@@ -1,13 +1,11 @@
 import { Drawer } from "expo-router/drawer";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
 import { View, Image } from "react-native";
-import { useRouter, useSegments } from "expo-router";
-import { CustomHeader } from "@/components/CustomHeader";
+import { useSegments } from "expo-router";
 import DrawerContent from "@/components/DrawerContent";
-import GoBack from "@/components/GoBack";
 import { AntDesign } from "@expo/vector-icons";
-
+import Ionicons from "@expo/vector-icons/Ionicons";
 const Layout = () => {
   const segments = useSegments();
   const isOnTabsScreen = segments[2] === "(tabs)";
@@ -25,7 +23,6 @@ const Layout = () => {
         drawerInactiveTintColor: "#000",
         overlayColor: "rgba(0, 0, 0, 0.2)",
         drawerItemStyle: { borderRadius: 12 },
-        // drawerLabelStyle: { marginLeft: -10 },
         drawerHideStatusBarOnOpen: true,
         swipeEnabled: false,
       }}
@@ -34,11 +31,10 @@ const Layout = () => {
         name="(tabs)"
         options={{
           title: "Home",
-          // drawerIcon: () => null,
-          // drawerLabel: () => null,
+
           drawerIcon: () => (
             <View style={[styles.item, { margin: 6 }]}>
-              <AntDesign name="home" size={24} color={"#4e4e4e"}/>
+              <AntDesign name="home" size={24} color={"#4e4e4e"} />
             </View>
           ),
           drawerItemStyle: isOnTabsScreen && { display: "none" },
@@ -58,13 +54,11 @@ const Layout = () => {
               />
             </View>
           ),
-          // header: () => <CustomHeader onPress={router.back} heading="Offers" />,
         }}
       />
 
       <Drawer.Screen
         name="vouchers"
-        // getId={() => Math.random().toString()}
         options={{
           title: "Vouchers",
           drawerIcon: () => (
@@ -75,16 +69,11 @@ const Layout = () => {
               />
             </View>
           ),
-
-          // header: () => (
-          //   <CustomHeader onPress={router.back} heading="Vouchers & offers" />
-          // ),
         }}
       />
 
       <Drawer.Screen
         name="orders"
-        // getId={() => Math.random().toString()}
         options={{
           title: "Orders",
           drawerIcon: () => (
@@ -95,13 +84,27 @@ const Layout = () => {
               />
             </View>
           ),
-          // header: () => <CustomHeader onPress={router.back} heading="Orders" />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="appointments"
+        options={{
+          title: "Appointments",
+          drawerIcon: () => (
+            <View style={[styles.item, { margin: 6, borderRadius: 0 }]}>
+              <Ionicons
+                name="calendar-number-outline"
+                size={24}
+                color="#383838"
+              />
+            </View>
+          ),
         }}
       />
 
       <Drawer.Screen
         name="address"
-        // getId={() => Math.random().toString()}
         options={{
           title: "Addresses",
           drawerIcon: () => (
@@ -112,15 +115,11 @@ const Layout = () => {
               />
             </View>
           ),
-          // header: () => (
-          //   <CustomHeader onPress={router.back} heading="Addresses" />
-          // ),
         }}
       />
 
       <Drawer.Screen
         name="helpCentre"
-        // getId={() => Math.random().toString()}
         options={{
           title: "Help Center",
           drawerIcon: () => (
@@ -131,9 +130,6 @@ const Layout = () => {
               />
             </View>
           ),
-          // header: () => (
-          //   <CustomHeader onPress={router.back} heading="Help Center" />
-          // ),
         }}
       />
     </Drawer>

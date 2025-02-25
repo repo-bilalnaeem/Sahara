@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -20,31 +20,68 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { useGetDoctorByIdQuery } from "@/slices/apiSlice";
 
-const generateTimeSlots = (
-  startHour: number,
-  endHour: number,
-  interval: number
-) => {
-  const slots = [];
-  for (let hour = startHour; hour <= endHour; hour++) {
-    for (let min = 0; min < 60; min += interval) {
-      const time = `${hour.toString().padStart(2, "0")}:${min
-        .toString()
-        .padStart(2, "0")}`;
-      slots.push(time);
-    }
-  }
-  return slots;
-};
+interface Slot {
+  id: number;
+  scheduleId: number;
+  date: string;
+  time: string;
+  isBooked: boolean;
+}
+
+interface Schedule {
+  id: number;
+  doctorId: string;
+  day: string;
+  slots: Slot[];
+}
+
+interface Doctor {
+  doctorId: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  country: string;
+  city: string;
+  postalCode: number;
+  imageUrl: string;
+  department: string;
+  experience: number;
+  fees: number;
+  aboutMe: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  schedules: Schedule[];
+}
+
+interface DoctorResponse {
+  doctor: Doctor;
+}
 
 const Page = () => {
   const { id } = useLocalSearchParams();
-  const [date, setDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+    return today.toISOString().split("T")[0];
+  });
+
+  const { data, isLoading } = useGetDoctorByIdQuery({ id, date });
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+
+  useEffect(() => {
+    if (data && data.doctor) {
+      setDoctor(data.doctor);
+    }
+  }, [data]);
+
+  // console.log(JSON.stringify(doctor, null, 2));
+
   const snapPoints = useMemo(() => ["35%", "100%"], []);
   const { top } = useSafeAreaInsets();
-  const timeSlots = generateTimeSlots(14, 15, 30);
   const bottomSheetRef = useRef<BottomSheet>(null);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -56,10 +93,7 @@ const Page = () => {
           left: 16,
         }}
       ></View>
-      <Animated.Image
-        source={require("@/assets/images/doctor.jpg")}
-        style={styles.image}
-      />
+      <Animated.Image source={{ uri: doctor?.imageUrl }} style={styles.image} />
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -80,16 +114,14 @@ const Page = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.content}>
-            <Text style={styles.name}>Dr Mathew Lewis</Text>
-            <Text style={styles.occupation}>Heart Specialist</Text>
+            <Text style={styles.name}>
+              Dr {doctor?.firstName} {doctor?.lastName}
+            </Text>
+            <Text style={styles.occupation}>{doctor?.department}</Text>
             <Divider />
             <View style={styles.container}>
               <Text style={styles.aboutme} ellipsizeMode="tail">
-                Welcome to my profile! I am Dr. Mathew Lewis, a highly
-                experienced and board-certified Cardiologist dedicated to
-                providing exceptional cardiovascular care. With over 15 years of
-                clinical experience, I am passionate about ensuring the heart
-                health and well-being of my patients.
+                {doctor?.aboutMe}
               </Text>
             </View>
             <DateTimePicker
@@ -99,44 +131,74 @@ const Page = () => {
               onChange={(params) => {
                 // console.log("Date selected:", params.date);
                 if (params.date) {
-                  setDate(params.date as any);
+                  const selectedDate = new Date(params.date as any);
+                  selectedDate.setMinutes(
+                    selectedDate.getMinutes() - selectedDate.getTimezoneOffset()
+                  );
+                  setDate(selectedDate.toISOString().split("T")[0]);
                 }
               }}
-              minDate={new Date(new Date().setHours(0, 0, 0, 0))} // Ensure today is selectable
+              minDate={new Date(new Date().setHours(0, 0, 0, 0))}
               headerContainerStyle={{
                 paddingHorizontal: 5,
                 paddingTop: 10,
                 overflow: "hidden",
               }}
             />
-            <Text style={styles.availableSlots}>Available Slots</Text>
+            {(doctor?.schedules?.length ?? 0) > 0 ? (
+              <View>
+                <Text style={styles.availableSlots}>Available Slots</Text>
 
-            <FlatList
-              data={timeSlots}
-              keyExtractor={(item, index) => index.toString()}
-              bounces={false}
-              horizontal // ✅ Enables horizontal scrolling
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.slotContainer}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => setSelectedSlot(item as any)}
-                  style={[
-                    styles.timeBtn,
-                    selectedSlot === item && styles.selectedTimeBtn,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.timeText,
-                      selectedSlot === item && styles.selectedTimeText,
-                    ]}
-                  >
-                    {item}
-                  </Text>
-                </Pressable>
-              )}
-            />
+                <FlatList
+                  data={
+                    doctor?.schedules?.flatMap((schedule) => schedule.slots) ||
+                    []
+                  }
+                  keyExtractor={(item) => item.id.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.slotContainer}
+                  renderItem={({ item, index }) => (
+                    <Pressable
+                      onPress={() => !item.isBooked && setSelectedSlot(item)}
+                      style={[
+                        styles.timeBtn,
+                        selectedSlot?.id === item.id && styles.selectedTimeBtn,
+                        item.isBooked && styles.bookedSlot,
+                      ]}
+                      disabled={item.isBooked}
+                      key={index}
+                    >
+                      <Text
+                        style={[
+                          styles.timeText,
+                          selectedSlot?.id === item.id &&
+                            styles.selectedTimeText,
+                          item.isBooked && styles.bookedText,
+                        ]}
+                      >
+                        {new Date(item.time).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </Text>
+                    </Pressable>
+                  )}
+                />
+              </View>
+            ) : (
+              <Text
+                style={{
+                  textAlign: "center",
+                  marginVertical: 5,
+                  fontWeight: "500",
+                  fontSize: 14,
+                }}
+              >
+                No Slots available
+              </Text>
+            )}
 
             <LinearGradient
               colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
@@ -157,8 +219,8 @@ const Page = () => {
                   router.navigate({
                     pathname: "/(authenticated)/(booking)",
                     params: {
-                      date: date.toISOString(),
-                      timeSlot: selectedSlot,
+                      date,
+                      timeSlot: selectedSlot?.time,
                     },
                   });
                 }}
@@ -268,6 +330,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     fontWeight: "500",
+  },
+
+  bookedSlot: {
+    backgroundColor: "#D3D3D3",
+  },
+
+  bookedText: {
+    color: "#808080",
   },
 });
 export default Page;

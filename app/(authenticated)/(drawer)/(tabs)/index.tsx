@@ -8,6 +8,7 @@ import {
   Pressable,
   ScrollView,
   PixelRatio,
+  FlatList,
 } from "react-native";
 
 import { Link, useNavigation } from "expo-router";
@@ -25,15 +26,17 @@ const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 import UpcomingSchedule from "@/components/UpcomingSchedule";
 import ServicesList from "@/components/ServicesList";
 import DoctorSpecialityList from "@/components/DoctorSpecialityList";
-import RecentlyViewed from "@/components/RecentlyViewed";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useGetRecentlyViewedQuery } from "@/slices/apiSlice";
+import BookNow from "@/components/BookNow";
 
 const Home = () => {
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
+  const { data, isLoading } = useGetRecentlyViewedQuery({});
 
 
   return (
@@ -97,7 +100,22 @@ const Home = () => {
           <ServicesList />
           <SeeMore heading={"My Checkup Schedule"} />
           <UpcomingSchedule />
-          <RecentlyViewed />
+          {/* <RecentlyViewed /> */}
+          <View style={{ marginBottom: 32 }}>
+            <SeeMore heading="Recently Viewed" />
+            <View>
+              <FlatList
+                horizontal
+                data={data || []}
+                renderItem={({ item, index }) => (
+                  <BookNow item={item} index={index} />
+                )}
+                keyExtractor={(item) => item.doctorId}
+                showsHorizontalScrollIndicator={false}
+                bounces={false}
+              />
+            </View>
+          </View>
 
           <View>
             <PharmacySponserAd

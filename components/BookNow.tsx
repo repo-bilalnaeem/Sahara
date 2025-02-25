@@ -10,17 +10,45 @@ import {
 
 interface Props {
   item: {
-    doctorId: string;
-    firstName: string;
-    lastName: string;
-    department: string;
-    imageUrl: string;
+    doctor: {
+      doctorId: string;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      country: string;
+      city: string;
+      postalCode: number;
+      imageUrl: string;
+      department: string;
+      experience: number;
+      fees: number;
+      aboutMe: string;
+    };
   };
   index: number;
 }
 
-const BookNow = ({ item, index }: Props) => {
-  const { doctorId, firstName, lastName, department, imageUrl } = item;
+// "doctor": {
+//   "doctorId": "f4ea1790-031a-4822-a7c4-8426971e0660",
+//   "firstName": "Kara",
+//   "lastName": "Thames",
+//   "phoneNumber": "+923343853303",
+//   "country": "Pakistan",
+//   "city": "Lahore",
+//   "postalCode": 74400,
+//   "imageUrl": null,
+//   "department": "Neurologist",
+//   "experience": 15,
+//   "fees": 34.99,
+//   "aboutMe": "Welcome to my profile! I am Dr. Sarah Ayoubi, a highly experienced and board-certified Neurologist dedicated to providing exceptional cardiovascular care. With over 15 years of clinical experience, I am passionate about ensuring the brain health and well-being of my patients",
+//   "status": "ACTIVE",
+//   "createdAt": "2025-02-25T11:08:12.828Z",
+//   "updatedAt": "2025-02-25T11:08:12.828Z"
+// }
+
+const BookNow = ({ item: { doctor }, index }: Props) => {
+  // console.log(JSON.stringify(doctor, null, 2));
+  const { doctorId, firstName, lastName, department, imageUrl } = doctor;
   return (
     <View
       style={[index === 0 ? { paddingLeft: 12 } : undefined]}
@@ -55,7 +83,9 @@ const BookNow = ({ item, index }: Props) => {
           <BookSlider name={"Book Now"} />
 
           <View style={[styles.navigation_button]}>
-            <TouchableOpacity onPress={() => router.navigate("/(doctor)/1")}>
+            <TouchableOpacity
+              onPress={() => router.navigate(`/(doctor)/${doctorId}`)}
+            >
               <Image
                 source={require("@/assets/images/arrow-needle.png")}
                 style={styles.nav}
