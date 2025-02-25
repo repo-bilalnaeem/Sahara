@@ -16,15 +16,16 @@ const Layout = () => {
       screenOptions={{
         headerStyle: {
           backgroundColor: "#FFFCFF",
+// height: 120
         },
-        headerShadowVisible: false,
+        // headerShadowVisible: false,
         drawerActiveBackgroundColor: "#F7F2F9",
         drawerActiveTintColor: "#000",
         drawerInactiveTintColor: "#000",
         overlayColor: "rgba(0, 0, 0, 0.2)",
         drawerItemStyle: { borderRadius: 12 },
-        drawerHideStatusBarOnOpen: true,
-        swipeEnabled: false,
+        // drawerHideStatusBarOnOpen: true,
+        // swipeEnabled: false,
       }}
     >
       <Drawer.Screen

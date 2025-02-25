@@ -10,6 +10,7 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { Divider } from "react-native-elements";
 import Animated from "react-native-reanimated";
@@ -83,6 +84,13 @@ const Page = () => {
   const snapPoints = useMemo(() => ["35%", "100%"], []);
   const { top } = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
+  if (!data) {
+    return (
+      <View style={{ justifyContent: "center", flex: 1, alignItems: "center" }}>
+        <ActivityIndicator size={"small"} />
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <View

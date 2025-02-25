@@ -71,9 +71,16 @@ export const apiSlice = createApi({
       }),
     }),
 
+    // GET DOCTOR BY ID
     getDoctorById: builder.query({
       query: ({ id, date }) => ({
         url: `doctors/${id}?date=${date}`,
+      }),
+    }),
+
+    getAllDoctors: builder.query({
+      query: ({ page, limit, department }) => ({
+        url: `doctors?department=${department}`,
       }),
     }),
   }),
@@ -90,4 +97,5 @@ export const {
   useGetDoctorScheduleQuery,
   useGetRecentlyViewedQuery,
   useGetDoctorByIdQuery,
+  useGetAllDoctorsQuery,
 } = apiSlice;
