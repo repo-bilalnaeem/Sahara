@@ -26,16 +26,23 @@ import { CheckBox } from "react-native-elements";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
 import { useSignIn } from "@clerk/clerk-expo";
+import { useLoginMutation } from "@/slices/apiSlice";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/slices/authSlice";
 
 const signin = () => {
+  const isDarkMode = useColorScheme() === "dark";
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signIn, isLoaded } = useSignIn();
 
-  const isDarkMode = useColorScheme() === "dark";
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
+
+  // const { signIn, isLoaded } = useSignIn();
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -54,26 +61,35 @@ const signin = () => {
   };
 
   // Sign in with email and password
-  const onSignInPress = async () => {
-    setLoading(true);
+  // const onSignInPress = async () => {
+  //   setLoading(true);
 
+  //   try {
+  //     if (!isLoaded) throw new Error("Clerk is not loaded yet");
+
+  //     const result = await signIn.create({
+  //       identifier: email,
+  //       password,
+  //     });
+
+  //     if (result.status === "complete") {
+  //       router.replace("/(authenticated)/(tabs)");
+  //     } else {
+  //       throw new Error("Sign-in process not completed");
+  //     }
+  //   } catch (error: any) {
+  //     Alert.alert("Login Error", error.errors?.[0]?.message || error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleLogin = async () => {
     try {
-      if (!isLoaded) throw new Error("Clerk is not loaded yet");
-
-      const result = await signIn.create({
-        identifier: email,
-        password,
-      });
-
-      if (result.status === "complete") {
-        router.replace("/(authenticated)/(tabs)");
-      } else {
-        throw new Error("Sign-in process not completed");
-      }
-    } catch (error: any) {
-      Alert.alert("Login Error", error.errors?.[0]?.message || error.message);
-    } finally {
-      setLoading(false);
+      const userData = await login({ email, password }).unwrap();
+      dispatch(setCredentials(userData));
+    } catch (error) {
+      Alert.alert("Login Failed", "Invalid email or password");
     }
   };
 
@@ -148,7 +164,11 @@ const signin = () => {
             </View>
 
             <View style={styles.loginButton}>
-              <TouchableOpacity activeOpacity={0.9} onPress={onSignInPress}>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={handleLogin}
+                disabled={isLoading}
+              >
                 <LinearGradient
                   colors={["#1661E0", "#478EEF"]}
                   style={styles.linearGradient}

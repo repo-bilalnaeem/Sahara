@@ -1,15 +1,8 @@
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack, useRouter, useSegments } from "expo-router";
-import { useEffect } from "react";
-import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
-import * as SecureStore from "expo-secure-store";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  ActivityIndicator,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
+import { useEffect, useState } from "react";
+
+import { ActivityIndicator, useColorScheme, View } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
@@ -20,27 +13,12 @@ import GoBack from "@/components/GoBack";
 
 export { ErrorBoundary } from "expo-router";
 import { LogBox } from "react-native";
-import VideoProvider from "@/provider/VideoProvider";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { RootState } from "@reduxjs/toolkit/query";
+import { AppDispatch, store } from "@/store/store";
+import { loadToken } from "@/slices/authSlice";
 
 LogBox.ignoreAllLogs();
-
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-const tokenCache = {
-  async getToken(key: string) {
-    try {
-      return SecureStore.getItemAsync(key);
-    } catch (err) {
-      return null;
-    }
-  },
-  async saveToken(key: string, value: string) {
-    try {
-      return SecureStore.setItemAsync(key, value);
-    } catch (err) {
-      return;
-    }
-  },
-};
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,10 +26,16 @@ const InitialLayout = () => {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-  const { isLoaded, isSignedIn } = useAuth();
+  // const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, accessToken } = useSelector((state: RootState) => state.auth);
+  const [checkingAuth, setCheckingAuth] = useState(true); // Prevents routing before token is checked
 
+  useEffect(() => {
+    dispatch(loadToken()).finally(() => setCheckingAuth(false));
+  }, []);
 
   useEffect(() => {
     if (error) throw error;
@@ -64,18 +48,19 @@ const InitialLayout = () => {
   }, [loaded]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    // if (!isLoaded) return;
+    if (checkingAuth) return;
 
     const inAuthGroup = segments[0] === "(authenticated)";
 
-    if (isSignedIn && !inAuthGroup) {
+    if (accessToken && !inAuthGroup) {
       router.replace("/(authenticated)/(drawer)/(tabs)");
-    } else if (!isSignedIn && inAuthGroup) {
-      router.replace("/");
+    } else if (!accessToken && inAuthGroup) {
+      router.replace("/signin");
     }
-  }, [isSignedIn]);
+  }, [accessToken, checkingAuth]);
 
-  if (!loaded || !isLoaded) {
+  if (!loaded || checkingAuth) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size={"small"} color={"#000"} />
@@ -153,14 +138,11 @@ const RootLayoutNav = () => {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <ClerkProvider
-        publishableKey={CLERK_PUBLISHABLE_KEY!}
-        tokenCache={tokenCache}
-      >
+      <Provider store={store}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <InitialLayout />
         </GestureHandlerRootView>
-      </ClerkProvider>
+      </Provider>
     </ThemeProvider>
   );
 };

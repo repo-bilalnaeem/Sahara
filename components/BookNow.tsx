@@ -26,6 +26,7 @@ interface Props {
     };
   };
   index: number;
+  style: Boolean;
 }
 
 // "doctor": {
@@ -46,8 +47,9 @@ interface Props {
 //   "updatedAt": "2025-02-25T11:08:12.828Z"
 // }
 
-const BookNow = ({ item: { doctor }, index }: Props) => {
+const BookNow = ({ item: { doctor }, index, style }: Props) => {
   // console.log(JSON.stringify(doctor, null, 2));
+  console.log(style);
   const { doctorId, firstName, lastName, department, imageUrl } = doctor;
   return (
     <View
@@ -61,15 +63,18 @@ const BookNow = ({ item: { doctor }, index }: Props) => {
         locations={[0.0527, 0.9575]}
         style={[
           styles.booknow_Gradient,
+          style ? { width: wp("100%") - 24 } : null,
           index === 0 ? { paddingLeft: 12 } : undefined,
         ]}
       >
-        <View style={styles.name_image}>
-          <View>
+        <View style={[styles.name_image, ]}>
+          <View style={[style ? { paddingHorizontal: 8, paddingVertical: 8 } : {}]}>
             <Text style={[styles.doctor_name]}>
-              Dr {firstName}
+              {style
+                ? `Dr ${firstName} ${lastName}`
+                : `Dr ${firstName}
               {"\n"}
-              {lastName}
+              ${lastName}`}
             </Text>
 
             <Text style={[styles.occupation]}>{department}</Text>

@@ -8,7 +8,7 @@ import {
   PixelRatio,
 } from "react-native";
 import React from "react";
-import { router } from "expo-router";
+import { router} from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   widthPercentageToDP as wp,
@@ -31,7 +31,12 @@ const Page = () => {
           <Pressable style={[styles.button, styles.AppleButton]}>
             <View style={styles.buttonContent}>
               <Image
-                style={{ width: wp('6%'), height: hp('3%'), tintColor: "white", objectFit:"contain" }}
+                style={{
+                  width: wp("6%"),
+                  height: hp("3%"),
+                  tintColor: "white",
+                  objectFit: "contain",
+                }}
                 source={require("@/assets/images/Apple-Icon.png")}
               />
               <Text style={styles.buttonText}>Continue with Apple</Text>
@@ -41,13 +46,12 @@ const Page = () => {
           <Pressable style={[styles.button, styles.GoogleButton]}>
             <View style={styles.buttonContent}>
               <Image
-                style={{width: wp('6%'), height: hp('3%')}}
+                style={{ width: wp("6%"), height: hp("3%") }}
                 source={require("../assets/images/Google-Icon.png")}
               />
               <Text style={styles.buttonTextDark}>Continue with Google</Text>
             </View>
           </Pressable>
-
 
           <View style={styles.lines}>
             <View style={styles.line} />
@@ -102,11 +106,11 @@ const styles = StyleSheet.create({
   },
   image: {
     // width: 106,
-    width: wp('28%'),
-    height: hp('10%'),
+    width: wp("28%"),
+    height: hp("10%"),
     objectFit: "contain",
-    marginBottom: wp('10%'),
-    marginTop: hp('5%'),
+    marginBottom: wp("10%"),
+    marginTop: hp("5%"),
   },
 
   heading: {
@@ -162,11 +166,11 @@ const styles = StyleSheet.create({
   },
 
   lines: {
-    marginTop: hp('2%'),
+    marginTop: hp("2%"),
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: hp('3%'),
+    marginBottom: hp("3%"),
   },
 
   line: {

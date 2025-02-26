@@ -1,7 +1,8 @@
+import { useGetDoctorByIdQuery } from "@/slices/apiSlice";
 import { useUser } from "@clerk/clerk-expo";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -21,7 +22,15 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { useSelector } from "react-redux";
 import { StreamChat } from "stream-chat";
+
+interface Doctor {
+  firstName: string;
+  lastName: string;
+  aboutMe: string;
+  department: string;
+}
 
 const client = StreamChat.getInstance(
   process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
@@ -40,7 +49,22 @@ const navigateToChat = async (
       members: { $in: [userId, doctorId] },
     });
 
-    const channel = channels[0];
+    // const channel = channels[0];
+
+    let channel;
+
+    if (channels.length > 0) {
+      // If a channel exists, use the first one
+      channel = channels[0];
+    } else {
+      // If no channel exists, create a new one
+      channel = client.channel("messaging", {
+        members: [userId, doctorId],
+        created_by_id: userId, // The user creating the channel
+      });
+
+      await channel.create();
+    }
 
     // Navigate to the chat
     router.push(`/(authenticated)/(drawer)/(tabs)/chats/${channel.cid}`);
@@ -50,8 +74,17 @@ const navigateToChat = async (
 };
 const Page = () => {
   const router = useRouter();
-  const { user, isLoaded } = useUser(); // Check if user is loaded
-  const doctorId = "f380df06-50f6-4bac-8866-32920a5e05cb";
+  // const { user, isLoaded } = useUser(); // Check if user is loaded
+  const user = useSelector((state: RootState) => state.auth.user);
+  const doctorId = "bcaeb6a5-26bd-477b-a0f1-5c5384da3cb3";
+  const { data, isLoading } = useGetDoctorByIdQuery({ id: doctorId, date: "" });
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  useEffect(() => {
+    if (data && data.doctor) {
+      setDoctor(data.doctor);
+    }
+  }, [data]);
+
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
   const scrollOffset = useScrollViewOffset(scrollRef);
@@ -91,8 +124,10 @@ const Page = () => {
             />
           </Animated.View>
           <View style={styles.content}>
-            <Text style={styles.name}>Dr Mathew Lewis</Text>
-            <Text style={styles.occupation}>Heart Specialist</Text>
+            <Text style={styles.name}>
+              Dr {doctor?.firstName} {doctor?.lastName}
+            </Text>
+            <Text style={styles.occupation}>{doctor?.department}</Text>
             <Divider />
             <View style={styles.container}>
               <Text
@@ -100,11 +135,7 @@ const Page = () => {
                 // numberOfLines={expanded ? undefined : 3}
                 ellipsizeMode="tail"
               >
-                Welcome to my profile! I am Dr. Mathew Lewis, a highly
-                experienced and board-certified Cardiologist dedicated to
-                providing exceptional cardiovascular care. With over 15 years of
-                clinical experience, I am passionate about ensuring the heart
-                health and well-being of my patients.
+                {doctor?.aboutMe}
               </Text>
             </View>
 

@@ -1,30 +1,30 @@
-import { useUser } from "@clerk/clerk-expo";
 import {
   StreamVideo,
   StreamVideoClient,
 } from "@stream-io/video-react-native-sdk";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
+import { useSelector } from "react-redux";
 
 const apiKey = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!;
 
 const VideoProvider = ({ children }: PropsWithChildren) => {
-  // console.warn("Video Provider");
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const [videoClient, setVideoClient] = useState<StreamVideoClient | null>(
     null
   );
-  const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    if (!isLoaded || !user) return;
+    if (!user) return;
 
     const initVideoClient = async () => {
       try {
         const client = new StreamVideoClient({
           apiKey,
-          user: { id: user.id, name: user.fullName || "Unknown User" },
+          user: { id: user.id, name: "Bilal Naeem" },
           token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl8yc2lESzI5N0VoZFRxaU1sZzhNZ3FDVjhMRlQifQ.-Ggl8KX4x1aiEcrFbbyZc7x90a6ofd16Kds1huonGh8", // Use a real token in production
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNGYwMzg4NTEtM2RmMC00NDU4LTljZDUtMWM5NDY0YTg1YjM3In0.6-_0TzNQM0LHPCq8HMa_cm5Rjpicwy7D0qcvHFRxRV8", // Use a real token in production
         });
 
         setVideoClient(client);
@@ -38,7 +38,7 @@ const VideoProvider = ({ children }: PropsWithChildren) => {
     return () => {
       videoClient?.disconnectUser(); // Cleanup on unmount
     };
-  }, [isLoaded, user]);
+  }, [user]);
 
   if (!videoClient) {
     return (

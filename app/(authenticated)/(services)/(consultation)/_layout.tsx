@@ -1,17 +1,3 @@
-// import { View, Text } from "react-native";
-// import React from "react";
-// import { Stack } from "expo-router";
-
-// const Layout = () => {
-//   return (
-//     <Stack>
-//       <Stack.Screen name="index" />
-//     </Stack>
-//   );
-// };
-
-// export default Layout;
-
 import { Drawer } from "expo-router/drawer";
 import {
   DrawerContentScrollView,
@@ -31,7 +17,7 @@ import {
   Alert,
 } from "react-native";
 import Colors from "@/constants/Colors";
-import { AntDesign, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import * as ContextMenu from "zeego/context-menu";
@@ -39,14 +25,30 @@ import { Keyboard } from "react-native";
 import { deleteChat, getChats, renameChat } from "@/utils/Database";
 import { Chat } from "@/utils/Interfaces";
 import { useSQLiteContext } from "expo-sqlite";
-import { useAuth } from "@clerk/clerk-expo";
+import { useDispatch } from "react-redux";
+import { logout } from "@/slices/authSlice";
+import { StreamChat } from "stream-chat";
+
+const client = StreamChat.getInstance(
+  process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
+);
 
 export const CustomDrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
   const [history, setHistory] = useState<Chat[]>([]);
   const db = useSQLiteContext();
-  const { signOut } = useAuth();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await client.disconnectUser();
+      dispatch(logout());
+      router.replace("/signin");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   const router = useRouter();
 
@@ -200,8 +202,8 @@ export const CustomDrawerContent = (props: any) => {
           style={styles.footer}
           onPress={async () => {
             try {
-              await signOut(); // Ensure signOut completes
-              router.replace("/signin"); // Redirect after signing out
+              handleLogout();
+              router.replace("/signin");
             } catch (error) {
               console.error("Sign-out error:", error);
             }

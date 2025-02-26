@@ -17,16 +17,32 @@ import {
 import { useEffect } from "react";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import React from "react";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import PharmacyHeader from "@/components/PharmacyHeader";
 import { Divider } from "react-native-paper";
 import { CustomHeader } from "@/components/CustomHeader";
-import { useAuth } from "@clerk/clerk-expo";
+import { useDispatch } from "react-redux";
+import { logout } from "@/slices/authSlice";
+import { StreamChat } from "stream-chat";
+
+const client = StreamChat.getInstance(
+  process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
+);
 
 const DrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
-  const { signOut } = useAuth();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await client.disconnectUser();
+      dispatch(logout());
+      router.replace("/signin");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   useEffect(() => {
     Keyboard.dismiss();
@@ -75,8 +91,7 @@ const DrawerContent = (props: any) => {
             style={styles.footer}
             onPress={async () => {
               try {
-                await signOut(); // Ensure signOut completes
-                router.replace("/signin"); // Redirect after signing out
+                handleLogout();
               } catch (error) {
                 console.error("Sign-out error:", error);
               }

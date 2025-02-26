@@ -9,6 +9,7 @@ import {
   ScrollView,
   PixelRatio,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 
 import { Link, useNavigation } from "expo-router";
@@ -36,8 +37,20 @@ import BookNow from "@/components/BookNow";
 const Home = () => {
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
-  const { data, isLoading } = useGetRecentlyViewedQuery({});
+  const { data, isLoading } = useGetRecentlyViewedQuery(
+    {},
+    {
+      refetchOnMountOrArgChange:true
+    }
+  );
 
+  if (isLoading) {
+    return (
+      <View style={{ justifyContent: "center", flex: 1, alignItems: "center" }}>
+        <ActivityIndicator size={"small"} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.lightScreen]}>
@@ -108,7 +121,11 @@ const Home = () => {
                 horizontal
                 data={data || []}
                 renderItem={({ item, index }) => (
-                  <BookNow item={item} index={index} />
+                  <BookNow
+                    item={item}
+                    index={index}
+                    style={data.length === 1 ? true : false}
+                  />
                 )}
                 keyExtractor={(item) => item.doctorId}
                 showsHorizontalScrollIndicator={false}
