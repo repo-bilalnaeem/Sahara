@@ -79,18 +79,18 @@ const Booking = () => {
   const [createAppointmentIntent] = useCreateAppointmentIntentMutation();
   const [confirmAppointment] = useConfirmAppointmentMutation();
   const [modalVisible, setModalVisible] = useState(false);
-  const { date, timeSlot } = useLocalSearchParams();
+  const { date, timeSlot, id } = useLocalSearchParams();
   const amountInDollars = Number(
     ((SERVICE_CHARGES + SUBTOTAL) / USD).toFixed(2)
   );
   const amountInCents = Math.round(amountInDollars * 100);
 
-  console.log(timeSlot);
+  // console.log(timeSlot);
 
   const onCheckout = async () => {
     const response = await createAppointmentIntent({
       // id: "5db8c0f6-cdf9-4466-a91c-4d1da27255e7",
-      id: "bcaeb6a5-26bd-477b-a0f1-5c5384da3cb3",
+      id,
       data: {
         amount: amountInCents,
         currency: "usd",
@@ -98,7 +98,7 @@ const Booking = () => {
       },
     });
 
-    console.log("response:", JSON.stringify(response, null, 2));
+    // console.log("response:", JSON.stringify(response, null, 2));
 
     if (response.error) {
       console.log(response.error);
@@ -133,10 +133,10 @@ const Booking = () => {
     // Step 4: Confirm the appointment after successful payment
     const paymentIntentId = response.data.paymentIntentId;
     const { customerId, doctorId, slotId } = response.data.appointment;
-    console.log("paymentIntentId", paymentIntentId);
-    console.log("userId: ", customerId);
-    console.log("doctorId: ", doctorId);
-    console.log("slotId: ", slotId);
+    // console.log("paymentIntentId", paymentIntentId);
+    // console.log("userId: ", customerId);
+    // console.log("doctorId: ", doctorId);
+    // console.log("slotId: ", slotId);
 
     const confirmResponse = await confirmAppointment({
       data: {
@@ -147,7 +147,7 @@ const Booking = () => {
       },
     });
 
-    console.log("confirmResponse:", confirmResponse);
+    // console.log("confirmResponse:", confirmResponse);
 
     if (confirmResponse.error) {
       Alert.alert("Failed to confirm the appointment.");

@@ -79,8 +79,6 @@ const Page = () => {
     }
   }, [data]);
 
-  // console.log(JSON.stringify(doctor, null, 2));
-
   const snapPoints = useMemo(() => ["35%", "100%"], []);
   const { top } = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -229,6 +227,7 @@ const Page = () => {
                     params: {
                       date,
                       timeSlot: selectedSlot?.time,
+                      id,
                     },
                   });
                 }}

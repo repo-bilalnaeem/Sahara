@@ -29,27 +29,7 @@ interface Props {
   style: Boolean;
 }
 
-// "doctor": {
-//   "doctorId": "f4ea1790-031a-4822-a7c4-8426971e0660",
-//   "firstName": "Kara",
-//   "lastName": "Thames",
-//   "phoneNumber": "+923343853303",
-//   "country": "Pakistan",
-//   "city": "Lahore",
-//   "postalCode": 74400,
-//   "imageUrl": null,
-//   "department": "Neurologist",
-//   "experience": 15,
-//   "fees": 34.99,
-//   "aboutMe": "Welcome to my profile! I am Dr. Sarah Ayoubi, a highly experienced and board-certified Neurologist dedicated to providing exceptional cardiovascular care. With over 15 years of clinical experience, I am passionate about ensuring the brain health and well-being of my patients",
-//   "status": "ACTIVE",
-//   "createdAt": "2025-02-25T11:08:12.828Z",
-//   "updatedAt": "2025-02-25T11:08:12.828Z"
-// }
-
 const BookNow = ({ item: { doctor }, index, style }: Props) => {
-  // console.log(JSON.stringify(doctor, null, 2));
-  console.log(style);
   const { doctorId, firstName, lastName, department, imageUrl } = doctor;
   return (
     <View
@@ -67,8 +47,10 @@ const BookNow = ({ item: { doctor }, index, style }: Props) => {
           index === 0 ? { paddingLeft: 12 } : undefined,
         ]}
       >
-        <View style={[styles.name_image, ]}>
-          <View style={[style ? { paddingHorizontal: 8, paddingVertical: 8 } : {}]}>
+        <View style={[styles.name_image]}>
+          <View
+            style={[style ? { paddingHorizontal: 8, paddingVertical: 8 } : {}]}
+          >
             <Text style={[styles.doctor_name]}>
               {style
                 ? `Dr ${firstName} ${lastName}`
@@ -89,7 +71,12 @@ const BookNow = ({ item: { doctor }, index, style }: Props) => {
 
           <View style={[styles.navigation_button]}>
             <TouchableOpacity
-              onPress={() => router.navigate(`/(doctor)/${doctorId}`)}
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(authenticated)/(doctor)/[id]",
+                  params: { id: doctorId }, // Pass params as an object
+                })
+              }
             >
               <Image
                 source={require("@/assets/images/arrow-needle.png")}

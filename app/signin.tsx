@@ -10,7 +10,6 @@ import {
   useColorScheme,
   Alert,
   PixelRatio,
-  ScrollView,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -20,12 +19,11 @@ import {
 const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 import { LinearGradient } from "expo-linear-gradient";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import LoginInput from "@/components/LoginInput";
 import { CheckBox } from "react-native-elements";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
-import { useSignIn } from "@clerk/clerk-expo";
 import { useLoginMutation } from "@/slices/apiSlice";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/slices/authSlice";
@@ -37,12 +35,9 @@ const signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
-
-  // const { signIn, isLoaded } = useSignIn();
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -59,30 +54,6 @@ const signin = () => {
   const handleCheckBoxChange = () => {
     setSelection(!isSelected);
   };
-
-  // Sign in with email and password
-  // const onSignInPress = async () => {
-  //   setLoading(true);
-
-  //   try {
-  //     if (!isLoaded) throw new Error("Clerk is not loaded yet");
-
-  //     const result = await signIn.create({
-  //       identifier: email,
-  //       password,
-  //     });
-
-  //     if (result.status === "complete") {
-  //       router.replace("/(authenticated)/(tabs)");
-  //     } else {
-  //       throw new Error("Sign-in process not completed");
-  //     }
-  //   } catch (error: any) {
-  //     Alert.alert("Login Error", error.errors?.[0]?.message || error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleLogin = async () => {
     try {
@@ -115,7 +86,7 @@ const signin = () => {
                 value={email}
                 onChangeText={handleEmailChange}
                 secureTextEntry={false}
-                imageSource={undefined} // any other props you need
+                imageSource={undefined}
               />
             </View>
 

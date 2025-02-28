@@ -14,8 +14,7 @@ import GoBack from "@/components/GoBack";
 export { ErrorBoundary } from "expo-router";
 import { LogBox } from "react-native";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
-import { AppDispatch, store } from "@/store/store";
+import { AppDispatch, RootState, store } from "@/store/store";
 import { loadToken } from "@/slices/authSlice";
 
 LogBox.ignoreAllLogs();

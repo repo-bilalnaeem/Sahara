@@ -1,5 +1,5 @@
 import { useGetDoctorByIdQuery } from "@/slices/apiSlice";
-import { useUser } from "@clerk/clerk-expo";
+import { RootState } from "@/store/store";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
