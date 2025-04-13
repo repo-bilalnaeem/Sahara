@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -31,7 +31,10 @@ import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 import SaharaMart from "@/components/SaharaMart";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useGetRecentlyViewedQuery } from "@/slices/apiSlice";
+import {
+  useGetAllAppointmentsQuery,
+  useGetRecentlyViewedQuery,
+} from "@/slices/apiSlice";
 import BookNow from "@/components/BookNow";
 
 const Home = () => {
@@ -40,9 +43,18 @@ const Home = () => {
   const { data, isLoading } = useGetRecentlyViewedQuery(
     {},
     {
-      refetchOnMountOrArgChange:true
+      refetchOnMountOrArgChange: true,
     }
   );
+
+  const { data: latestAppointmnet, isLoading: loadingAppointmnet } =
+    useGetAllAppointmentsQuery({ limit: 1 });
+
+  console.log(latestAppointmnet);
+
+  useEffect(() => {
+    // console.log(JSON.stringify(latestAppointmnet, null, 2));
+  }, [latestAppointmnet]);
 
   if (isLoading) {
     return (
@@ -111,28 +123,34 @@ const Home = () => {
         </View>
         <View>
           <ServicesList />
-          <SeeMore heading={"My Checkup Schedule"} />
-          <UpcomingSchedule />
+          {latestAppointmnet && (
+            <>
+              <SeeMore heading={"My Checkup Schedule"} />
+              <UpcomingSchedule data={latestAppointmnet[0]} />
+            </>
+          )}
           {/* <RecentlyViewed /> */}
-          <View style={{ marginBottom: 32 }}>
-            <SeeMore heading="Recently Viewed" />
-            <View>
-              <FlatList
-                horizontal
-                data={data || []}
-                renderItem={({ item, index }) => (
-                  <BookNow
-                    item={item}
-                    index={index}
-                    style={data.length === 1 ? true : false}
-                  />
-                )}
-                keyExtractor={(item) => item.doctorId}
-                showsHorizontalScrollIndicator={false}
-                bounces={false}
-              />
+          {data && (
+            <View style={{ marginBottom: 32 }}>
+              <SeeMore heading="Recently Viewed" />
+              <View>
+                <FlatList
+                  horizontal
+                  data={data}
+                  renderItem={({ item, index }) => (
+                    <BookNow
+                      item={item}
+                      index={index}
+                      style={data.length === 1 ? true : false}
+                    />
+                  )}
+                  keyExtractor={(item) => item.doctorId}
+                  showsHorizontalScrollIndicator={false}
+                  bounces={false}
+                />
+              </View>
             </View>
-          </View>
+          )}
 
           <View>
             <PharmacySponserAd

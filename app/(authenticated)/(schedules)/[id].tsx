@@ -1,7 +1,7 @@
 import { useGetDoctorByIdQuery } from "@/slices/apiSlice";
 import { RootState } from "@/store/store";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -30,6 +30,7 @@ interface Doctor {
   lastName: string;
   aboutMe: string;
   department: string;
+  imageUrl: string
 }
 
 const client = StreamChat.getInstance(
@@ -74,16 +75,25 @@ const navigateToChat = async (
 };
 const Page = () => {
   const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  // console.log("doctorId:", id);
+
+  useEffect(() => {
+    // console.log("Doctor ID:", id);
+  }, [id]);
+
   // const { user, isLoaded } = useUser(); // Check if user is loaded
   const user = useSelector((state: RootState) => state.auth.user);
-  const doctorId = "bcaeb6a5-26bd-477b-a0f1-5c5384da3cb3";
-  const { data, isLoading } = useGetDoctorByIdQuery({ id: doctorId, date: "" });
+  // const doctorId = "bcaeb6a5-26bd-477b-a0f1-5c5384da3cb3";
+  const { data, isLoading } = useGetDoctorByIdQuery({ id, date: "" });
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   useEffect(() => {
     if (data && data.doctor) {
       setDoctor(data.doctor);
     }
   }, [data]);
+
+  // console.log(data);
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
@@ -119,7 +129,7 @@ const Page = () => {
         >
           <Animated.View style={[imageAnimatedStyle, styles.profileImage]}>
             <Animated.Image
-              source={require("@/assets/images/doctor.jpg")}
+              source={{uri: doctor?.imageUrl}}
               style={[styles.image]}
             />
           </Animated.View>
@@ -140,7 +150,7 @@ const Page = () => {
             </View>
 
             <Pressable
-              onPressIn={() => navigateToChat(user!.id, doctorId, router)}
+              onPressIn={() => navigateToChat(user!.id, id, router)}
             >
               <LinearGradient
                 colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}

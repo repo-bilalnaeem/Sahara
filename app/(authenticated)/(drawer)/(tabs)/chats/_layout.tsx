@@ -1,5 +1,4 @@
 import GoBack from "@/components/GoBack";
-import { useUser } from "@clerk/clerk-expo";
 import { Slot, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";

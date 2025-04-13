@@ -16,6 +16,8 @@ import { LogBox } from "react-native";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, store } from "@/store/store";
 import { loadToken } from "@/slices/authSlice";
+import { Toaster } from "sonner-native";
+import { TranscriptionProvider } from "@/context/TranscriptionContext";
 
 LogBox.ignoreAllLogs();
 
@@ -136,13 +138,16 @@ const RootLayoutNav = () => {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Provider store={store}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <InitialLayout />
-        </GestureHandlerRootView>
-      </Provider>
-    </ThemeProvider>
+    <TranscriptionProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Provider store={store}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Toaster />
+            <InitialLayout />
+          </GestureHandlerRootView>
+        </Provider>
+      </ThemeProvider>
+    </TranscriptionProvider>
   );
 };
 

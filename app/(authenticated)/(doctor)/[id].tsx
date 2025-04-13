@@ -21,7 +21,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { useGetDoctorByIdQuery } from "@/slices/apiSlice";
+import {
+  useGetDoctorByIdQuery,
+  usePostRecentlyViewedMutation,
+} from "@/slices/apiSlice";
 
 interface Slot {
   id: number;
@@ -72,6 +75,15 @@ const Page = () => {
   const { data, isLoading } = useGetDoctorByIdQuery({ id, date });
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+  const [recentlyVisited] = usePostRecentlyViewedMutation();
+
+  useEffect(() => {
+    const onViwed = async () => {
+      const response = await recentlyVisited({ doctorId: id });
+      console.log(response);
+    };
+    onViwed();
+  }, [id]);
 
   useEffect(() => {
     if (data && data.doctor) {

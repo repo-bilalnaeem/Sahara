@@ -3,7 +3,6 @@
 # dependencies
 node_modules/
 android/
-.env
 
 # Expo
 .expo/
@@ -37,7 +36,3 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# Expo
-.expo
-dist/
-web-build/

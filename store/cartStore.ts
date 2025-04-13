@@ -1,12 +1,34 @@
 import {create} from 'zustand'
 
-export const useCart = create((set) =>({
+interface Product{
+  id:string;
+  name:string;
+  price: number;
+  stock: number;
+  imageUrl: string
+}
+
+export interface CartItem {
+  product: Product,
+  quantity: number
+}
+
+interface CartStore {
+  items: CartItem[];
+  addProduct: (product: Product) => void;
+  increaseQuantity: (productId: string) => void;
+  decreaseQuantity: (productId: string) => void;
+  removeProduct: (productId: string) => void;
+  clearCart: () => void;
+}
+
+export const useCart = create<CartStore>((set) =>({
     items:[],
 
     addProduct: (product: any) =>
         set((state: { items: any[] }) => {
           const existingProductIndex = state.items.findIndex(
-            (item) => item.product.key === product.key
+            (item) => item.product.id === product.id
           );
     
           if (existingProductIndex !== -1) {
@@ -23,8 +45,8 @@ export const useCart = create((set) =>({
 
         increaseQuantity: (productKey: any) =>
           set((state: { items: any[]; }) => {
-            const updatedItems = state.items.map((item: { product: { key: any; }; quantity: number; }) => {
-              if (item.product.key === productKey) {
+            const updatedItems = state.items.map((item: { product: { id: any; }; quantity: number; }) => {
+              if (item.product.id === productKey) {
                 return { ...item, quantity: item.quantity + 1 };
               }
               return item;
@@ -36,14 +58,14 @@ export const useCart = create((set) =>({
           // Remove product from the cart
   removeProduct: (productKey: string) =>
     set((state: { items: any[] }) => ({
-      items: state.items.filter((item) => item.product.key !== productKey),
+      items: state.items.filter((item) => item.product.id !== productKey),
     })),
 
   // Decrease quantity of a product
   decreaseQuantity: (productKey: string) =>
     set((state: { items: any[] }) => {
       const updatedItems = state.items.map((item) => {
-        if (item.product.key === productKey) {
+        if (item.product.id === productKey) {
           return { ...item, quantity: Math.max(0, item.quantity - 1) };
         }
         return item;

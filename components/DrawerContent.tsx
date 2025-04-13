@@ -1,5 +1,4 @@
 import { logout } from "@/slices/authSlice";
-import { useAuth } from "@clerk/clerk-expo";
 import { AntDesign } from "@expo/vector-icons";
 import {
   useDrawerStatus,

@@ -3,7 +3,7 @@ import { setCredentials, logout } from "./authSlice";
 import { jwtDecode } from "jwt-decode";
 import { secureStorage } from "@/store/secureStorage";
 
-const baseUrl = "http://192.168.1.102:3001/";
+const baseUrl = "http://192.168.1.103:3001/";
 
 const baseQuery = fetchBaseQuery({
   baseUrl,
@@ -34,11 +34,13 @@ export const apiSlice = createApi({
           // 🔹 Use helper to store tokens
           await secureStorage.setItem("access_token", data.access_token);
           await secureStorage.setItem("refresh_token", data.refresh_token);
+          await secureStorage.setItem("stream_token", data.stream_token);
 
           dispatch(
             setCredentials({
               access_token: data.access_token,
               refresh_token: data.refresh_token,
+              stream_token: data.stream_token,
             })
           );
         } catch (err) {
@@ -92,8 +94,8 @@ export const apiSlice = createApi({
 
     // Get GENEREAL Products
     getGeneralProducts: builder.query({
-      query: ({ category, tag }) => ({
-        url: `products?category=${category}&tag=${tag}`,
+      query: ({ category, tag, limit }) => ({
+        url: `products?category=${category}&tag=${tag}&limit=${limit}`,
       }),
     }),
 
@@ -108,16 +110,28 @@ export const apiSlice = createApi({
     }),
 
     // Get USERS ALL Appointmnets
-    getAllAppointments: builder.query({
-      query: () => ({
-        url: "appointments",
-      }),
+    getAllAppointments: builder.query<any, { limit?: number } | void>({
+      query: (args) => {
+        const limit = args?.limit;
+
+        return {
+          url: "appointments",
+          params: limit ? { limit } : {}, // Add more params here if needed
+        };
+      },
     }),
 
     // Get RECENTLY VIEWED Doctors
     getRecentlyViewed: builder.query({
       query: () => ({
         url: "/users/recently-viewed",
+      }),
+    }),
+    postRecentlyViewed: builder.mutation({
+      query: (doctorId) => ({
+        url: "/users/recently-viewed",
+        method: "POST",
+        body: doctorId,
       }),
     }),
 
@@ -150,4 +164,5 @@ export const {
   useGetRecentlyViewedQuery,
   useGetDoctorByIdQuery,
   useGetAllDoctorsQuery,
+  usePostRecentlyViewedMutation,
 } = apiSlice;

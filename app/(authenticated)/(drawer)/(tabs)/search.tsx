@@ -20,12 +20,13 @@ import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 const RenderRow = ({ item, index }: any) => {
   const router = useRouter();
+  console.log("item", item);
   return (
     <Pressable
       onPress={() =>
         router.push({
           pathname: `/(authenticated)/(doctor)/[id]`,
-          params: { id: item.doctorId },
+          params: { id: item.Doctor.doctorId },
         })
       }
     >
@@ -36,7 +37,7 @@ const RenderRow = ({ item, index }: any) => {
       >
         <ImageBackground
           style={styles.backgroundImage}
-          source={{ uri: item.imageUrl }}
+          source={{ uri: item.Doctor.imageUrl }}
         >
           <LinearGradient
             colors={[
@@ -70,9 +71,9 @@ const RenderRow = ({ item, index }: any) => {
           </View>
 
           <Text style={styles.name}>
-            {item.firstName} {item.lastName}
+            {item.Doctor.firstName} {item.Doctor.lastName}
           </Text>
-          <Text style={styles.speciality}>{item.department}</Text>
+          <Text style={styles.speciality}>{item.Doctor.department}</Text>
           <Pressable style={styles.bookNow}>
             <Text style={styles.bookText}>Book Now</Text>
           </Pressable>
@@ -89,12 +90,16 @@ const Search = () => {
     department: department === "All" ? "" : department,
   });
 
+  console.log(data?.doctors);
+
   const scrollRef = useRef<ScrollView>(null);
   const listRef = useRef<FlatList>(null);
   const itemsRef = useRef<Array<any>>(categories.map(() => null));
   const [activeIndex, setActiveIndex] = useState(0);
 
   const doctors = data?.doctors || [];
+
+  console.log(doctors);
 
   const scrollToIndex = (index: number) => {
     const selected = itemsRef.current[index];

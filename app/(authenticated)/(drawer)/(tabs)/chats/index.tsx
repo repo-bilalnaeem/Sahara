@@ -1,7 +1,6 @@
 import React from "react";
 import { ChannelList } from "stream-chat-expo";
 import { router } from "expo-router";
-import { useUser } from "@clerk/clerk-expo";
 import {
   View,
   Text,
@@ -9,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native"; // Add View & Text for handling loading
 import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const Index = () => {
   // const { user, isLoaded } = useUser(); // Check if user is loaded

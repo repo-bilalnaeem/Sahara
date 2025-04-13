@@ -13,8 +13,7 @@ const SaharaMart = () => {
     tag: "POPULAR_PRODUCT",
   });
   const { data: general, isLoading: loading_general } =
-    useGetGeneralProductsQuery({ category: "GENERAL", tag: "NULL" });
-
+    useGetGeneralProductsQuery({ category: "GENERAL", tag: "NONE", limit: 8 });
   const [products, setProducts] = useState([]);
 
   const [generalProducts, setGeneralProducts] = useState([]);

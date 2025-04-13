@@ -1,7 +1,6 @@
 import { View, Text, Pressable, Alert } from "react-native";
 import React from "react";
 import { useChatContext } from "stream-chat-expo";
-import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 
 const UserListItem = ({ user }) => {

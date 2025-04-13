@@ -24,7 +24,7 @@ const ChatProvider = ({ children }: PropsWithChildren) => {
       await client.connectUser(
         {
           id: user!.id,
-          name: "Bilal Naeem",
+          name: user.firstName,
           image: "https://getstream.io/random_svg/?name=John",
         },
         client.devToken(user!.id)

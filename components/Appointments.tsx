@@ -21,7 +21,7 @@ import {
 } from "react-native-responsive-screen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 const Appointments = () => {
-  const { data, isLoading } = useGetAllAppointmentsQuery({});
+  const { data, isLoading } = useGetAllAppointmentsQuery();
   const navigation = useNavigation();
   const router = useRouter();
   const { top } = useSafeAreaInsets();

@@ -1,9 +1,14 @@
 import { Link, router, Stack } from "expo-router";
 import React from "react";
-import { Pressable, TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useCart } from "@/store/cartStore";
 
 const Layout = () => {
+  const items = useCart((state) => state.items);
+
+  const hasItems = items.length > 0;
+
   return (
     <Stack>
       <Stack.Screen
@@ -20,29 +25,32 @@ const Layout = () => {
           ),
           headerRight: () => (
             <Link href={"/(cart)"} asChild>
-              <Pressable style={{marginRight: 10}}>
-                <Ionicons
-                  name="bag-outline"
-                  size={22}
-                  color={"#636363"}
-                  style={{ marginBottom: 5 }}
-                />
+              <Pressable style={{ marginRight: 10 }}>
+                <View>
+                  <Ionicons
+                    name="bag-outline"
+                    size={22}
+                    color={"#636363"}
+                    style={{ marginBottom: 5 }}
+                  />
+                  {hasItems && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 4,
+                        right: -1,
+                        width: 6,
+                        height: 6,
+                        borderRadius: 5,
+                        backgroundColor: "red",
+                      }}
+                    />
+                  )}
+                </View>
               </Pressable>
             </Link>
           ),
         }}
-
-        // options={{
-        //     headerTitle:"",
-        //   headerLeft: () => (
-        //     <TouchableOpacity
-        //       onPress={router.back}
-        //       style={[ { marginTop: 52, marginLeft: 18 }]}
-        //     >
-        //       <Ionicons name="close" size={24} color={"#636363"} />
-        //     </TouchableOpacity>
-        //   ),
-        // }}
       />
       <Stack.Screen
         name="(cart)"
@@ -55,4 +63,5 @@ const Layout = () => {
     </Stack>
   );
 };
+
 export default Layout;

@@ -58,7 +58,9 @@ const Product = () => {
   }, [data]);
 
   const { data: products, isLoading: loading_products } =
-    useGetGeneralProductsQuery({ category: "GENERAL", tag: "NULL" });
+    useGetGeneralProductsQuery({ category: "GENERAL", tag: "POPULAR_PRODUCT", limit: 8 });
+
+  // console.log("data", products);
 
   useEffect(() => {
     if (products && products?.products) {

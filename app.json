@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Sahara",
-    "slug": "Sahara",
+    "name": "sahara",
+    "slug": "sahara",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
@@ -14,12 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "com.anonymous.sahara",
-      "infoPlist": {
-        "CFBundleAllowMixedLocalizations": true,
-        "CFBundleLocalizations": ["fr"]
-      }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.sahara"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,9 +24,37 @@
       },
       "package": "com.anonymous.sahara"
     },
+    "web": {
+      "bundler": "metro",
+      "output": "server",
+      "favicon": "./assets/images/favicon.png"
+    },
     "plugins": [
-      "expo-router",
-      "expo-secure-store",
+      ["expo-router",
+        {
+        "origin":"http://192.168.1.103:8081/"
+        } 
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+      "@stream-io/video-react-native-sdk",
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "cameraPermission": "$(PRODUCT_NAME) requires camera access in order to capture and transmit video",
+          "microphonePermission": "$(PRODUCT_NAME) requires microphone access in order to capture and transmit audio"
+        }
+      ],
       [
         "expo-build-properties",
         {
@@ -44,35 +68,6 @@
           "ios": {
             "deploymentTarget": "15.1"
           }
-        }
-      ],
-      "@stream-io/video-react-native-sdk",
-      [
-        "@config-plugins/react-native-webrtc",
-        {
-          "cameraPermission": "$(PRODUCT_NAME) requires camera access in order to capture and transmit video",
-          "microphonePermission": "$(PRODUCT_NAME) requires microphone access in order to capture and transmit audio"
-        }
-      ],
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
-          "isAccessMediaLocationEnabled": true
-        }
-      ],
-      "expo-sqlite",
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ],
-      [
-        "expo-av",
-        {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
         }
       ]
     ],

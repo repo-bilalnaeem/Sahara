@@ -13,17 +13,39 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { router } from "expo-router";
+import { addMinutes, format } from "date-fns";
 
 const isAndroid = Platform.OS === "android";
 
-const UpcomingSchedule = () => {
+interface DoctorData {
+  doctor: {
+    doctorId: string;
+    firstName: string;
+    lastName: string;
+    imageUrl: string;
+    department: string;
+  };
+  slot: {
+    date: string;
+    time: string;
+  };
+}
+interface UpcomingScheduleProps {
+  data: DoctorData;
+}
+
+const UpcomingSchedule = ({ data }: UpcomingScheduleProps) => {
+  // console.log(JSON.stringify(data.doctor, null, 2));
+  const startDate = new Date(data.slot.time);
+  const endDate = addMinutes(startDate, 30); // 30-minute slot
+
+  const formatted = `${format(startDate, 'EEE, MMM d, h:mm a')} - ${format(endDate, 'h:mm a')}`;
+
   return (
     <View style={{ marginBottom: 24 }}>
       <Pressable
         onPress={() =>
-          router.push(
-            "/(authenticated)/(schedules)/9a1b0bf5-6cac-4ea6-a0fb-bf139df9a2cf"
-          )
+          router.push(`/(authenticated)/(schedules)/${data.doctor.doctorId}`)
         }
       >
         <View style={styles.container}>
@@ -37,7 +59,7 @@ const UpcomingSchedule = () => {
             <View style={styles.flex_items}>
               <View style={styles.img_container}>
                 <Image
-                  source={require("@/assets/images/doctor.jpg")}
+                  source={{ uri: data.doctor.imageUrl }}
                   style={styles.doctor_img}
                 />
               </View>
@@ -48,7 +70,7 @@ const UpcomingSchedule = () => {
                     isAndroid ? { fontSize: 16, lineHeight: 20 } : null,
                   ]}
                 >
-                  Doctor Mathew Lewis
+                  Doctor {data.doctor.firstName} {data.doctor.lastName}
                 </Text>
                 <Text
                   style={[
@@ -56,7 +78,7 @@ const UpcomingSchedule = () => {
                     isAndroid ? { fontSize: 14, lineHeight: 18 } : null,
                   ]}
                 >
-                  Heart Specialist
+                  {data.doctor.department}
                 </Text>
               </View>
               <View style={styles.camera_holder}>
@@ -81,7 +103,8 @@ const UpcomingSchedule = () => {
                 <Text
                   style={[styles.time, isAndroid ? { fontSize: 13 } : null]}
                 >
-                  Wed, Feb 12, 10:00 am - 10:30 am
+                  {/* Wed, Feb 12, 10:00 am - 10:30 am */}
+                  {formatted}
                 </Text>
               </LinearGradient>
             </View>

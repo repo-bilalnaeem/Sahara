@@ -10,34 +10,56 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCart } from "@/store/cartStore";
-import { popular_data } from "@/assets/data/PharmacyPageData";
+import { CartItem, useCart } from "@/store/cartStore";
 import ProductTile from "@/components/ProductTile";
 import SeeMore from "@/components/SeeMore";
+import { useGetGeneralProductsQuery } from "@/slices/apiSlice";
 
 const Cart = () => {
   const router = useRouter();
   const items = useCart((state) => state.items);
   const DELIVERY_FEE = 200;
+  const [productList, setProductList] = useState([]);
 
   // Log all items and their quantities
-  items.forEach((item: { product: { title: any }; quantity: any }) => {
-    console.log(`Product: ${item.product.title}, Quantity: ${item.quantity}`);
+  items.forEach((item: CartItem) => {
+    console.log(`Product: ${item.product.name}, Quantity: ${item.quantity}`);
   });
 
-  const subtotal = items.reduce(
-    (
-      accumulator: number,
-      item: { product: { price: number }; quantity: number }
-    ) => {
-      return accumulator + item.product.price * item.quantity;
-    },
-    0
+  console.log(items);
+
+  const subtotal = Number(
+    items
+      .reduce(
+        (
+          accumulator: number,
+          item: { product: { price: number }; quantity: number }
+        ) => {
+          return accumulator + item.product.price * item.quantity;
+        },
+        0
+      )
+      .toFixed(2)
   );
+
+  const { data: products, isLoading: loading_products } =
+    useGetGeneralProductsQuery({
+      category: "GENERAL",
+      tag: "POPULAR_PRODUCT",
+      limit: 8,
+    });
+
+console.log(productList)
+
+  useEffect(() => {
+    if (products && products?.products) {
+      setProductList(products.products);
+    }
+  }, [products]);
 
   if (items.length === 0) {
     return (
@@ -116,24 +138,22 @@ const Cart = () => {
           <View style={{ paddingTop: 24 }}>
             <FlatList
               data={items}
-              keyExtractor={(item, index) => `${item.product.key}-${index}`}
+              keyExtractor={(item, index) => `${item.product.id}-${index}`}
               renderItem={({ item }) => (
                 <View style={styles.card}>
                   <View>
                     <Image
-                      source={require("@/assets/images/medicine_images/img2.jpeg")}
+                      source={{ uri: item?.product?.imageUrl }}
                       style={styles.thumbnail}
                     />
                   </View>
                   <View style={{ flexGrow: 1, marginRight: 30 }}>
-                    <Text style={styles.title}>{item.product.title}</Text>
+                    <Text style={styles.title}>{item.product.name}</Text>
                     <View style={styles.quantity_price}>
                       <View style={styles.quantity}>
                         <Pressable
                           onPress={() =>
-                            useCart
-                              .getState()
-                              .decreaseQuantity(item.product.key)
+                            useCart.getState().decreaseQuantity(item.product.id)
                           }
                         >
                           <EvilIcons name="trash" size={24} color="black" />
@@ -143,9 +163,7 @@ const Cart = () => {
                         </Text>
                         <Pressable
                           onPress={() =>
-                            useCart
-                              .getState()
-                              .increaseQuantity(item.product.key)
+                            useCart.getState().increaseQuantity(item.product.id)
                           }
                         >
                           <AntDesign name="plus" size={20} color="black" />
@@ -172,10 +190,14 @@ const Cart = () => {
         <Pressable>
           <FlatList
             horizontal
-            data={popular_data}
+            data={productList}
             renderItem={ProductTile}
-            keyExtractor={(item) => item.key}
+            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              gap: 10,
+              paddingRight: 16,
+            }}
           />
         </Pressable>
         <View style={styles.bill}>
@@ -187,7 +209,7 @@ const Cart = () => {
             }}
           >
             <Text style={styles.label}>Subtotal</Text>
-            <Text style={styles.label}>Rs. {subtotal}</Text>
+            <Text style={styles.label}>Rs. {Number(subtotal)}</Text>
           </View>
           <View
             style={{
@@ -246,7 +268,9 @@ const Cart = () => {
               (incl. fees and tax)
             </Text>
           </Text>
-          <Text style={styles.total}>Rs. {DELIVERY_FEE + subtotal}</Text>
+          <Text style={styles.total}>
+            Rs. {parseFloat(DELIVERY_FEE + subtotal).toFixed(2)}
+          </Text>
         </View>
         <TouchableWithoutFeedback style={{ width: "100%", flexGrow: 1 }}>
           <LinearGradient

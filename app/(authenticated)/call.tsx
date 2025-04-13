@@ -1,7 +1,6 @@
 import { View, Text, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Call, User } from "stream-chat";
-import { useUser } from "@clerk/clerk-expo";
 import {
   CallContent,
   RingingCallContent,

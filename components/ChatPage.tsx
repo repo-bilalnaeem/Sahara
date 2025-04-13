@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useAuth } from "@clerk/clerk-expo";
 import { defaultStyles } from "@/constants/Styles";
 import {
   Redirect,
@@ -29,11 +28,17 @@ import { addChat, addMessage, getMessages } from "@/utils/Database";
 import { FontAwesome6 } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { DrawerActions } from "@react-navigation/native";
+import { useTranscription } from "@/context/TranscriptionContext";
+import { toast } from "sonner-native";
+import * as FileSystem from "expo-file-system";
+
 
 const ChatPage = () => {
   const navigation = useNavigation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [height, setHeight] = useState(0);
+  const { audioUri, setAudioUri } = useTranscription();
+  const [isTranscribing, setIsTranscribing] = useState(false);
 
   const [gptVersion, setGptVersion] = useMMKVString("gptVersion", Storage);
 
@@ -42,7 +47,8 @@ const ChatPage = () => {
   const [chatId, setChatId] = useState<string | null>(id);
   const chatIdRef = useRef<string | null>(id);
 
-  const apiKey = "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";
+  const apiKey =
+    "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";
 
   const organization = "org-4zqKW8XE9vBUyJH2LJl3mqdd";
 
@@ -164,6 +170,96 @@ const ChatPage = () => {
     setHeight(event.nativeEvent.layout.height);
   };
 
+  // useEffect(() => {
+  //   const transcribeAudioIfNeeded = async () => {
+  //     if (!audioUri) return;
+
+  //     toast.loading("Transcribing audio...");
+  //     try {
+  //       const formData = new FormData();
+  //       const audioData = {
+  //         uri: audioUri,
+  //         name: "audio.m4a",
+  //         type: "audio/m4a", // (fix typo: "aduio" => "audio")
+  //       };
+  //       formData.append("file", audioData as any);
+
+  //       const response = await fetch(`/api/speech-to-text`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //         body: formData,
+  //       }).then((res) => res.json());
+
+  //       console.log("Transcription Response:", response);
+
+  //       if (response.text) {
+  //         getCompletion(response.text); // send it to GPT
+  //       } else {
+  //         toast.error("No transcription found");
+  //       }
+
+  //       // Optional: delete file after transcription
+  //       await FileSystem.deleteAsync(audioUri, { idempotent: true });
+  //       setAudioUri(null); // clear context
+  //     } catch (error) {
+  //       console.error("Error transcribing audio:", error);
+  //       toast.error("Failed to transcribe");
+  //     } finally {
+  //       toast.dismiss();
+  //     }
+  //   };
+
+  //   transcribeAudioIfNeeded();
+  // }, [audioUri]);
+
+  useEffect(() => {
+    const transcribeAudioIfNeeded = async () => {
+      if (!audioUri || isTranscribing) return;
+  
+      setIsTranscribing(true);
+      toast.loading("Transcribing audio...");
+  
+      try {
+        const formData = new FormData();
+        const audioData = {
+          uri: audioUri,
+          name: "audio.m4a",
+          type: "audio/m4a",
+        };
+        formData.append("file", audioData as any);
+  
+        const response = await fetch(`/api/speech-to-text`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        }).then((res) => res.json());
+  
+        console.log("Transcription Response:", response);
+  
+        if (response.text) {
+          getCompletion(response.text);
+        } else {
+          toast.error("No transcription found");
+        }
+  
+        // Delete file and clear state
+        await FileSystem.deleteAsync(audioUri, { idempotent: true });
+        setAudioUri(null);
+      } catch (error) {
+        console.error("Error transcribing audio:", error);
+        toast.error("Failed to transcribe");
+      } finally {
+        setIsTranscribing(false);
+        toast.dismiss();
+      }
+    };
+  
+    transcribeAudioIfNeeded();
+  }, [audioUri]);
   return (
     <View style={defaultStyles.pageContainer}>
       <Stack.Screen
