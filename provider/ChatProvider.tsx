@@ -5,6 +5,8 @@ import { PropsWithChildren } from "react";
 import { StreamChat } from "stream-chat";
 import { useSelector } from "react-redux";
 import { RootState } from "@reduxjs/toolkit/query";
+import { User } from "@/app/signin";
+import * as SecureStore from "expo-secure-store";
 
 const client = StreamChat.getInstance(
   process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
@@ -13,6 +15,24 @@ const client = StreamChat.getInstance(
 const ChatProvider = ({ children }: PropsWithChildren) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [isReady, setIsReady] = useState(false);
+
+  const [userData, setUserData] = useState<User | null>(null);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const storedData = await SecureStore.getItemAsync("user_data");
+        if (!storedData) return;
+        // console.log(storedData);
+        const parsedUser = JSON.parse(storedData);
+        // console.log("parsed:", parsedUser);
+        setUserData(parsedUser);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    initializeUser();
+  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -24,8 +44,9 @@ const ChatProvider = ({ children }: PropsWithChildren) => {
       await client.connectUser(
         {
           id: user!.id,
-          name: user.firstName,
-          image: "https://getstream.io/random_svg/?name=John",
+          name: userData?.name,
+          image: userData?.imageUrl,
+          // image: "https://galaxies.dev/img/meerkat_2.jpg",
         },
         client.devToken(user!.id)
       );

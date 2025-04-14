@@ -24,9 +24,17 @@ import LoginInput from "@/components/LoginInput";
 import { CheckBox } from "react-native-elements";
 import MediaIcons from "@/components/MediaIcons";
 import Continue from "@/components/Continue";
-import { useLoginMutation } from "@/slices/apiSlice";
+import { useLazyGetLoggedUserQuery, useLoginMutation } from "@/slices/apiSlice";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/slices/authSlice";
+import * as SecureStore from "expo-secure-store";
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  imageUrl: string;
+}
 
 const signin = () => {
   const isDarkMode = useColorScheme() === "dark";
@@ -35,9 +43,14 @@ const signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
-
+  const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
+  const [user, setUser] = useState<User | null>(null);
+
+  const storeUserData = async (userData: User) => {
+    await SecureStore.setItemAsync("user_data", JSON.stringify(userData));
+  };
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -59,6 +72,22 @@ const signin = () => {
     try {
       const userData = await login({ email, password }).unwrap();
       dispatch(setCredentials(userData));
+      const profile = await triggerGetLoggedUser().unwrap();
+
+      console.log(
+        "profile: ",
+        JSON.stringify(profile?.user?.Customer, null, 2)
+      );
+
+      const formattedUser: User = {
+        id: profile?.user?.Customer?.userId,
+        name: `${profile?.user?.Customer?.firstName} ${profile?.user?.Customer?.lastName}`,
+        email: email,
+        imageUrl: profile?.user?.Customer?.imageUrl,
+      };
+      setUser(formattedUser);
+      await storeUserData(formattedUser);
+      console.log("Formatted User:", formattedUser);
     } catch (error) {
       Alert.alert("Login Failed", "Invalid email or password");
     }

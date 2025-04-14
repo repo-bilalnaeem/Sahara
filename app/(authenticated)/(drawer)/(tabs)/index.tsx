@@ -50,7 +50,7 @@ const Home = () => {
   const { data: latestAppointmnet, isLoading: loadingAppointmnet } =
     useGetAllAppointmentsQuery({ limit: 1 });
 
-  console.log(latestAppointmnet);
+  // console.log(latestAppointmnet);
 
   useEffect(() => {
     // console.log(JSON.stringify(latestAppointmnet, null, 2));

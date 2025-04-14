@@ -147,6 +147,12 @@ export const apiSlice = createApi({
         url: `doctors?department=${department}`,
       }),
     }),
+
+    getLoggedUser: builder.query<any, void>({
+      query: () => ({
+        url: "/users/profile",
+      }),
+    }),
   }),
 });
 
@@ -165,4 +171,5 @@ export const {
   useGetDoctorByIdQuery,
   useGetAllDoctorsQuery,
   usePostRecentlyViewedMutation,
+  useLazyGetLoggedUserQuery,
 } = apiSlice;

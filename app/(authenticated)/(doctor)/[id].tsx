@@ -80,7 +80,7 @@ const Page = () => {
   useEffect(() => {
     const onViwed = async () => {
       const response = await recentlyVisited({ doctorId: id });
-      console.log(response);
+      // console.log(response);
     };
     onViwed();
   }, [id]);
