@@ -8,6 +8,8 @@ import {
   StyleSheet,
   TextInput,
   PixelRatio,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 
 import {
@@ -16,10 +18,13 @@ import {
 } from "react-native-responsive-screen";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import GoBack from "@/components/GoBack";
 const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 const Layout = () => {
   const { top } = useSafeAreaInsets();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -74,8 +79,34 @@ const Layout = () => {
           ),
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
+          tabBarStyle: { display: "none" },
+
           header: () => (
-            <View style={[styles.meetDoctor, { paddingTop: top }]}>
+            <View
+              style={[
+                styles.meetDoctor,
+                {
+                  paddingTop: top,
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 10,
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <TouchableOpacity
+                onPressIn={router.back}
+                style={[styles.darkBackButton]}
+              >
+                <Image
+                  style={[
+                    { width: wp("5%") },
+                    { height: hp("2%") },
+                    { tintColor: "#6e6e6e", objectFit: "contain" },
+                  ]}
+                  source={require("@/assets/images/arrow.png")}
+                />
+              </TouchableOpacity>
               <View style={styles.searchbarBox}>
                 <AntDesign name="search1" size={scaleFont(20)} color="#000" />
                 <TextInput
@@ -139,6 +170,16 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingBottom: 12,
     backgroundColor: "#fff",
+  },
+
+  darkBackButton: {
+    borderRadius: 24,
+    width: wp("3%"),
+    height: hp("4%"),
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
   },
 });
 

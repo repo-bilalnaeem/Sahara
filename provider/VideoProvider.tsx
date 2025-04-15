@@ -38,7 +38,7 @@ const VideoProvider = ({ children }: PropsWithChildren) => {
     initializeUser();
   }, []);
 
-  console.log(userData)
+  // console.log(userData)
 
   useEffect(() => {
     if (!user) return;

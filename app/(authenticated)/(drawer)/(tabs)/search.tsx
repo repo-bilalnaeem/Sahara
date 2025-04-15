@@ -20,7 +20,7 @@ import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 const RenderRow = ({ item, index }: any) => {
   const router = useRouter();
-  console.log("item", item);
+  // console.log("item", item);
   return (
     <Pressable
       onPress={() =>
@@ -90,7 +90,7 @@ const Search = () => {
     department: department === "All" ? "" : department,
   });
 
-  console.log(data?.doctors);
+  // console.log(data?.doctors);
 
   const scrollRef = useRef<ScrollView>(null);
   const listRef = useRef<FlatList>(null);
@@ -99,7 +99,7 @@ const Search = () => {
 
   const doctors = data?.doctors || [];
 
-  console.log(doctors);
+  // console.log(doctors);
 
   const scrollToIndex = (index: number) => {
     const selected = itemsRef.current[index];
@@ -133,12 +133,12 @@ const Search = () => {
         scrollToIndex(index);
       }
     }
-    console.log("Category Changed");
+    // console.log("Category Changed");
   }, [department]);
 
   useEffect(() => {
     if (data) {
-      console.log("Refetched Data");
+      // console.log("Refetched Data");
     }
   }, [data]);
 

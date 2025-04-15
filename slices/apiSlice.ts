@@ -169,6 +169,12 @@ export const apiSlice = createApi({
         url: "/users/profile",
       }),
     }),
+
+    getAllOrders: builder.query({
+      query: () => ({
+        url: "orders",
+      }),
+    }),
   }),
 });
 
@@ -190,4 +196,5 @@ export const {
   useGetAllDoctorsQuery,
   usePostRecentlyViewedMutation,
   useLazyGetLoggedUserQuery,
+  useGetAllOrdersQuery,
 } = apiSlice;

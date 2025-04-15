@@ -38,7 +38,7 @@ const ChatProvider = ({ children }: PropsWithChildren) => {
     if (!user) {
       return;
     }
-    console.log(user.id);
+    // console.log(user.id);
 
     const connect = async () => {
       await client.connectUser(

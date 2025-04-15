@@ -16,7 +16,8 @@ import { Divider } from "react-native-elements";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DateTimePicker from "react-native-ui-datepicker";
-
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -90,6 +91,7 @@ const Page = () => {
       setDoctor(data.doctor);
     }
   }, [data]);
+  dayjs.extend(utc);
 
   const snapPoints = useMemo(() => ["35%", "100%"], []);
   const { top } = useSafeAreaInsets();
@@ -195,11 +197,12 @@ const Page = () => {
                           item.isBooked && styles.bookedText,
                         ]}
                       >
-                        {new Date(item.time).toLocaleTimeString([], {
+                        {/* {new Date(item.time).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                           hour12: true,
-                        })}
+                        })} */}
+                         {dayjs.utc(item.time).format("hh:mm A")}
                       </Text>
                     </Pressable>
                   )}

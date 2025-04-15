@@ -74,10 +74,10 @@ const signin = () => {
       dispatch(setCredentials(userData));
       const profile = await triggerGetLoggedUser().unwrap();
 
-      console.log(
-        "profile: ",
-        JSON.stringify(profile?.user?.Customer, null, 2)
-      );
+      // console.log(
+      //   "profile: ",
+      //   JSON.stringify(profile?.user?.Customer, null, 2)
+      // );
 
       const formattedUser: User = {
         id: profile?.user?.Customer?.userId,
@@ -87,7 +87,7 @@ const signin = () => {
       };
       setUser(formattedUser);
       await storeUserData(formattedUser);
-      console.log("Formatted User:", formattedUser);
+      // console.log("Formatted User:", formattedUser);
     } catch (error) {
       Alert.alert("Login Failed", "Invalid email or password");
     }

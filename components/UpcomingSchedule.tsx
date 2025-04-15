@@ -34,12 +34,27 @@ interface UpcomingScheduleProps {
   data: DoctorData;
 }
 
+import { formatInTimeZone } from "date-fns-tz";
+// import { addMinutes } from "date-fns";
+
 const UpcomingSchedule = ({ data }: UpcomingScheduleProps) => {
   // console.log(JSON.stringify(data.doctor, null, 2));
+  // const startDate = new Date(data.slot.time);
+  // const endDate = addMinutes(startDate, 30); // 30-minute slot
+
+  // const formatted = `${format(startDate, "EEE, MMM d, h:mm a")} - ${format(
+  //   endDate,
+  //   "h:mm a"
+  // )}`;
+
   const startDate = new Date(data.slot.time);
   const endDate = addMinutes(startDate, 30); // 30-minute slot
-
-  const formatted = `${format(startDate, 'EEE, MMM d, h:mm a')} - ${format(endDate, 'h:mm a')}`;
+  
+  const formatted = `${formatInTimeZone(
+    startDate,
+    "UTC",
+    "EEE, MMM d, h:mm a"
+  )} - ${formatInTimeZone(endDate, "UTC", "h:mm a")}`;
 
   return (
     <View style={{ marginBottom: 24 }}>

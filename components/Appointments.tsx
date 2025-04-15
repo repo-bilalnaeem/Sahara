@@ -20,12 +20,16 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 const Appointments = () => {
   const { data, isLoading } = useGetAllAppointmentsQuery();
   const navigation = useNavigation();
   const router = useRouter();
   const { top } = useSafeAreaInsets();
 
+  // console.log(JSON.stringify(data, null, 2));
+  dayjs.extend(utc);
   if (isLoading)
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -147,23 +151,15 @@ const Appointments = () => {
                         }}
                       >
                         <Text style={[styles.time]}>
-                          {/* {new Date(appointment.slot.date).toLocaleDateString(
-                            "en-US",
-                            {
-                              weekday: "short",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
-                          ,{" "} */}
-                          {new Date(appointment.slot.time).toLocaleTimeString(
+                          {/* {new Date(appointment.slot.time).toLocaleTimeString(
                             [],
                             {
                               hour: "2-digit",
                               minute: "2-digit",
                               hour12: true,
                             }
-                          )}
+                          )} */}
+                         {dayjs.utc(appointment.slot.time).format("hh:mm A")}
                         </Text>
                         <Text
                           style={[
@@ -171,7 +167,7 @@ const Appointments = () => {
                             { textAlign: "right", alignSelf: "baseline" },
                           ]}
                         >
-                          Rs. {appointment.doctor.fees}
+                          USD. {(appointment.doctor.fees / 280).toFixed(2)}
                         </Text>
                       </View>
                     </View>
@@ -228,12 +224,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-
   time: {
-    color: "#333",
-    fontSize: 13,
+    color: "grey",
+    fontSize: 14,
     fontStyle: "normal",
-    fontWeight: "500",
+    fontWeight: "600",
     lineHeight: 22.2,
     // textAlign: "center",
   },
