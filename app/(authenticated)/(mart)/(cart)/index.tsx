@@ -9,6 +9,9 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableWithoutFeedback,
+  Alert,
+  Modal,
+  useColorScheme,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
@@ -17,20 +20,74 @@ import { LinearGradient } from "expo-linear-gradient";
 import { CartItem, useCart } from "@/store/cartStore";
 import ProductTile from "@/components/ProductTile";
 import SeeMore from "@/components/SeeMore";
-import { useGetGeneralProductsQuery } from "@/slices/apiSlice";
+import {
+  useConfirmProductOrderMutation,
+  useCreateProductOrderIntentMutation,
+  useGetGeneralProductsQuery,
+} from "@/slices/apiSlice";
+import { presentPaymentSheet, useStripe } from "@stripe/stripe-react-native";
+
+const USD = 280;
+
+const CustomModal = () => {
+  const isDarkMode = useColorScheme() == "dark";
+  const router = useRouter();
+
+  const BOOKED_PROMPT = "Your Products have been Ordered!";
+
+  return (
+    <View style={[isDarkMode ? styles.modalDark : styles.modalLight]}>
+      <View style={styles.modal_inner}>
+        <View style={styles.container}>
+          <Image
+            source={require("@/assets/images/accept.gif")}
+            style={styles.gif}
+          />
+        </View>
+        <Text style={isDarkMode ? styles.successLight : styles.successDark}>
+          Success
+        </Text>
+        <Text style={isDarkMode ? styles.modalTextLight : styles.modalTextDark}>
+          {BOOKED_PROMPT}
+        </Text>
+
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => router.replace("/(authenticated)/(drawer)/(tabs)")}
+        >
+          <LinearGradient
+            colors={["#1661E0", "#478EEF"]}
+            style={styles.linearGradientModal}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Text style={styles.LightText}>Continue</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const Cart = () => {
+  const { initPaymentSheet } = useStripe();
+  const [createProductIntent] = useCreateProductOrderIntentMutation();
+  const [confirmProduct] = useConfirmProductOrderMutation();
+  const [modalVisible, setModalVisible] = useState(false);
+
   const router = useRouter();
   const items = useCart((state) => state.items);
   const DELIVERY_FEE = 200;
   const [productList, setProductList] = useState([]);
 
   // Log all items and their quantities
-  items.forEach((item: CartItem) => {
-    console.log(`Product: ${item.product.name}, Quantity: ${item.quantity}`);
-  });
+  // items.forEach((item: CartItem) => {
+  //   console.log(
+  //     `Product: ${item.product.name}, Quantity: ${item.quantity}, Product Id: ${item.product.id}`
+  //   );
+  // });
 
-  console.log(items);
+  // console.log(items);
 
   const subtotal = Number(
     items
@@ -53,7 +110,86 @@ const Cart = () => {
       limit: 8,
     });
 
-console.log(productList)
+  // console.log(JSON.stringify(productList, null, 2));
+
+  const onCheckout = async () => {
+    try {
+      const productData = items.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+      }));
+      console.log(productData);
+
+      const response = await createProductIntent({
+        data: {
+          products: productData,
+        },
+      }).unwrap();
+      // console.log("Intent created:", JSON.stringify(response, null, 2));
+
+      console.log(JSON.stringify(response, null, 2));
+
+      if (response.error) {
+        console.log(response.error);
+        Alert.alert("Something went wrong!");
+        return;
+      }
+
+      // 2. Initialize the payment sheet
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: "Sahara Inc.",
+        paymentIntentClientSecret: response.clientSecret,
+      });
+
+      if (initResponse.error) {
+        console.log(initResponse.error.message);
+        Alert.alert("Something wnet wrong!");
+        return;
+      }
+
+      // 3. Present the Payment Sheet from Stripe
+      const paymentResponse = await presentPaymentSheet();
+      if (paymentResponse.error) {
+        Alert.alert(
+          `Error code: ${paymentResponse.error.code}`,
+          paymentResponse.error.message
+        );
+        return;
+      }
+
+      const { paymentIntentId, orderId, cart } = response;
+      console.log(paymentIntentId, orderId, cart);
+
+      cart.forEach((item) => {
+        console.log(
+          `Product ID: ${item.productId}, Quantity: ${item.quantity}`
+        );
+      });
+
+      // 4. If payment ok -> create the order
+      const confirmRes = await confirmProduct({
+        data: {
+          paymentIntentId,
+          orderId,
+          cart,
+        },
+      }).unwrap();
+
+      console.log(response);
+
+      if (confirmRes.error) {
+        Alert.alert("Failed to confirm the appointment.");
+        return;
+      }
+
+      // ✅ Clear the cart
+      setModalVisible(true);
+      useCart.getState().clearCart();
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     if (products && products?.products) {
@@ -224,7 +360,7 @@ console.log(productList)
         </View>
       </ScrollView>
 
-      <View
+      {/* <View
         style={{
           position: "absolute",
           bottom: 0,
@@ -292,7 +428,110 @@ console.log(productList)
             </Text>
           </LinearGradient>
         </TouchableWithoutFeedback>
+      </View> */}
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          paddingHorizontal: 24,
+          width: "100%",
+          height: 185,
+          backgroundColor: "#ffffff",
+          paddingTop: 24,
+          zIndex: 2,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+
+          // Shadow for iOS
+          shadowColor: "#000000ff",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.16,
+          shadowRadius: 12,
+
+          // Shadow for Android
+          elevation: 5,
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={[styles.total, { marginBottom: 0 }]}>
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: "300",
+              }}
+            >
+              (incl. fees and tax)
+            </Text>
+          </Text>
+          <Text style={[styles.total, { fontSize: 13, marginBottom: 16 }]}>
+            Rs. {DELIVERY_FEE + subtotal}
+          </Text>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.total}>
+            Payable due{" "}
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "300",
+              }}
+            >
+              (approx)
+            </Text>
+          </Text>
+          <Text style={styles.total}>
+            USD {((DELIVERY_FEE + subtotal) / USD).toFixed(2)}
+          </Text>
+        </View>
+        <TouchableWithoutFeedback
+          style={{ width: "100%", flexGrow: 1 }}
+          onPress={() => onCheckout()}
+        >
+          <LinearGradient
+            colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0.0527, 0.9575]}
+            style={[styles.linearGradient, { width: "100%" }]}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#fff",
+                fontWeight: "600",
+                fontSize: 15,
+              }}
+            >
+              Proceed to Payment
+            </Text>
+          </LinearGradient>
+        </TouchableWithoutFeedback>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        // onRequestClose={() => router.replace('/(authenticated)/(drawer)/(tabs)')}
+        presentationStyle="fullScreen"
+      >
+        <CustomModal />
+      </Modal>
     </View>
   );
 };
@@ -431,6 +670,83 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     marginBottom: 20,
+  },
+
+  modalLight: {
+    width: "100%",
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 13,
+  },
+  modalDark: {
+    width: "100%",
+    flex: 1,
+    backgroundColor: "#1E1F22",
+    paddingHorizontal: 13,
+  },
+  modal_inner: {
+    flex: 0.9,
+  },
+
+  successDark: {
+    color: "#4878C9",
+    textAlign: "center",
+    fontSize: 26,
+    fontWeight: "500",
+    marginBottom: 32,
+  },
+  successLight: {
+    color: "#F5F5F5",
+    textAlign: "center",
+    fontSize: 26,
+    fontWeight: "500",
+    marginBottom: 32,
+  },
+  modalTextDark: {
+    color: "#7B6161",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "300",
+    lineHeight: 28 /* 24px */,
+    letterSpacing: 0.5,
+    marginBottom: "15%",
+    marginHorizontal: 18,
+  },
+  modalTextLight: {
+    color: "#C9C9C9",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "300",
+    lineHeight: 28 /* 24px */,
+    letterSpacing: 0.5,
+    marginBottom: "15%",
+    marginHorizontal: 18,
+  },
+
+  linearGradientModal: {
+    // flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 40,
+  },
+
+  LightText: {
+    color: "#fff",
+    fontSize: 14,
+    fontStyle: "normal",
+    // marginLeft: 10,
+  },
+
+  container: {
+    alignItems: "center",
+  },
+  gif: {
+    width: 140,
+    height: 140,
+    marginTop: "75%",
+    marginBottom: "35%",
   },
 });
 

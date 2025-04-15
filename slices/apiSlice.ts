@@ -74,11 +74,27 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+    createProductOrderIntent: builder.mutation({
+      query: ({ data }) => ({
+        url: `/orders`,
+        method: "POST",
+        body: data,
+      }),
+    }),
 
     // Confirm Appointment
     confirmAppointment: builder.mutation({
       query: ({ data }) => ({
         url: "/appointments/confirm",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // Confirm Appointment
+    confirmProductOrder: builder.mutation({
+      query: ({ data }) => ({
+        url: "/orders/confirm",
         method: "POST",
         body: data,
       }),
@@ -161,7 +177,9 @@ export const {
   useSignupMutation,
   useCreatePaymentIntentMutation,
   useCreateAppointmentIntentMutation,
+  useCreateProductOrderIntentMutation,
   useConfirmAppointmentMutation,
+  useConfirmProductOrderMutation,
   useGetPopularProductsQuery,
   useGetGeneralProductsQuery,
   useGetProductByIdQuery,

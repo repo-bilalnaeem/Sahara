@@ -1,9 +1,18 @@
 import GoBack from "@/components/GoBack";
-import { Slot, Stack } from "expo-router";
+import { Slot, Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { StreamChat, User } from "stream-chat";
 import { OverlayProvider, Chat } from "stream-chat-expo";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const STREAM_KEY = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY;
 
@@ -29,33 +38,61 @@ const Layout = () => {
   //     client.disconnectUser();
   //   };
   // });
-
+  const router = useRouter();
   return (
     <OverlayProvider>
       {/* <Chat client={client}> */}
-        <Stack>
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Messages",
-              headerLeft: () => <GoBack />,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="[cid]"
-            options={{
-              title: "channel",
-              headerBackButtonDisplayMode: "minimal",
-              headerLeft: () => <GoBack />,
+      <Stack>
+        <Stack.Screen
+          name="index"
+          options={{
+            title: "Messages",
+            headerLeft: () => <GoBack />,
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="[cid]"
+          options={{
+            title: "channel",
+            headerBackButtonDisplayMode: "minimal",
+            headerLeft: () => (
+              <TouchableOpacity
+                onPressIn={() =>
+                  router.dismissTo("/(authenticated)/(drawer)/(tabs)/chats")
+                }
+                style={[styles.darkBackButton]}
+              >
+                <Image
+                  style={[
+                    { width: wp("4%") },
+                    { height: hp("4%") },
+                    { tintColor: "#fff", objectFit: "contain" },
+                  ]}
+                  source={require("@/assets/images/arrow.png")}
+                />
+              </TouchableOpacity>
+            ),
 
-              //   headerShown: false,
-            }}
-          />
-        </Stack>
+            //   headerShown: false,
+          }}
+        />
+      </Stack>
       {/* </Chat> */}
     </OverlayProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  darkBackButton: {
+    borderRadius: 24,
+    width: wp("9%"),
+    height: hp("4%"),
+    backgroundColor: "#1E1F22",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
+  },
+});
 
 export default Layout;
