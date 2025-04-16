@@ -36,6 +36,11 @@ export const apiSlice = createApi({
           await secureStorage.setItem("refresh_token", data.refresh_token);
           await secureStorage.setItem("stream_token", data.stream_token);
 
+          // 🔹 Decode user and store it with exp
+          const decodedUser = jwtDecode(data.access_token);
+          // console.log("Decoded User:", decodedUser);
+          await secureStorage.setItem("decoded_user", JSON.stringify(decodedUser));
+
           dispatch(
             setCredentials({
               access_token: data.access_token,

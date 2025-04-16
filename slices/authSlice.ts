@@ -6,6 +6,8 @@ interface User {
   id: string;
   email: string;
   role: string;
+  exp: number;
+  iat: number;
 }
 
 interface AuthState {
@@ -30,6 +32,9 @@ export const loadToken = createAsyncThunk("auth/loadToken", async () => {
 
   if (access_token) {
     const decodedUser: User = jwtDecode(access_token);
+
+    // console.log("Decoded user:", decodedUser);
+
     return { access_token, refresh_token, stream_token, user: decodedUser };
   }
   return {
@@ -55,9 +60,9 @@ const authSlice = createSlice({
       const { access_token, refresh_token, stream_token } = action.payload;
       const decodedUser: User = jwtDecode(access_token);
 
-      console.log("Access Token:",access_token)
-      console.log("Refresh Token:",refresh_token)
-      console.log("Stream Token:",stream_token)
+      // console.log("Access Token:", access_token);
+      // console.log("Refresh Token:", refresh_token);
+      // console.log("Stream Token:", stream_token);
 
       state.accessToken = access_token;
       state.refreshToken = refresh_token;
