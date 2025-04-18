@@ -62,7 +62,7 @@ const VideoProvider = ({ children }: PropsWithChildren) => {
     return () => {
       videoClient?.disconnectUser(); // Cleanup on unmount
     };
-  }, [user]);
+  }, [user, userData]);
 
   if (!videoClient) {
     return (

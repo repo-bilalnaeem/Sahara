@@ -39,7 +39,10 @@ export const apiSlice = createApi({
           // 🔹 Decode user and store it with exp
           const decodedUser = jwtDecode(data.access_token);
           // console.log("Decoded User:", decodedUser);
-          await secureStorage.setItem("decoded_user", JSON.stringify(decodedUser));
+          await secureStorage.setItem(
+            "decoded_user",
+            JSON.stringify(decodedUser)
+          );
 
           dispatch(
             setCredentials({
@@ -169,6 +172,31 @@ export const apiSlice = createApi({
       }),
     }),
 
+    searchDoctors: builder.query({
+      // Custom queryFn
+      queryFn: async (args, _queryApi, _extraOptions, fetchWithBQ) => {
+        const { role, page, limit, department, name } = args;
+
+        const searchParams = new URLSearchParams();
+
+        if (role) searchParams.append("role", role);
+        if (page) searchParams.append("page", page.toString());
+        if (limit) searchParams.append("limit", limit.toString());
+        if (department) searchParams.append("department", department);
+        if (name) searchParams.append("name", name); // 👈 pass full name
+
+        const url = `/doctors?${searchParams.toString()}`;
+
+        const result = await fetchWithBQ(url);
+
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        return { data: result.data };
+      },
+    }),
+
     getLoggedUser: builder.query<any, void>({
       query: () => ({
         url: "/users/profile",
@@ -202,4 +230,5 @@ export const {
   usePostRecentlyViewedMutation,
   useLazyGetLoggedUserQuery,
   useGetAllOrdersQuery,
+  useSearchDoctorsQuery,
 } = apiSlice;

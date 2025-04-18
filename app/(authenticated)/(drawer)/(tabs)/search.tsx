@@ -8,17 +8,27 @@ import {
   FlatList,
   Pressable,
   ImageBackground,
+  TextInput,
+  PixelRatio,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useGetAllDoctorsQuery } from "@/slices/apiSlice";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  useGetAllDoctorsQuery,
+  useSearchDoctorsQuery,
+} from "@/slices/apiSlice";
 import { categories } from "@/assets/data/SearchFilters";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
-
-const RenderRow = ({ item, index }: any) => {
+import { AntDesign } from "@expo/vector-icons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+export const RenderRow = ({ item, index }: any) => {
   const router = useRouter();
   // console.log("item", item);
   return (
@@ -74,7 +84,15 @@ const RenderRow = ({ item, index }: any) => {
             {item.Doctor.firstName} {item.Doctor.lastName}
           </Text>
           <Text style={styles.speciality}>{item.Doctor.department}</Text>
-          <Pressable style={styles.bookNow}>
+          <Pressable
+            style={styles.bookNow}
+            onPress={() =>
+              router.push({
+                pathname: `/(authenticated)/(doctor)/[id]`,
+                params: { id: item.Doctor.doctorId },
+              })
+            }
+          >
             <Text style={styles.bookText}>Book Now</Text>
           </Pressable>
         </ImageBackground>
@@ -82,6 +100,7 @@ const RenderRow = ({ item, index }: any) => {
     </Pressable>
   );
 };
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 const Search = () => {
   const { query } = useLocalSearchParams();
@@ -89,6 +108,9 @@ const Search = () => {
   const { data, isLoading } = useGetAllDoctorsQuery({
     department: department === "All" ? "" : department,
   });
+
+  const router = useRouter();
+  const { top } = useSafeAreaInsets();
 
   // console.log(data?.doctors);
 
@@ -144,6 +166,46 @@ const Search = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      <View
+        style={[
+          styles.meetDoctor,
+          {
+            paddingTop: top,
+            display: "flex",
+            flexDirection: "row",
+            gap: 10,
+            alignItems: "center",
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPressIn={() => router.back()}
+          style={[styles.darkBackButton]}
+        >
+          <Image
+            style={[
+              { width: wp("5%") },
+              { height: hp("2%") },
+              { tintColor: "#6e6e6e", objectFit: "contain" },
+            ]}
+            source={require("@/assets/images/arrow.png")}
+          />
+        </TouchableOpacity>
+        <Link href={"/(authenticated)/searching"} asChild>
+          <TouchableOpacity style={styles.searchTouch}>
+            <View style={styles.searchbarBox}>
+              <AntDesign name="search1" size={scaleFont(20)} color="#000" />
+              <TextInput
+                style={styles.doctorSearch}
+                placeholder="Search Doctor"
+                placeholderTextColor={"#A9A9A9"}
+                // value={search}
+                // onChangeText={setSearch}
+              />
+            </View>
+          </TouchableOpacity>
+        </Link>
+      </View>
       <View>
         <ScrollView
           ref={scrollRef}
@@ -357,6 +419,56 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 50,
+  },
+
+  searchTouch: {
+    flexGrow: 1,
+  },
+
+  searchbarBox: {
+    backgroundColor: "#fff",
+    height: hp("5.75%"),
+    borderRadius: 30,
+    elevation: 5, // or use shadow properties for iOS
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 6.54,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    flexGrow: 1,
+    paddingLeft: 20,
+    pointerEvents: "box-only",
+  },
+
+  doctorSearch: {
+    fontSize: scaleFont(15),
+    fontWeight: "400",
+    justifyContent: "center",
+    marginHorizontal: 16,
+    color: "#a1a1a1",
+    flexGrow: 1,
+  },
+
+  meetDoctor: {
+    paddingHorizontal: 13,
+    paddingTop: 24,
+    paddingBottom: 12,
+    backgroundColor: "#fff",
+  },
+
+  darkBackButton: {
+    borderRadius: 24,
+    width: wp("3%"),
+    height: hp("4%"),
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 22,
   },
 });
 

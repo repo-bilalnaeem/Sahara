@@ -28,6 +28,8 @@ const Appointments = () => {
   const router = useRouter();
   const { top } = useSafeAreaInsets();
 
+
+
   // console.log(JSON.stringify(data, null, 2));
   dayjs.extend(utc);
   if (isLoading)

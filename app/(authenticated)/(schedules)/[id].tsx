@@ -30,7 +30,7 @@ interface Doctor {
   lastName: string;
   aboutMe: string;
   department: string;
-  imageUrl: string
+  imageUrl: string;
 }
 
 const client = StreamChat.getInstance(
@@ -44,13 +44,15 @@ const navigateToChat = async (
   router: any
 ) => {
   try {
+    console.log(userId);
     // Check if a chat already exists
     const channels = await client.queryChannels({
       type: "messaging",
-      members: { $in: [userId, doctorId] },
+      members: { $eq: [userId, doctorId] },
     });
 
     // const channel = channels[0];
+    // console.log(channels);
 
     let channel;
 
@@ -67,7 +69,9 @@ const navigateToChat = async (
       await channel.create();
     }
 
-    // Navigate to the chat
+    console.log(channel.id);
+
+    // // Navigate to the chat
     router.push(`/(authenticated)/(drawer)/(tabs)/chats/${channel.cid}`);
   } catch (error) {
     console.error("Error navigating to chat:", error);
@@ -76,16 +80,17 @@ const navigateToChat = async (
 const Page = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  // console.log("doctorId:", id);
 
   useEffect(() => {
-    // console.log("Doctor ID:", id);
+    console.log("Doctor ID:", id);
   }, [id]);
 
   // const { user, isLoaded } = useUser(); // Check if user is loaded
   const user = useSelector((state: RootState) => state.auth.user);
+
   // const doctorId = "bcaeb6a5-26bd-477b-a0f1-5c5384da3cb3";
   const { data, isLoading } = useGetDoctorByIdQuery({ id, date: "" });
+  // console.log(JSON.stringify(data, null,2));
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   useEffect(() => {
     if (data && data.doctor) {
@@ -119,6 +124,8 @@ const Page = () => {
     };
   });
 
+  console.log("User id:", user!.id);
+
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={0}>
       <View style={styles.screen}>
@@ -129,7 +136,7 @@ const Page = () => {
         >
           <Animated.View style={[imageAnimatedStyle, styles.profileImage]}>
             <Animated.Image
-              source={{uri: doctor?.imageUrl}}
+              source={{ uri: doctor?.imageUrl }}
               style={[styles.image]}
             />
           </Animated.View>
@@ -149,9 +156,7 @@ const Page = () => {
               </Text>
             </View>
 
-            <Pressable
-              onPressIn={() => navigateToChat(user!.id, id, router)}
-            >
+            <Pressable onPressIn={() => navigateToChat(user!.id, id, router)}>
               <LinearGradient
                 colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
                 start={{ x: 0, y: 0.5 }}

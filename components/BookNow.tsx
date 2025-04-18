@@ -43,7 +43,7 @@ const BookNow = ({ item: { doctor }, index, style }: Props) => {
         locations={[0.0527, 0.9575]}
         style={[
           styles.booknow_Gradient,
-          style ? { width: wp("100%") - 24 } : null,
+          style ? { width: wp("100%") - 24, height: hp("25%") } : null,
           index === 0 ? { paddingLeft: 12 } : undefined,
         ]}
       >
@@ -54,35 +54,50 @@ const BookNow = ({ item: { doctor }, index, style }: Props) => {
             <Text style={[styles.doctor_name]}>
               {style
                 ? `Dr ${firstName} ${lastName}`
-                : `Dr ${firstName}
-              {"\n"}
-              ${lastName}`}
+                : `Dr ${firstName}${"\n"}${lastName}`}
             </Text>
 
             <Text style={[styles.occupation]}>{department}</Text>
-          </View>
-          <View style={styles.image_container}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
-          </View>
-        </View>
 
-        <View style={styles.book_and_nav}>
-          <BookSlider name={"Book Now"} />
+            <View style={styles.book_and_nav}>
+              {/* <BookSlider name={"Book Now"} /> */}
 
-          <View style={[styles.navigation_button]}>
-            <TouchableOpacity
-              onPress={() =>
-                router.navigate({
-                  pathname: "/(authenticated)/(doctor)/[id]",
-                  params: { id: doctorId }, // Pass params as an object
-                })
-              }
-            >
-              <Image
-                source={require("@/assets/images/arrow-needle.png")}
-                style={styles.nav}
-              />
-            </TouchableOpacity>
+              <View
+                style={[
+                  styles.navigation_button,
+                  style ? { marginTop: 24 } : null,
+                ]}
+              >
+                <TouchableOpacity
+                  onPress={() =>
+                    router.navigate({
+                      pathname: "/(authenticated)/(doctor)/[id]",
+                      params: { id: doctorId }, // Pass params as an object
+                    })
+                  }
+                >
+                  <Image
+                    source={require("@/assets/images/arrow-needle.png")}
+                    style={styles.nav}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.image_container,
+
+              style ? { height: hp("20%"), width: wp("36%") } : null,
+            ]}
+          >
+            <Image
+              source={{ uri: imageUrl }}
+              style={[
+                styles.image,
+                style ? { height: hp("20%"), width: wp("36%") } : null,
+              ]}
+            />
           </View>
         </View>
       </LinearGradient>
@@ -104,7 +119,7 @@ const styles = StyleSheet.create({
   name_image: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 22,
+    // alignItems:"center"
   },
 
   doctor_name: {
@@ -128,11 +143,12 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "400",
     lineHeight: 30.2 /* 30.2px */,
+    marginBottom: 10,
   },
 
   image_container: {
     width: wp("30%"),
-    height: hp("13%"),
+    height: hp("17%"),
     borderRadius: 29,
     overflow: "hidden",
   },
@@ -150,8 +166,8 @@ const styles = StyleSheet.create({
   },
 
   navigation_button: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     backgroundColor: "#fff",
     borderRadius: 100,
     justifyContent: "center",
@@ -159,6 +175,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     display: "flex",
     transform: [{ rotate: "-135deg" }],
+    marginBottom: 4,
   },
 
   nav: {

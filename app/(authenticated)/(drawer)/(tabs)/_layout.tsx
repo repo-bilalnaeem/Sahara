@@ -80,43 +80,7 @@ const Layout = () => {
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
           tabBarStyle: { display: "none" },
-
-          header: () => (
-            <View
-              style={[
-                styles.meetDoctor,
-                {
-                  paddingTop: top,
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 10,
-                  alignItems: "center",
-                },
-              ]}
-            >
-              <TouchableOpacity
-                onPressIn={router.back}
-                style={[styles.darkBackButton]}
-              >
-                <Image
-                  style={[
-                    { width: wp("5%") },
-                    { height: hp("2%") },
-                    { tintColor: "#6e6e6e", objectFit: "contain" },
-                  ]}
-                  source={require("@/assets/images/arrow.png")}
-                />
-              </TouchableOpacity>
-              <View style={styles.searchbarBox}>
-                <AntDesign name="search1" size={scaleFont(20)} color="#000" />
-                <TextInput
-                  style={styles.doctorSearch}
-                  placeholder="Search Doctor"
-                  placeholderTextColor={"#A9A9A9"}
-                />
-              </View>
-            </View>
-          ),
+          headerShown: false,
         }}
       />
 
@@ -137,50 +101,7 @@ const Layout = () => {
 };
 
 const styles = StyleSheet.create({
-  searchbarBox: {
-    backgroundColor: "#fff",
-    height: hp("5.75%"),
-    borderRadius: 30,
-    elevation: 5, // or use shadow properties for iOS
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 6.54,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    flexGrow: 1,
-    paddingLeft: 20,
-  },
 
-  doctorSearch: {
-    fontSize: scaleFont(15),
-    fontWeight: "400",
-    justifyContent: "center",
-    marginHorizontal: 16,
-    color: "#a1a1a1",
-    flexGrow: 1,
-  },
-
-  meetDoctor: {
-    paddingHorizontal: 13,
-    paddingTop: 24,
-    paddingBottom: 12,
-    backgroundColor: "#fff",
-  },
-
-  darkBackButton: {
-    borderRadius: 24,
-    width: wp("3%"),
-    height: hp("4%"),
-    backgroundColor: "#ffffff",
-    alignItems: "center",
-    justifyContent: "center",
-    // marginVertical: 22,
-  },
 });
 
 export default Layout;

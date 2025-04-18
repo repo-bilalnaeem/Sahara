@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Divider } from "react-native-paper";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,6 +17,7 @@ import {
   useCreatePaymentIntentMutation,
   useCreateAppointmentIntentMutation,
   useConfirmAppointmentMutation,
+  useGetDoctorByIdQuery,
 } from "@/slices/apiSlice";
 import {
   PaymentSheet,
@@ -30,8 +31,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-const SERVICE_CHARGES = 200;
-const SUBTOTAL = 1000;
+const SERVICE_CHARGES: number = 200;
 const USD = 280;
 
 const CustomModal = () => {
@@ -74,22 +74,51 @@ const CustomModal = () => {
   );
 };
 
+interface Doctor {
+  firstName: string;
+  lastName: string;
+  imageUrl: string;
+  department: string;
+  fees: string;
+}
+
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+
 const Booking = () => {
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
   const { initPaymentSheet } = useStripe();
   const [createAppointmentIntent] = useCreateAppointmentIntentMutation();
   const [confirmAppointment] = useConfirmAppointmentMutation();
   const [modalVisible, setModalVisible] = useState(false);
   const { date, timeSlot, id } = useLocalSearchParams();
+  const SUBTOTAL = Number(doctor?.fees);
+
+  // formatting time
+  const rawTimeSlot: string | string[] = timeSlot;
+  // If it's an array, take the first item
+  const time = Array.isArray(rawTimeSlot) ? rawTimeSlot[0] : rawTimeSlot;
+  console.log("Time Slot:", timeSlot);
+  const formattedTime = dayjs.utc(time).format("dddd, DD MMM YYYY | HH.mm A");
+  console.log(formattedTime);
+
+  const doctorId = id;
+  const { data, isLoading } = useGetDoctorByIdQuery({ id: doctorId, date: "" });
+
+  useEffect(() => {
+    if (data && data.doctor) {
+      setDoctor(data.doctor);
+    }
+  }, [data]);
+
   const amountInDollars = Number(
     ((SERVICE_CHARGES + SUBTOTAL) / USD).toFixed(2)
   );
   const amountInCents = Math.round(amountInDollars * 100);
-
-  // console.log(timeSlot);
-
   const onCheckout = async () => {
     const response = await createAppointmentIntent({
-      // id: "5db8c0f6-cdf9-4466-a91c-4d1da27255e7",
       id,
       data: {
         amount: amountInCents,
@@ -193,7 +222,7 @@ const Booking = () => {
               }}
             >
               <Image
-                source={require("@/assets/images/doctor.jpg")}
+                source={{ uri: doctor?.imageUrl }}
                 style={{
                   width: wp("30%"),
                   height: hp("20%"),
@@ -211,7 +240,7 @@ const Booking = () => {
                 <Text
                   style={{ fontWeight: "400", fontSize: 16, marginBottom: 6 }}
                 >
-                  Dr. Mathew Lewis
+                  Dr. {doctor?.firstName} {doctor?.lastName}
                 </Text>
                 <Image
                   source={require("@/assets/images/Professional.png")}
@@ -219,7 +248,7 @@ const Booking = () => {
                 />
               </View>
               <Text style={{ fontSize: 13, fontWeight: "300" }}>
-                Heart Speacialist
+                {doctor?.department}
               </Text>
               <View>
                 <BlurView
@@ -304,7 +333,8 @@ const Booking = () => {
                     flexGrow: 1,
                   }}
                 >
-                  Tuesday, 11 Feb 2025 | 15.00 PM
+                  {/* Tuesday, 11 Feb 2025 | 15.00 PM */}
+                  {formattedTime}
                 </Text>
               </View>
               <Divider />
@@ -344,8 +374,10 @@ const Booking = () => {
                   </Text>
                 </View>
                 <View style={{ width: "30%", justifyContent: "flex-end" }}>
-                  <Text style={styles.paymentPrice}>Rs. 1000</Text>
-                  <Text style={styles.paymentPrice}>Rs. 200</Text>
+                  <Text style={styles.paymentPrice}>
+                    Rs. {Number(doctor?.fees)}
+                  </Text>
+                  <Text style={styles.paymentPrice}>Rs. {SERVICE_CHARGES}</Text>
                   <Text style={styles.paymentPrice}>-</Text>
                   <Text
                     style={[
@@ -353,7 +385,7 @@ const Booking = () => {
                       { color: "#000", fontWeight: "600" },
                     ]}
                   >
-                    Rs. 1200
+                    Rs. {Number(doctor?.fees) + SERVICE_CHARGES}
                   </Text>
                 </View>
               </View>

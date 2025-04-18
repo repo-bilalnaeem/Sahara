@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { Link, useNavigation } from "expo-router";
+import { Link, useFocusEffect, useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -40,11 +40,17 @@ import BookNow from "@/components/BookNow";
 const Home = () => {
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
-  const { data, isLoading } = useGetRecentlyViewedQuery(
+  const { data, isLoading, refetch } = useGetRecentlyViewedQuery(
     {},
     {
       refetchOnMountOrArgChange: true,
     }
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch(); // <- refetches whenever this screen is focused
+    }, [])
   );
 
   const { data: latestAppointmnet, isLoading: loadingAppointmnet } =

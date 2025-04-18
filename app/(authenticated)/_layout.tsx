@@ -61,7 +61,19 @@ const Layout = () => {
                     presentation: "fullScreenModal",
                   }}
                 />
-                <Stack.Screen name="call" />
+                <Stack.Screen
+                  name="call"
+                  options={{
+                    headerTransparent: true,
+                    headerLeft: () => <GoBack />,
+                  }}
+                />
+                <Stack.Screen
+                  name="searching"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
               </Stack>
             </SQLiteProvider>
           </StripeProvider>
