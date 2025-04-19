@@ -1,3 +1,5 @@
+import { User } from "@/app/signin";
+import { apiSlice } from "@/slices/apiSlice";
 import { logout } from "@/slices/authSlice";
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -6,13 +8,14 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { router } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Keyboard, View, TouchableOpacity, Image, Text } from "react-native";
 import { Divider } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { StreamChat } from "stream-chat";
+import * as SecureStore from "expo-secure-store";
 
 const client = StreamChat.getInstance(
   process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
@@ -27,6 +30,8 @@ const DrawerContent = (props: any) => {
     try {
       await client.disconnectUser();
       dispatch(logout());
+      dispatch(apiSlice.util.resetApiState()); // ✅ fixed this
+
       router.replace("/signin");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -36,6 +41,24 @@ const DrawerContent = (props: any) => {
   useEffect(() => {
     Keyboard.dismiss();
   }, [isDrawerOpen]);
+
+  const [userData, setUserData] = useState<User | null>(null);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const storedData = await SecureStore.getItemAsync("user_data");
+        if (!storedData) return;
+        // console.log(storedData);
+        const parsedUser = JSON.parse(storedData);
+        // console.log("parsed:", parsedUser);
+        setUserData(parsedUser);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    initializeUser();
+  }, []);
 
   return (
     <View style={{ flex: 1, marginTop: top }}>
@@ -86,11 +109,8 @@ const DrawerContent = (props: any) => {
               }
             }}
           >
-            <Image
-              source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-              style={styles.avatar}
-            />
-            <Text style={styles.userName}>Bilal Naeem</Text>
+            <Image source={{ uri: userData?.imageUrl }} style={styles.avatar} />
+            <Text style={styles.userName}>{userData?.name}</Text>
             <AntDesign name="logout" size={24} color={"#B8B3BA"} />
           </TouchableOpacity>
         </View>

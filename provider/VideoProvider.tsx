@@ -14,8 +14,6 @@ const apiKey = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!;
 const VideoProvider = ({ children }: PropsWithChildren) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const streamToken = useSelector((state: RootState) => state.auth.streamToken);
-  // console.log("user:",user);
-  // console.log("token:",streamToken);
   const [videoClient, setVideoClient] = useState<StreamVideoClient | null>(
     null
   );
@@ -45,7 +43,7 @@ const VideoProvider = ({ children }: PropsWithChildren) => {
 
     const initVideoClient = async () => {
       try {
-        const client = new StreamVideoClient({
+        const client = await StreamVideoClient.getOrCreateInstance({
           apiKey,
           user: { id: user.id, name: userData?.name },
           token: streamToken!, // Use a real token in production

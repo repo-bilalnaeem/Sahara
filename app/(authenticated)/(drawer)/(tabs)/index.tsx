@@ -47,14 +47,23 @@ const Home = () => {
     }
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      refetch(); // <- refetches whenever this screen is focused
-    }, [])
+  const {
+    data: latestAppointmnet,
+    isLoading: loadingAppointmnet,
+    refetch: refetchLatestAppointment,
+  } = useGetAllAppointmentsQuery(
+    { limit: 1 },
+    {
+      refetchOnMountOrArgChange: true,
+    }
   );
 
-  const { data: latestAppointmnet, isLoading: loadingAppointmnet } =
-    useGetAllAppointmentsQuery({ limit: 1 });
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+      refetchLatestAppointment();
+    }, [])
+  );
 
   // console.log(latestAppointmnet);
 

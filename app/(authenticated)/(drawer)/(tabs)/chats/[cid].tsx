@@ -20,14 +20,28 @@ const ChannelId = () => {
   const router = useRouter();
   const { client } = useChatContext();
   const videoClient = useStreamVideoClient();
+  const [otherMemberName, setOtherMemberName] = useState<string>("");
 
   useEffect(() => {
     const fetchChannel = async () => {
       const channels = await client.queryChannels({ cid });
       SetChannel(channels[0]);
+
+      if (channels[0]) {
+        const members = Object.values(channels[0].state.members);
+        // Assuming there's only one other member in the conversation
+        const otherMember = members.find(
+          (member) => member.user_id !== client.user?.id
+        );
+        if (otherMember) {
+          setOtherMemberName(otherMember.user?.name || "Unknown User");
+        }
+      }
     };
     fetchChannel();
   }, [cid]);
+
+  // console.log("Other memeber:",otherMemberName)
 
   const joinCall = async () => {
     if (!videoClient) {
@@ -71,9 +85,12 @@ const ChannelId = () => {
     <Channel channel={channel}>
       <Stack.Screen
         options={{
-          title: "Channel",
+          title: otherMemberName || "Channel",
           headerRight: () => (
-            <TouchableOpacity onPress={joinCall}>
+            <TouchableOpacity
+              style={{ width: 20, height: 20 }}
+              onPressIn={joinCall}
+            >
               <Ionicons name="call" size={20} color={"gray"} />
             </TouchableOpacity>
           ),

@@ -19,6 +19,7 @@ import { loadToken, logout, setCredentials } from "@/slices/authSlice";
 import { Toaster } from "sonner-native";
 import { TranscriptionProvider } from "@/context/TranscriptionContext";
 import { secureStorage } from "@/store/secureStorage";
+import { apiSlice } from "@/slices/apiSlice";
 
 LogBox.ignoreAllLogs();
 
@@ -100,6 +101,7 @@ const InitialLayout = () => {
           if (!refresh_token || !stream_token) {
             Alert.alert("Session has expired!");
             dispatch(logout());
+            dispatch(apiSlice.util.resetApiState()); // ✅ fixed this
             router.replace("/signin");
             return;
           }
@@ -117,6 +119,8 @@ const InitialLayout = () => {
 
           console.error("Token refresh failed:", error);
           dispatch(logout());
+          dispatch(apiSlice.util.resetApiState()); // ✅ fixed this
+
           router.replace("/signin");
         }
       }

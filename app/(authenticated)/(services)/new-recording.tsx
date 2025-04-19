@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranscription } from "@/context/TranscriptionContext";
+import * as Haptics from "expo-haptics";
 
 const NewRecording = () => {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
@@ -76,7 +77,35 @@ const NewRecording = () => {
         <Ionicons name="close" size={28} color="#333" />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={recording ? stopRecording : startRecording}>
+      <TouchableOpacity
+        style={{
+          width: 150,
+          height: 150,
+          justifyContent: "center",
+          alignItems: "center",
+          borderColor: "#8e8e8e",
+          backgroundColor: "#ffffff",
+          borderRadius: 200,
+          borderWidth: 1,
+
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+
+          shadowOpacity: 0.2,
+          shadowRadius: 6,
+
+          // Android shadow
+          elevation: 6,
+        }}
+        onPress={async () => {
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          recording ? stopRecording() : startRecording();
+        }}
+        // onPress={recording ? stopRecording : startRecording}
+      >
         <LottieView
           ref={lottieRef}
           source={require("@/assets/animation/lottie.json")}
@@ -85,24 +114,6 @@ const NewRecording = () => {
           style={styles.lottie}
         />
       </TouchableOpacity>
-
-      {/* {!recording && (
-        <View style={[styles.buttonContainer, { bottom }]}>
-          <TouchableOpacity
-            onPress={startRecording}
-            style={[
-              styles.recordButton,
-              recording ? styles.recordingButton : styles.notRecordingButton,
-            ]}
-          >
-            <Ionicons
-              name={recording ? "stop" : "mic"}
-              size={24}
-              color="#fff"
-            />
-          </TouchableOpacity>
-        </View>
-      )} */}
     </View>
   );
 };

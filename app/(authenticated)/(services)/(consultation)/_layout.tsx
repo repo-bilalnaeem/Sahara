@@ -28,6 +28,9 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useDispatch } from "react-redux";
 import { logout } from "@/slices/authSlice";
 import { StreamChat } from "stream-chat";
+import { apiSlice } from "@/slices/apiSlice";
+import { User } from "@/app/signin";
+import * as SecureStore from "expo-secure-store";
 
 const client = StreamChat.getInstance(
   process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
@@ -44,6 +47,8 @@ export const CustomDrawerContent = (props: any) => {
     try {
       await client.disconnectUser();
       dispatch(logout());
+      dispatch(apiSlice.util.resetApiState()); // ✅ fixed this
+
       router.replace("/signin");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -95,6 +100,24 @@ export const CustomDrawerContent = (props: any) => {
       }
     );
   };
+
+  const [userData, setUserData] = useState<User | null>(null);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const storedData = await SecureStore.getItemAsync("user_data");
+        if (!storedData) return;
+        // console.log(storedData);
+        const parsedUser = JSON.parse(storedData);
+        // console.log("parsed:", parsedUser);
+        setUserData(parsedUser);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    initializeUser();
+  }, []);
 
   return (
     <View style={{ flex: 1, marginTop: top }}>
@@ -203,17 +226,13 @@ export const CustomDrawerContent = (props: any) => {
           onPress={async () => {
             try {
               handleLogout();
-              router.replace("/signin");
             } catch (error) {
               console.error("Sign-out error:", error);
             }
           }}
         >
-          <Image
-            source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-            style={styles.avatar}
-          />
-          <Text style={styles.userName}>Bilal Naeem</Text>
+          <Image source={{ uri: userData?.imageUrl }} style={styles.avatar} />
+          <Text style={styles.userName}>{userData?.name}</Text>
           <AntDesign name="logout" size={24} color={Colors.greyLight} />
         </TouchableOpacity>
       </View>
