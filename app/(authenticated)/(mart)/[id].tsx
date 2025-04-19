@@ -23,8 +23,10 @@ import ImageView from "react-native-image-viewing";
 import { useCart } from "@/store/cartStore";
 import { StatusBar } from "expo-status-bar";
 import {
-  useGetGeneralProductsQuery,
+  // useGetGeneralProductsQuery,
+  useGetProductsByCategoryTagsQuery,
   useGetProductByIdQuery,
+  useGetProductsByTagsQuery,
 } from "@/slices/apiSlice";
 import ProductTile from "@/components/ProductTile";
 
@@ -50,6 +52,7 @@ const Product = () => {
 
   const [product, setProduct] = useState<Product>();
   const [productList, setProductList] = useState([]);
+  const [recommendedProductsTag, setRecommendedProductsTag] = useState([]);
 
   useEffect(() => {
     if (data && data?.product) {
@@ -58,8 +61,23 @@ const Product = () => {
   }, [data]);
 
   const { data: products, isLoading: loading_products } =
-    useGetGeneralProductsQuery({ category: "GENERAL", tag: "POPULAR_PRODUCT", limit: 8 });
+    useGetProductsByCategoryTagsQuery({
+      category: "GENERAL",
+      tag: "POPULAR_PRODUCT",
+      limit: 8,
+    });
 
+  const { data: recommendedData, isLoading: recommendedLoading } =
+    useGetProductsByTagsQuery({
+      limit: 8,
+      tag: "RECOMMENDED",
+    });
+
+  useEffect(() => {
+    if (recommendedData && recommendedData?.products) {
+      setRecommendedProductsTag(recommendedData?.products);
+    }
+  }, [recommendedData]);
   // console.log("data", products);
 
   useEffect(() => {
@@ -79,51 +97,23 @@ const Product = () => {
 
   const [visible, setIsVisible] = useState(false);
 
-  // const renderProductTile = ({ item, index }: RenderProductTileProps) => (
-  //   <Pressable onPress={() => router.push(`/(product)/${item.id}` as Href)}>
-  //     <View style={[index === 0 ? { marginLeft: 16 } : null]}>
-  //       <View style={styles.productTile}>
-  //         <Image
-  //           source={item.imageSource}
-  //           style={[{ resizeMode: "contain", width: 120, height: 120 }]}
-  //         />
-  //         <TouchableWithoutFeedback>
-  //           <View style={styles.add_button}>
-  //             <Ionicons name="add" size={20} color={"#494848"} />
-  //           </View>
-  //         </TouchableWithoutFeedback>
-  //       </View>
-  //       <Text
-  //         style={{
-  //           fontSize: 14,
-  //           fontWeight: "500",
-  //           marginBottom: 4,
-  //           width: 120,
-  //         }}
-  //       >
-  //         Rs. {item.price}
-  //       </Text>
-  //       <Text
-  //         style={{ width: 120, fontSize: 14, fontWeight: "400", color: "gray" }}
-  //       >
-  //         {formatTitle(item.name)}
-  //       </Text>
-  //     </View>
-  //   </Pressable>
-  // );
-
   const addToCart = () => {
     console.log("pressed");
     addProduct(product);
   };
 
-  if (!id)
+  if (!id || loading_products)
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size={"small"} />
       </View>
     );
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading)
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"small"} />
+      </View>
+    );
   if (error) return <Text>Error fetching product</Text>;
 
   return (
@@ -222,7 +212,7 @@ const Product = () => {
           <Pressable>
             <FlatList
               horizontal
-              data={productList}
+              data={recommendedProductsTag}
               renderItem={({ item, index }) => (
                 <ProductTile item={item} index={index} />
               )}

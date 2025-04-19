@@ -31,46 +31,46 @@ export function formatTitle(name?: string, maxLength = 20) {
 export const ProductTile = ({ item, index }: RenderProductTileProps) => {
   // console.log(item.id);
   return (
-    <Link href={`/(mart)/${item.id}`} asChild key={item.id}>
-      <Pressable>
-        <View style={[index === 0 ? { marginLeft: 16 } : null]}>
-          <View style={styles.productTile}>
-            <Image
-              source={{ uri: item.imageUrl }}
-              style={[
-                {
-                  resizeMode: "contain",
-                  width: "auto",
-                  height: 80,
-                  backgroundColor: "#fff",
-                },
-              ]}
-            />
-          </View>
-          <Text
+    // <Link href={`/(mart)/${item.id}`} asChild key={item.id}>
+    <Pressable onPress={() => router.push(`/(mart)/${item.id}`)}>
+      <View style={[index === 0 ? { marginLeft: 16 } : null]}>
+        <View style={styles.productTile}>
+          <Image
+            source={{ uri: item.imageUrl }}
             style={[
               {
-                marginTop: 6,
-                fontSize: 13,
-                fontWeight: "500",
-                marginBottom: 4,
-                width: 100,
+                resizeMode: "contain",
+                width: "auto",
+                height: 80,
+                backgroundColor: "#fff",
               },
             ]}
-          >
-            Rs. {item.price}
-          </Text>
-          <Text
-            style={[
-              { width: 110, fontSize: 14, fontWeight: "400", color: "gray" },
-              isAndroid ? { fontSize: 12 } : null,
-            ]}
-          >
-            {formatTitle(item.name)}
-          </Text>
+          />
         </View>
-      </Pressable>
-    </Link>
+        <Text
+          style={[
+            {
+              marginTop: 6,
+              fontSize: 13,
+              fontWeight: "500",
+              marginBottom: 4,
+              width: 100,
+            },
+          ]}
+        >
+          Rs. {item.price}
+        </Text>
+        <Text
+          style={[
+            { width: 110, fontSize: 14, fontWeight: "400", color: "gray" },
+            isAndroid ? { fontSize: 12 } : null,
+          ]}
+        >
+          {formatTitle(item.name)}
+        </Text>
+      </View>
+    </Pressable>
+    // </Link>
   );
 };
 

@@ -3,17 +3,21 @@ import React, { useEffect, useState } from "react";
 import ProductTile from "./ProductTile";
 import SeeMore from "./SeeMore";
 import {
-  useGetGeneralProductsQuery,
-  useGetPopularProductsQuery,
+  useGetProductsByCategoryTagsQuery,
+  useGetProductsByTagsQuery,
 } from "@/slices/apiSlice";
 
 const SaharaMart = () => {
-  const { data, isLoading } = useGetPopularProductsQuery({
+  const { data, isLoading } = useGetProductsByTagsQuery({
     limit: 8,
     tag: "POPULAR_PRODUCT",
   });
   const { data: general, isLoading: loading_general } =
-    useGetGeneralProductsQuery({ category: "GENERAL", tag: "NONE", limit: 8 });
+    useGetProductsByCategoryTagsQuery({
+      category: "GENERAL",
+      tag: "NONE",
+      limit: 8,
+    });
   const [products, setProducts] = useState([]);
 
   const [generalProducts, setGeneralProducts] = useState([]);

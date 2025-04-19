@@ -109,7 +109,7 @@ export const apiSlice = createApi({
     }),
 
     // Get Popular Products
-    getPopularProducts: builder.query({
+    getProductsByTags: builder.query({
       query: ({ tag, limit }) => ({
         url: `products?limit=${limit}&tag=${tag}`,
         method: "GET",
@@ -117,7 +117,7 @@ export const apiSlice = createApi({
     }),
 
     // Get GENEREAL Products
-    getGeneralProducts: builder.query({
+    getProductsByCategoryTags: builder.query({
       query: ({ category, tag, limit }) => ({
         url: `products?category=${category}&tag=${tag}&limit=${limit}`,
       }),
@@ -219,8 +219,9 @@ export const {
   useCreateProductOrderIntentMutation,
   useConfirmAppointmentMutation,
   useConfirmProductOrderMutation,
-  useGetPopularProductsQuery,
-  useGetGeneralProductsQuery,
+  useGetProductsByTagsQuery,
+  // useGetProductsByCateoryQuery,
+  useGetProductsByCategoryTagsQuery,
   useGetProductByIdQuery,
   useGetAllAppointmentsQuery,
   useGetDoctorScheduleQuery,

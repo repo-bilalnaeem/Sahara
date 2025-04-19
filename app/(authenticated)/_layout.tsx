@@ -64,7 +64,7 @@ const Layout = () => {
                 <Stack.Screen
                   name="call"
                   options={{
-                    title:"",
+                    title: "",
                     headerTransparent: true,
                     headerLeft: () => <GoBack />,
                   }}

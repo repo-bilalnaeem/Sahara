@@ -23,7 +23,8 @@ import SeeMore from "@/components/SeeMore";
 import {
   useConfirmProductOrderMutation,
   useCreateProductOrderIntentMutation,
-  useGetGeneralProductsQuery,
+  // useGetGeneralProductsQuery,
+  useGetProductsByCategoryTagsQuery,
 } from "@/slices/apiSlice";
 import { presentPaymentSheet, useStripe } from "@stripe/stripe-react-native";
 
@@ -104,7 +105,7 @@ const Cart = () => {
   );
 
   const { data: products, isLoading: loading_products } =
-    useGetGeneralProductsQuery({
+    useGetProductsByCategoryTagsQuery({
       category: "GENERAL",
       tag: "POPULAR_PRODUCT",
       limit: 8,
@@ -160,7 +161,7 @@ const Cart = () => {
       const { paymentIntentId, orderId, cart } = response;
       console.log(paymentIntentId, orderId, cart);
 
-      cart.forEach((item) => {
+      cart.forEach((item: any) => {
         console.log(
           `Product ID: ${item.productId}, Quantity: ${item.quantity}`
         );
@@ -185,7 +186,6 @@ const Cart = () => {
       // ✅ Clear the cart
       setModalVisible(true);
       useCart.getState().clearCart();
-
     } catch (err) {
       console.log(err);
     }
@@ -250,40 +250,145 @@ const Cart = () => {
         paddingTop: 32,
       }}
     >
-      <ScrollView contentContainerStyle={{ paddingBottom: 180 }}>
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <View style={styles.delivery_card}>
-            <Image
-              source={require("@/assets/images/delivery_bike.png")}
-              style={styles.bike_img}
-            />
-            <View
+      {/* <FlatList contentContainerStyle={{ paddingBottom: 250 }} ListHeaderComponent={
+              <View
               style={{
-                alignSelf: "center",
-                marginRight: "10%",
+                paddingHorizontal: 12,
               }}
             >
-              <Text style={styles.est}>Est. Delivery Time</Text>
-              <Text style={styles.time}>Standard (5-20 mins)</Text>
-            </View>
-          </View>
+              <View style={styles.delivery_card}>
+                <Image
+                  source={require("@/assets/images/delivery_bike.png")}
+                  style={styles.bike_img}
+                />
+                <View
+                  style={{
+                    alignSelf: "center",
+                    marginRight: "10%",
+                  }}
+                >
+                  <Text style={styles.est}>Est. Delivery Time</Text>
+                  <Text style={styles.time}>Standard (5-20 mins)</Text>
+                </View>
+              </View>
+      } ListFooterComponent={
           <View style={{ paddingTop: 24 }}>
-            <FlatList
-              data={items}
-              keyExtractor={(item, index) => `${item.product.id}-${index}`}
-              renderItem={({ item }) => (
-                <View style={styles.card}>
-                  <View>
-                    <Image
-                      source={{ uri: item?.product?.imageUrl }}
-                      style={styles.thumbnail}
-                    />
+          <FlatList
+            data={items}
+            keyExtractor={(item, index) => `${item.product.id}-${index}`}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <Image
+                  source={{ uri: item?.product?.imageUrl }}
+                  style={styles.thumbnail}
+                />
+
+                <View style={{ flexShrink: 1 }}>
+                  <Text style={styles.title}>{item.product.name}</Text>
+                  <View style={styles.quantity_price}>
+                    <View style={styles.quantity}>
+                      <Pressable
+                        onPress={() =>
+                          useCart.getState().decreaseQuantity(item.product.id)
+                        }
+                      >
+                        <EvilIcons name="trash" size={24} color="black" />
+                      </Pressable>
+                      <Text style={styles.quantity_number}>
+                        {item.quantity}
+                      </Text>
+                      <Pressable
+                        onPress={() =>
+                          useCart.getState().increaseQuantity(item.product.id)
+                        }
+                      >
+                        <AntDesign name="plus" size={20} color="black" />
+                      </Pressable>
+                    </View>
+                    <Text>Rs. {item.product.price}</Text>
                   </View>
-                  <View style={{ flexGrow: 1, marginRight: 30 }}>
+                </View>
+              </View>
+            )}
+          />
+          <Pressable>
+            <View style={styles.more}>
+              <AntDesign name="plus" size={20} color="black" />
+
+              <Text>Add more items</Text>
+            </View>
+          </Pressable>
+        </View>
+      </View>
+      <View>
+        <SeeMore heading="Popular products" />
+      </View>
+      <Pressable>
+        <FlatList
+          horizontal
+          data={productList}
+          renderItem={ProductTile}
+          keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            gap: 10,
+            paddingRight: 16,
+          }}
+        />
+      </Pressable>
+      <View style={styles.bill}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.label}>Subtotal</Text>
+          <Text style={styles.label}>Rs. {Number(subtotal)}</Text>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.label}>Standard delivery</Text>
+          <Text style={styles.label}>Rs. {DELIVERY_FEE}</Text>
+        </View>
+      </View>
+      }>
+  
+        
+      </FlatList> */}
+
+      <FlatList
+        data={[]}
+        renderItem={null}
+        contentContainerStyle={{ paddingBottom: 250, paddingHorizontal: 12 }}
+        ListHeaderComponent={
+          <>
+            <View style={styles.delivery_card}>
+              <Image
+                source={require("@/assets/images/delivery_bike.png")}
+                style={styles.bike_img}
+              />
+              <View style={{ alignSelf: "center", marginRight: "10%" }}>
+                <Text style={styles.est}>Est. Delivery Time</Text>
+                <Text style={styles.time}>Standard (5-20 mins)</Text>
+              </View>
+            </View>
+
+            <View style={{ paddingTop: 24 }}>
+              {items.map((item, index) => (
+                <View key={`${item.product.id}-${index}`} style={styles.card}>
+                  <Image
+                    source={{ uri: item?.product?.imageUrl }}
+                    style={styles.thumbnail}
+                  />
+
+                  <View style={{ flexShrink: 1 }}>
                     <Text style={styles.title}>{item.product.name}</Text>
                     <View style={styles.quantity_price}>
                       <View style={styles.quantity}>
@@ -309,126 +414,55 @@ const Cart = () => {
                     </View>
                   </View>
                 </View>
-              )}
-            />
+              ))}
+              <Pressable>
+                <View style={styles.more}>
+                  <AntDesign name="plus" size={20} color="black" />
+                  <Text>Add more items</Text>
+                </View>
+              </Pressable>
+            </View>
+
+            <SeeMore heading="Popular products" />
+
             <Pressable>
-              <View style={styles.more}>
-                <AntDesign name="plus" size={20} color="black" />
-
-                <Text>Add more items</Text>
-              </View>
+              <FlatList
+                horizontal
+                data={productList}
+                renderItem={ProductTile}
+                keyExtractor={(item) => item.id}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  gap: 10,
+                  paddingRight: 16,
+                }}
+              />
             </Pressable>
-          </View>
-        </View>
-        <View>
-          <SeeMore heading="Popular products" />
-        </View>
-        <Pressable>
-          <FlatList
-            horizontal
-            data={productList}
-            renderItem={ProductTile}
-            keyExtractor={(item) => item.id}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 10,
-              paddingRight: 16,
-            }}
-          />
-        </Pressable>
-        <View style={styles.bill}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={styles.label}>Subtotal</Text>
-            <Text style={styles.label}>Rs. {Number(subtotal)}</Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={styles.label}>Standard delivery</Text>
-            <Text style={styles.label}>Rs. {DELIVERY_FEE}</Text>
-          </View>
-        </View>
-      </ScrollView>
 
-      {/* <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          paddingHorizontal: 24,
-          width: "100%",
-          height: 160,
-          backgroundColor: "#ffffff",
-          paddingTop: 24,
-          zIndex: 2,
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
+            <View style={styles.bill}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.label}>Subtotal</Text>
+                <Text style={styles.label}>Rs. {Number(subtotal)}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.label}>Standard delivery</Text>
+                <Text style={styles.label}>Rs. {DELIVERY_FEE}</Text>
+              </View>
+            </View>
+          </>
+        }
+      />
 
-          // Shadow for iOS
-          shadowColor: "#000000ff",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.16,
-          shadowRadius: 12,
-
-          // Shadow for Android
-          elevation: 5,
-        }}
-      >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={styles.total}>
-            Total{" "}
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "300",
-              }}
-            >
-              (incl. fees and tax)
-            </Text>
-          </Text>
-          <Text style={styles.total}>
-            Rs. {parseFloat(DELIVERY_FEE + subtotal).toFixed(2)}
-          </Text>
-        </View>
-        <TouchableWithoutFeedback style={{ width: "100%", flexGrow: 1 }}>
-          <LinearGradient
-            colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            locations={[0.0527, 0.9575]}
-            style={[styles.linearGradient, { width: "100%" }]}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#fff",
-                fontWeight: "600",
-                fontSize: 15,
-              }}
-            >
-              Proceed to Payment
-            </Text>
-          </LinearGradient>
-        </TouchableWithoutFeedback>
-      </View> */}
       <View
         style={{
           position: "absolute",
@@ -564,7 +598,8 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "600",
     fontSize: 15,
-    marginBottom: 6,
+    marginBottom: 10,
+    lineHeight: 24,
   },
 
   card: {
@@ -635,6 +670,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    flexGrow: 1,
+    // flexBasis:1
+    width: "100%",
   },
 
   more: {
