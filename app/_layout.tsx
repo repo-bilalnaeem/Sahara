@@ -199,6 +199,8 @@ const InitialLayout = () => {
         }}
       />
 
+      <Stack.Screen name="Intro" />
+
       <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
     </Stack>
   );

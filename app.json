@@ -15,7 +15,13 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.sahara"
+      "bundleIdentifier": "com.anonymous.sahara",
+      "config": {
+        "googleMapsApiKey": "AIzaSyC7JYYXDCvta4nJW-PCvBWvc6_XyeNiSyY"
+      },
+      "infoPlist": {
+      "NSLocationWhenInUseUsageDescription": "We need access to your location for displaying nearby places."
+    }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,10 +36,11 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      ["expo-router",
+      [
+        "expo-router",
         {
-        "origin":"http://192.168.1.103:8081/"
-        } 
+          "origin": "http://192.168.1.103:8081/"
+        }
       ],
       [
         "expo-av",

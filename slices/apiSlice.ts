@@ -3,7 +3,7 @@ import { setCredentials, logout } from "./authSlice";
 import { jwtDecode } from "jwt-decode";
 import { secureStorage } from "@/store/secureStorage";
 
-const baseUrl = "http://192.168.1.103:3001/";
+const baseUrl = "http://192.168.1.102:3001/";
 
 const baseQuery = fetchBaseQuery({
   baseUrl,
