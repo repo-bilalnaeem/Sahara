@@ -19,7 +19,7 @@ import { loadToken, logout, setCredentials } from "@/slices/authSlice";
 import { Toaster } from "sonner-native";
 import { TranscriptionProvider } from "@/context/TranscriptionContext";
 import { secureStorage } from "@/store/secureStorage";
-import { apiSlice } from "@/slices/apiSlice";
+import { apiSlice, useLazyGetLoggedUserQuery } from "@/slices/apiSlice";
 
 LogBox.ignoreAllLogs();
 
@@ -29,14 +29,15 @@ const InitialLayout = () => {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-  // const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { user, accessToken, refreshToken } = useSelector(
     (state: RootState) => state.auth
   );
-  const [checkingAuth, setCheckingAuth] = useState(true); // Prevents routing before token is checked
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
+
 
   useEffect(() => {
     dispatch(loadToken()).finally(() => setCheckingAuth(false));
@@ -52,31 +53,53 @@ const InitialLayout = () => {
     }
   }, [loaded]);
 
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const userData = await triggerGetLoggedUser().unwrap();
+  //       console.log("Fetched user data:", userData.user.Customer);
+  //     } catch (error) {
+  //       console.error(error);
+  //       Alert.alert("Something went wrong!");
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
+
   useEffect(() => {
-    // if (!isLoaded) return;
-    if (checkingAuth) return;
+    const checkUserProfile = async () => {
+      if (checkingAuth) return;
 
-    const inAuthGroup = segments[0] === "(authenticated)";
+      try {
+        const userData = await triggerGetLoggedUser().unwrap();
+        // console.log("Fetched user data:", userData.user);
 
-    if (accessToken && !inAuthGroup) {
-      router.replace("/(authenticated)/(drawer)/(tabs)");
-    } else if (!accessToken && inAuthGroup) {
-      router.replace("/signin");
-    }
-  }, [accessToken, checkingAuth]);
+        // Check if the customer profile is set up
+        if (!userData.user.Customer) {
+          // Navigate to profile setup page if customer profile isn't set
+          router.replace("/(authenticated)/userProfile");
+        } else {
+          // If customer profile is set, navigate to tabs
+          router.replace("/(authenticated)/(drawer)/(tabs)");
+        }
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+        // Alert.alert("Something went wrong!");
+      }
+    };
+
+    checkUserProfile();
+  }, [accessToken, checkingAuth, router, triggerGetLoggedUser]);
 
   useEffect(() => {
     const checkTokenExpiryAndRefresh = async () => {
-      // console.log("User:", user);
-      // console.log("RefreshToken: ", refreshToken);
-
       if (!user || !refreshToken) return;
 
       const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
 
       if (user.exp < currentTime) {
         try {
-          const res = await fetch("http://192.168.1.103:3001/auth/refresh", {
+          const res = await fetch("http://192.168.1.102:3001/auth/refresh", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -84,12 +107,9 @@ const InitialLayout = () => {
             },
           });
 
-          // console.log("Response is:", JSON.stringify(res));
-
           if (!res.ok) throw new Error("Failed to refresh token");
 
           const data = await res.json();
-          // console.log(data);
 
           const { access_token } = data;
 
@@ -101,7 +121,7 @@ const InitialLayout = () => {
           if (!refresh_token || !stream_token) {
             Alert.alert("Session has expired!");
             dispatch(logout());
-            dispatch(apiSlice.util.resetApiState()); // ✅ fixed this
+            dispatch(apiSlice.util.resetApiState());
             router.replace("/signin");
             return;
           }
@@ -119,7 +139,7 @@ const InitialLayout = () => {
 
           console.error("Token refresh failed:", error);
           dispatch(logout());
-          dispatch(apiSlice.util.resetApiState()); // ✅ fixed this
+          dispatch(apiSlice.util.resetApiState());
 
           router.replace("/signin");
         }

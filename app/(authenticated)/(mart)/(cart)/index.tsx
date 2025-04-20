@@ -132,7 +132,7 @@ const Cart = () => {
 
       if (response.error) {
         console.log(response.error);
-        Alert.alert("Something went wrong!");
+        // Alert.alert("Something went wrong!");
         return;
       }
 

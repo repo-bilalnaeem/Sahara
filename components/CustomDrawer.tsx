@@ -24,7 +24,7 @@ import { CustomHeader } from "@/components/CustomHeader";
 import { useDispatch } from "react-redux";
 import { logout } from "@/slices/authSlice";
 import { StreamChat } from "stream-chat";
-import { apiSlice } from "@/slices/apiSlice";
+import { apiSlice, useLazyGetLoggedUserQuery } from "@/slices/apiSlice";
 import { User } from "@/app/signin";
 import * as SecureStore from "expo-secure-store";
 
@@ -36,6 +36,7 @@ const DrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
   const dispatch = useDispatch();
+  const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
 
   const handleLogout = async () => {
     try {
@@ -56,20 +57,28 @@ const DrawerContent = (props: any) => {
   const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
-    const initializeUser = async () => {
+    const fetchUser = async () => {
       try {
-        const storedData = await SecureStore.getItemAsync("user_data");
-        if (!storedData) return;
-        // console.log(storedData);
-        const parsedUser = JSON.parse(storedData);
-        // console.log("parsed:", parsedUser);
-        setUserData(parsedUser);
+        const profile = await triggerGetLoggedUser().unwrap();
+        const userFromApi = profile.user;
+
+        const formattedUser: User = {
+          id: userFromApi.id,
+          name: `${userFromApi.Customer?.firstName ?? ""} ${
+            userFromApi.Customer?.lastName ?? ""
+          }`.trim(),
+          email: userFromApi.email,
+          imageUrl: userFromApi.Customer?.imageUrl ?? "", // fallback to empty string if null
+        };
+
+        setUserData(formattedUser);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch user:", error);
       }
     };
-    initializeUser();
+    fetchUser();
   }, []);
+  // console.log("User data", userData);
 
   return (
     <View style={{ flex: 1, marginTop: top }}>
@@ -120,11 +129,8 @@ const DrawerContent = (props: any) => {
               }
             }}
           >
-            <Image
-              source={{ uri: userData?.imageUrl }}
-              style={styles.avatar}
-            />
-            <Text style={styles.userName}>{userData?.name}</Text>
+            <Image source={{ uri: userData?.imageUrl }} style={styles.avatar} />
+            <Text style={styles.userName}>{userData?.name} </Text>
             <AntDesign name="logout" size={24} color={"#B8B3BA"} />
           </TouchableOpacity>
         </View>

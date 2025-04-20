@@ -1,5 +1,5 @@
 import { User } from "@/app/signin";
-import { apiSlice } from "@/slices/apiSlice";
+import { apiSlice, useLazyGetLoggedUserQuery } from "@/slices/apiSlice";
 import { logout } from "@/slices/authSlice";
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -25,6 +25,7 @@ const DrawerContent = (props: any) => {
   const { bottom, top } = useSafeAreaInsets();
   const isDrawerOpen = useDrawerStatus() === "open";
   const dispatch = useDispatch();
+  const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
 
   const handleLogout = async () => {
     try {
@@ -45,19 +46,26 @@ const DrawerContent = (props: any) => {
   const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
-    const initializeUser = async () => {
+    const fetchUser = async () => {
       try {
-        const storedData = await SecureStore.getItemAsync("user_data");
-        if (!storedData) return;
-        // console.log(storedData);
-        const parsedUser = JSON.parse(storedData);
-        // console.log("parsed:", parsedUser);
-        setUserData(parsedUser);
+        const profile = await triggerGetLoggedUser().unwrap();
+        const userFromApi = profile.user;
+
+        const formattedUser: User = {
+          id: userFromApi.id,
+          name: `${userFromApi.Customer?.firstName ?? ""} ${
+            userFromApi.Customer?.lastName ?? ""
+          }`.trim(),
+          email: userFromApi.email,
+          imageUrl: userFromApi.Customer?.imageUrl ?? "", // fallback to empty string if null
+        };
+
+        setUserData(formattedUser);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch user:", error);
       }
     };
-    initializeUser();
+    fetchUser();
   }, []);
 
   return (

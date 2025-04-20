@@ -86,6 +86,7 @@ export default LoginInput;
 const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: hp("1%"),
+    flexGrow:1
   },
   lightLabelTag: {
     fontSize: scaleFont(15),
@@ -110,6 +111,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("6%"),
     backgroundColor: "transparent",
     color: "#000",
+    flexGrow: 1,
   },
   lightInputFocus: {
     borderColor: "#7593BD",

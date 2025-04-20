@@ -208,6 +208,14 @@ export const apiSlice = createApi({
         url: "orders",
       }),
     }),
+
+    createUserProfile: builder.mutation({
+      query: (data) => ({
+        url: "/users/setup-profile",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -232,4 +240,5 @@ export const {
   useLazyGetLoggedUserQuery,
   useGetAllOrdersQuery,
   useSearchDoctorsQuery,
+  useCreateUserProfileMutation,
 } = apiSlice;

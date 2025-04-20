@@ -10,6 +10,7 @@ import {
   useColorScheme,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -23,6 +24,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSignupMutation } from "@/slices/apiSlice";
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -33,6 +35,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [signup, { isLoading }] = useSignupMutation();
 
   const handleEmailChange = (text: any) => {
     setEmail(text);
@@ -49,8 +52,22 @@ const Signup = () => {
     Keyboard.dismiss();
   };
 
-  const handleSignIn = () => {
-    router.push("/userProfile");
+  const handleSignIn = async () => {
+    try {
+      const userData = await signup({
+        email,
+        password,
+        confirmPassword,
+      }).unwrap();
+      console.log(userData);
+      router.replace("/");
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      Alert.alert(
+        "Unable to signup",
+        error?.data?.message || "Please try again."
+      );
+    }
   };
 
   return (
