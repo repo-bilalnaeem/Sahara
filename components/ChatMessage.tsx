@@ -1,96 +1,163 @@
-import { View, Text, Image, ActivityIndicator, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { Message, Role } from "@/utils/Interfaces";
 import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
-import * as ContextMenu from "zeego/context-menu";
-import {
-  copyImageToClipboard,
-  downloadAndSaveImage,
-  shareImage,
-} from "@/utils/Image";
-import { Link } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import { Audio } from "expo-av";
+import axios from "axios";
+import * as Crypto from "expo-crypto";
+import { encode } from "base64-arraybuffer";
+const BASE_URL = "http://192.168.1.102:8081";
+import { toast } from "sonner-native";
+
+// const playTTSFromOpenAI = async (text: string) => {
+//   const toastId = toast.loading("Preparing audio...");
+//   let sound = null;
+//   try {
+//     const response = await fetch(`${BASE_URL}/api/text-to-speech`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ text }),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Failed to generate TTS");
+//     }
+
+//     const arrayBuffer = await response.arrayBuffer();
+//     const base64Audio = encode(arrayBuffer);
+
+//     const fileUri = FileSystem.cacheDirectory + "openai-tts.mp3";
+//     await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
+//       encoding: FileSystem.EncodingType.Base64,
+//     });
+
+//     const fileInfo = await FileSystem.getInfoAsync(fileUri);
+//     console.log("📁 TTS file saved at:", fileUri);
+//     console.log("📦 File info:", fileInfo);
+//     console.log("🧬 Base64 snippet:", base64Audio.slice(0, 50) + "...");
+
+//     // Create and load the sound
+//     const { sound: newSound, status } = await Audio.Sound.createAsync(
+//       { uri: fileUri },
+//       { shouldPlay: true }
+//     );
+
+//     sound = newSound;
+
+//     // Add event listener to handle playback errors
+//     sound.setOnPlaybackStatusUpdate((status) => {
+//       if (status.didJustFinish) {
+//         console.log("Playback finished.");
+//         sound.unloadAsync(); // Unload when finished
+//       }
+//       if (status.error) {
+//         console.error("Error during playback:", status.error);
+//       }
+//     });
+
+//     // Wait for the sound to finish before showing success
+//     if (status.isLoaded && status.isPlaying) {
+//       toast.success("Audio is ready!", { id: toastId });
+//     } else {
+//       console.error("Audio did not load or play correctly");
+//       toast.error("Audio playback failed", { id: toastId });
+//     }
+//   } catch (error) {
+//     console.error("OpenAI TTS error:", error);
+//   }
+// };
+const playTTSFromOpenAI = async (text: string) => {
+  const toastId = toast.loading("Preparing audio...");
+  let sound: Audio.Sound | null = null;
+  try {
+    const response = await fetch(`${BASE_URL}/api/text-to-speech`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to generate TTS");
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const base64Audio = encode(arrayBuffer);
+
+    const fileUri = FileSystem.cacheDirectory + "openai-tts.mp3";
+    await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    console.log("📁 TTS file saved at:", fileUri);
+    console.log("📦 File info:", fileInfo);
+    console.log("🧬 Base64 snippet:", base64Audio.slice(0, 50) + "...");
+
+    const { sound: newSound, status } = await Audio.Sound.createAsync(
+      { uri: fileUri },
+      { shouldPlay: true }
+    );
+
+    sound = newSound;
+
+
+  } catch (error) {
+    console.error("OpenAI TTS error:", error);
+    toast.error("Audio playback failed", { id: toastId });
+  }
+};
 
 const ChatMessage = ({
   content,
   role,
-  imageUrl,
-  prompt,
   loading,
 }: Message & { loading?: boolean }) => {
-  const contextItems = [
-    {
-      title: "Copy",
-      systemIcon: "doc.on.doc",
-      action: () => copyImageToClipboard(imageUrl!),
-    },
-    {
-      title: "Save to Photos",
-      systemIcon: "arrow.down.to.line",
-      action: () => downloadAndSaveImage(imageUrl!),
-    },
-    {
-      title: "Share",
-      systemIcon: "square.and.arrow.up",
-      action: () => shareImage(imageUrl!),
-    },
-  ];
   return (
-    <View style={styles.row}>
-      {role === Role.Bot ? (
-        <View style={[styles.item]}>
+    <View>
+      <View style={styles.row}>
+        {role === Role.Bot ? (
+          <View style={[styles.item]}>
+            <Image
+              source={require("@/assets/images/Vector.png")}
+              style={styles.btnImage}
+            />
+          </View>
+        ) : (
           <Image
-            source={require("@/assets/images/Vector.png")}
-            style={styles.btnImage}
+            source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
+            style={styles.avatar}
           />
-        </View>
-      ) : (
-        <Image
-          source={{ uri: "https://galaxies.dev/img/meerkat_2.jpg" }}
-          style={styles.avatar}
-        />
-      )}
-      {loading ? (
-        <View style={styles.loading}>
-          <ActivityIndicator color={Colors.primary} size={"small"} />
-        </View>
-      ) : (
-        <>
-          {content === "" && imageUrl ? (
-            <ContextMenu.Root>
-              <ContextMenu.Trigger>
-                <Link
-                  href={`/(auth)/(modal)/${encodeURIComponent(
-                    imageUrl
-                  )}?propmpt=${encodeURIComponent(prompt!)}`}
-                  asChild
-                >
-                  <Pressable>
-                    <Image
-                      source={{ uri: imageUrl }}
-                      style={styles.previewImage}
-                    />
-                  </Pressable>
-                </Link>
-              </ContextMenu.Trigger>
-              <ContextMenu.Content>
-                {contextItems.map((item, index) => (
-                  <ContextMenu.Item key={item.title} onSelect={item.action}>
-                    <ContextMenu.ItemTitle>{item.title}</ContextMenu.ItemTitle>
-                    <ContextMenu.ItemIcon
-                      ios={{
-                        name: item.systemIcon as any,
-                        pointSize: 18,
-                      }}
-                    />
-                  </ContextMenu.Item>
-                ))}
-              </ContextMenu.Content>
-            </ContextMenu.Root>
-          ) : (
+        )}
+        {loading ? (
+          <View style={styles.loading}>
+            <ActivityIndicator color={Colors.primary} size={"small"} />
+          </View>
+        ) : (
+          <>
             <Text style={styles.text}>{content}</Text>
-          )}
-        </>
+          </>
+        )}
+      </View>
+      {role === Role.Bot && content && (
+        <TouchableOpacity
+          style={{ paddingHorizontal: 64 }}
+          onPress={() => playTTSFromOpenAI(content)} // Using OpenAI TTS here
+        >
+          <Feather name="volume-2" size={20} color="#646464" />
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -141,6 +208,11 @@ const styles = StyleSheet.create({
     width: 240,
     height: 240,
     borderRadius: 10,
+  },
+
+  voiceIcon: {
+    marginLeft: 8,
+    alignSelf: "center",
   },
 });
 

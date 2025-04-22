@@ -6,7 +6,7 @@ import {
   FlatList,
   StyleSheet,
   Platform,
-  PixelRatio
+  PixelRatio,
 } from "react-native";
 import SeeMore from "@/components/SeeMore";
 import React from "react";
@@ -16,9 +16,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-
 const scaleFont = (size: number) => size * PixelRatio.getFontScale();
-
 
 const isAndroid = Platform.OS === "android";
 
@@ -29,12 +27,12 @@ const data = [
     text: "Emergency",
     screen: "/emergency",
   },
-  {
-    key: "2",
-    imageSource: require("@/assets/images/Consultation-PNG.png"),
-    text: "Consultation",
-    screen: "/(consultation)",
-  },
+  // {
+  //   key: "2",
+  //   imageSource: require("@/assets/images/Consultation-PNG.png"),
+  //   text: "Consultation",
+  //   screen: "/(consultation)",
+  // },
   {
     key: "3",
     imageSource: require("@/assets/images/Medicine-PNG.png"),
@@ -63,7 +61,12 @@ const ServicesList = () => {
           source={item.imageSource}
           style={[styles.service_icons, { resizeMode: "contain" }]}
         />
-        <Text style={[styles.service_text, isAndroid ? { fontSize: scaleFont(12) } : {}]}>
+        <Text
+          style={[
+            styles.service_text,
+            isAndroid ? { fontSize: scaleFont(12) } : {},
+          ]}
+        >
           {item.text}
         </Text>
       </View>
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
   doctorServiceBtn: {
     justifyContent: "center",
     alignItems: "center",
-    width: wp("27%"),
+    width: wp("28.5%"),
     paddingVertical: 12,
     borderRadius: 14,
     backgroundColor: "#F6F6F6",
@@ -97,7 +100,8 @@ const styles = StyleSheet.create({
   },
 
   service_icons: {
-    width: wp("6%"),
+    // width: wp("6%"),
+    width: wp("6.5%"),
     height: hp("3.5%"),
     resizeMode: "cover",
   },

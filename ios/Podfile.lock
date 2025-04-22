@@ -288,6 +288,8 @@ PODS:
     - ExpoModulesCore
   - ExpoSharing (13.0.1):
     - ExpoModulesCore
+  - ExpoSpeech (13.0.1):
+    - ExpoModulesCore
   - ExpoSplashScreen (0.29.22):
     - ExpoModulesCore
   - ExpoSQLite (15.1.4):
@@ -2396,6 +2398,7 @@ DEPENDENCIES:
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
   - ExpoSharing (from `../node_modules/expo-sharing/ios`)
+  - ExpoSpeech (from `../node_modules/expo-speech/ios`)
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - ExpoSQLite (from `../node_modules/expo-sqlite/ios`)
   - ExpoSystemUI (from `../node_modules/expo-system-ui/ios`)
@@ -2574,6 +2577,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-secure-store/ios"
   ExpoSharing:
     :path: "../node_modules/expo-sharing/ios"
+  ExpoSpeech:
+    :path: "../node_modules/expo-speech/ios"
   ExpoSplashScreen:
     :path: "../node_modules/expo-splash-screen/ios"
   ExpoSQLite:
@@ -2789,6 +2794,7 @@ SPEC CHECKSUMS:
   ExpoModulesCore: c25d77625038b1968ea1afefc719862c0d8dd993
   ExpoSecureStore: 9a3665d7161dd1031be386e278bffd623658f316
   ExpoSharing: 849a5ce9985c22598c16ec027e32969be8062e8e
+  ExpoSpeech: 8f74347608243ee8fdc2faa14e7d2cd5503f33f8
   ExpoSplashScreen: 0f281e3c2ded4757d2309276c682d023c6299c77
   ExpoSQLite: 10fceac6748e9e8f010c70733e0e704fa67399ab
   ExpoSystemUI: b82a45cf0f6a4fa18d07c46deba8725dd27688b4
@@ -2896,6 +2902,6 @@ SPEC CHECKSUMS:
   WebRTC-SDK: dff00a3892bc570b6014e046297782084071657e
   Yoga: feb4910aba9742cfedc059e2b2902e22ffe9954a
 
-PODFILE CHECKSUM: 6ff30a625b3e201514eefe493693c517b2b7379c
+PODFILE CHECKSUM: 8cb7612f1c5808bbe83a03988cb330ca432e0bcd
 
 COCOAPODS: 1.16.2

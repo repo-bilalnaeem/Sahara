@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Animated, {
@@ -91,14 +91,14 @@ const MessageInput = ({ onShouldSend }: Props) => {
       style={{ paddingBottom: bottom, paddingTop: 10 }}
     >
       <View style={styles.row}>
-        <ATouchableOpacity
+        {/* <ATouchableOpacity
           onPress={expandItems}
           style={[styles.roundBtn, expandButtonStyle]}
         >
           <Ionicons name="add" size={24} color={Colors.grey} />
-        </ATouchableOpacity>
+        </ATouchableOpacity> */}
 
-        <Animated.View style={[styles.buttonView, buttonViewStyle]}>
+        {/* <Animated.View style={[styles.buttonView, buttonViewStyle]}>
           <TouchableOpacity onPress={() => ImagePicker.launchCameraAsync()}>
             <Ionicons name="camera-outline" size={24} color={Colors.grey} />
           </TouchableOpacity>
@@ -110,10 +110,10 @@ const MessageInput = ({ onShouldSend }: Props) => {
           <TouchableOpacity onPress={() => DocumentPicker.getDocumentAsync()}>
             <Ionicons name="folder-outline" size={24} color={Colors.grey} />
           </TouchableOpacity>
-        </Animated.View>
+        </Animated.View> */}
 
         <TextInput
-          autoFocus
+          // autoFocus
           ref={inputRef}
           placeholder="Message"
           style={styles.messageInput}
@@ -130,7 +130,8 @@ const MessageInput = ({ onShouldSend }: Props) => {
           <TouchableOpacity
             onPress={() => router.push("/(authenticated)/(services)/new-recording")}
           >
-            <FontAwesome5 name="headphones" size={24} color={Colors.grey} />
+            {/* <FontAwesome5 name="headphones" size={24} color={Colors.grey} /> */}
+            <FontAwesome name="microphone" size={24} color="black" />
           </TouchableOpacity>
         )}
       </View>

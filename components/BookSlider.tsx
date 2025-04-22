@@ -29,15 +29,15 @@ const BookSlider = ({ name }: SliderProps) => {
       return;
     }
     setValue(0);
-    router.push("/(booking");
+    router.replace("/(authenticated)/(services)/(consultation)");
   };
 
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={["#768CB0", "rgba(7, 56, 83, 0.95)"]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
+        colors={["#8b96ab", "rgba(71, 97, 110, 0.95)"]}
+        start={{ x: 0, y: 0.6 }}
+        end={{ x: 0.6, y: 0.3 }}
         style={[styles.slide_btn_container]}
       >
         <Slider

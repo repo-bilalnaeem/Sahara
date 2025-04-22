@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-const API_KEY = process.env.OPENAI_KEY;
+const API_KEY = process.env.EXPO_PUBLIC_OPENAI_KEY;
 
 if (!API_KEY) {
   throw new Error(

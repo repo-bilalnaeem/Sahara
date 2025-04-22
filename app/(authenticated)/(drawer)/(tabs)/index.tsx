@@ -36,6 +36,7 @@ import {
   useGetRecentlyViewedQuery,
 } from "@/slices/apiSlice";
 import BookNow from "@/components/BookNow";
+import BookSlider from "@/components/BookSlider";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -137,6 +138,9 @@ const Home = () => {
           </ImageBackground>
         </View>
         <View>
+          <View style={{ marginHorizontal: 14, marginTop: "12%" }}>
+            <BookSlider name={"Swipe to Chat with SaharaBot"} />
+          </View>
           <ServicesList />
           {latestAppointmnet && (
             <>

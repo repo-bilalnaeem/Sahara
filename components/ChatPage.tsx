@@ -32,13 +32,13 @@ import { useTranscription } from "@/context/TranscriptionContext";
 import { toast } from "sonner-native";
 import * as FileSystem from "expo-file-system";
 
-
 const ChatPage = () => {
   const navigation = useNavigation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [height, setHeight] = useState(0);
   const { audioUri, setAudioUri } = useTranscription();
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const isTranscribingRef = useRef(false);
 
   const [gptVersion, setGptVersion] = useMMKVString("gptVersion", Storage);
 
@@ -52,12 +52,34 @@ const ChatPage = () => {
 
   const organization = "org-4zqKW8XE9vBUyJH2LJl3mqdd";
 
+  // useEffect(() => {
+  //   if (!id) return;
+
+  //   console.log("Switching to Chat ID:", id);
+
+  //   setMessages([]); // 🛑 Clear previous messages before fetching new ones
+
+  //   getMessages(db, parseInt(id))
+  //     .then((messages) => {
+  //       if (!Array.isArray(messages)) {
+  //         console.error("Invalid messages format:", messages);
+  //         setMessages([]);
+  //         return;
+  //       }
+  //       setMessages(messages.filter((msg) => msg?.content !== undefined));
+  //     })
+  //     .catch((err) => console.error("Error fetching messages:", err));
+  // }, [id]);
+
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      console.log("No chat ID provided — waiting to create new chat...");
+      return;
+    }
 
     console.log("Switching to Chat ID:", id);
 
-    setMessages([]); // 🛑 Clear previous messages before fetching new ones
+    setMessages([]);
 
     getMessages(db, parseInt(id))
       .then((messages) => {
@@ -170,57 +192,13 @@ const ChatPage = () => {
     setHeight(event.nativeEvent.layout.height);
   };
 
-  // useEffect(() => {
-  //   const transcribeAudioIfNeeded = async () => {
-  //     if (!audioUri) return;
-
-  //     toast.loading("Transcribing audio...");
-  //     try {
-  //       const formData = new FormData();
-  //       const audioData = {
-  //         uri: audioUri,
-  //         name: "audio.m4a",
-  //         type: "audio/m4a", // (fix typo: "aduio" => "audio")
-  //       };
-  //       formData.append("file", audioData as any);
-
-  //       const response = await fetch(`/api/speech-to-text`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //         body: formData,
-  //       }).then((res) => res.json());
-
-  //       console.log("Transcription Response:", response);
-
-  //       if (response.text) {
-  //         getCompletion(response.text); // send it to GPT
-  //       } else {
-  //         toast.error("No transcription found");
-  //       }
-
-  //       // Optional: delete file after transcription
-  //       await FileSystem.deleteAsync(audioUri, { idempotent: true });
-  //       setAudioUri(null); // clear context
-  //     } catch (error) {
-  //       console.error("Error transcribing audio:", error);
-  //       toast.error("Failed to transcribe");
-  //     } finally {
-  //       toast.dismiss();
-  //     }
-  //   };
-
-  //   transcribeAudioIfNeeded();
-  // }, [audioUri]);
-
   useEffect(() => {
     const transcribeAudioIfNeeded = async () => {
       if (!audioUri || isTranscribing) return;
-  
+
       setIsTranscribing(true);
       toast.loading("Transcribing audio...");
-  
+
       try {
         const formData = new FormData();
         const audioData = {
@@ -229,7 +207,7 @@ const ChatPage = () => {
           type: "audio/m4a",
         };
         formData.append("file", audioData as any);
-  
+
         const response = await fetch(`/api/speech-to-text`, {
           method: "POST",
           headers: {
@@ -237,15 +215,15 @@ const ChatPage = () => {
           },
           body: formData,
         }).then((res) => res.json());
-  
+
         console.log("Transcription Response:", response);
-  
+
         if (response.text) {
           getCompletion(response.text);
         } else {
           toast.error("No transcription found");
         }
-  
+
         // Delete file and clear state
         await FileSystem.deleteAsync(audioUri, { idempotent: true });
         setAudioUri(null);
@@ -257,24 +235,14 @@ const ChatPage = () => {
         toast.dismiss();
       }
     };
-  
+
     transcribeAudioIfNeeded();
   }, [audioUri]);
   return (
     <View style={defaultStyles.pageContainer}>
       <Stack.Screen
         options={{
-          headerTitle: () => (
-            <HeaderDropDown
-              onSelect={(key) => setGptVersion(key)}
-              selected={gptVersion}
-              title={"SaharaBot"}
-              items={[
-                { key: "3.5", title: "GPT-3.5", icon: "bolt" },
-                { key: "4", title: "GPT-4", icon: "sparkles" },
-              ]}
-            />
-          ),
+          headerTitle: "SaharaBot",
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
@@ -326,8 +294,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
     resizeMode: "contain",
   },
 });

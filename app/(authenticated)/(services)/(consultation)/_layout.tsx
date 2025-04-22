@@ -42,8 +42,7 @@ export const CustomDrawerContent = (props: any) => {
   const [history, setHistory] = useState<Chat[]>([]);
   const db = useSQLiteContext();
   const dispatch = useDispatch();
-    const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
-  
+  const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
 
   const handleLogout = async () => {
     try {
@@ -285,20 +284,18 @@ const Layout = () => {
             </View>
           ),
           headerRight: () => (
-            <Link
-              href={"/(authenticated)/(services)/(consultation)/(chat)"}
-              push
-              asChild
+            <TouchableOpacity
+              onPress={() =>
+                router.replace("/(authenticated)/(services)/(consultation)")
+              }
             >
-              <TouchableOpacity>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color={Colors.grey}
-                  style={{ marginRight: 16 }}
-                />
-              </TouchableOpacity>
-            </Link>
+              <Ionicons
+                name="create-outline"
+                size={24}
+                color={Colors.grey}
+                style={{ marginRight: 16 }}
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -309,20 +306,18 @@ const Layout = () => {
             display: "none",
           },
           headerRight: () => (
-            <Link
-              href={"/(authenticated)/(services)/(consultation)/(chat)"}
-              push
-              asChild
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate("/(authenticated)/(services)/(consultation)")
+              }
             >
-              <TouchableOpacity>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color={Colors.grey}
-                  style={{ marginRight: 16 }}
-                />
-              </TouchableOpacity>
-            </Link>
+              <Ionicons
+                name="create-outline"
+                size={24}
+                color={Colors.grey}
+                style={{ marginRight: 16 }}
+              />
+            </TouchableOpacity>
           ),
         }}
       />

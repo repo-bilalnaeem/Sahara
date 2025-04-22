@@ -31,7 +31,6 @@ const Layout = () => {
 
   return (
     <Stack>
- 
       <Stack.Screen
         name="emergency"
         options={{
@@ -40,7 +39,7 @@ const Layout = () => {
           navigationBarHidden: true,
           headerBackVisible: true,
           headerTransparent: true,
-      
+
           header: () => (
             <View
               style={[
@@ -132,7 +131,7 @@ const Layout = () => {
         name="new-recording"
         options={{
           headerShown: false,
-          presentation: "fullScreenModal",
+          presentation: "containedTransparentModal",
           animation: "fade",
         }}
       />
