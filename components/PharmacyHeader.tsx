@@ -15,12 +15,16 @@ import { router, useNavigation } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Pressable } from "react-native";
 import { DrawerActions } from "@react-navigation/native";
+import GoBack from "./GoBack";
+import { useCart } from "@/store/cartStore";
 
 const PharmacyHeader = () => {
   const { top } = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === "dark";
   const navigation = useNavigation();
+  const items = useCart((state) => state.items);
 
+  const hasItems = items.length > 0;
   return (
     <LinearGradient
       colors={["#394A65", "rgba(0, 37, 58, 0.76)"]}
@@ -46,21 +50,7 @@ const PharmacyHeader = () => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity
-            onPress={router.back}
-            style={[
-              isDarkMode ? styles.lightBackButton : styles.darkBackButton,
-            ]}
-          >
-            <Image
-              style={[
-                { width: 20 },
-                { height: 20 },
-                isDarkMode ? null : { tintColor: "#fff" },
-              ]}
-              source={require("@/assets/images/arrow.png")}
-            />
-          </TouchableOpacity>
+          <GoBack />
           <View>
             <Text style={[{ fontSize: 16, color: "#fff", fontWeight: "600" }]}>
               77 7th Lane
@@ -85,6 +75,19 @@ const PharmacyHeader = () => {
               color={"#fff"}
               style={{ marginBottom: 5 }}
             />
+            {hasItems && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 4,
+                  right: -1,
+                  width: 6,
+                  height: 6,
+                  borderRadius: 5,
+                  backgroundColor: "red",
+                }}
+              />
+            )}
           </Pressable>
 
           <TouchableOpacity

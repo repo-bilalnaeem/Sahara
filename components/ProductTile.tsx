@@ -11,7 +11,7 @@ import {
 } from "react-native";
 const isAndroid = Platform.OS === "android";
 
-interface ProductItem {
+export interface ProductItem {
   id: string;
   imageUrl: any;
   price: number;

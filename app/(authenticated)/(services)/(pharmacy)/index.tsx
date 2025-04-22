@@ -12,11 +12,7 @@ import PharmacyFeatures from "@/components/PharmacyFeatures";
 import SeeMore from "@/components/SeeMore";
 import PharmacySponserAd from "@/components/PharmacySponserAd";
 
-import {
- 
-  categoryData,
- 
-} from "@/assets/data/PharmacyPageData";
+import { categoryData } from "@/assets/data/PharmacyPageData";
 import { StatusBar } from "expo-status-bar";
 import ProductTile from "@/components/ProductTile";
 import PharmacyServiceList from "@/components/PharmacyServiceList";
@@ -28,7 +24,7 @@ import {
 const category = categoryData.map((item) => ({
   ...item,
   get screen() {
-    return `/(category)/${item.text}`;
+    return `/(authenticated)/(services)/(pharmacy)/${item.category}`;
   },
 }));
 
@@ -55,6 +51,7 @@ const Pharmacy = () => {
       limit: 8,
       category: "GENERAL",
       tag: "NONE",
+      page: 1,
     });
 
   useEffect(() => {
@@ -91,18 +88,6 @@ const Pharmacy = () => {
       >
         <PharmacyFeatures />
 
-        {/* <View style={{ paddingVertical: 38, paddingTop: 24 }}>
-          <Text
-            style={[
-              styles.flex_headings,
-              isDarkMode ? styles.lightHeading : styles.darkHeading,
-            ]}
-          >
-            Shops
-          </Text>
-
-          <PharmacyServiceList listData={data} />
-        </View> */}
         <View style={{ paddingTop: 48 }} />
         <PharmacySponserAd
           height={160}

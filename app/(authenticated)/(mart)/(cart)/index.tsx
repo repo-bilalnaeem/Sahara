@@ -109,6 +109,7 @@ const Cart = () => {
       category: "GENERAL",
       tag: "POPULAR_PRODUCT",
       limit: 8,
+      page:1
     });
 
   // console.log(JSON.stringify(productList, null, 2));

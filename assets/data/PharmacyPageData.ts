@@ -64,26 +64,26 @@ export const data = [
     {
       key: "1",
       imageSource: require("@/assets/images/general.png"),
-      text: "General",
+      category: "General",
     },
     {
       key: "2",
       imageSource: require("@/assets/images/blood.png"),
-      text: "Blood",
+      category: "Blood",
     },
     {
       key: "3",
       imageSource: require("@/assets/images/brain.png"),
-      text: "Brain",
+      category: "Brain",
     },
   
-    { key: "5", imageSource: require("@/assets/images/cold.png"), text: "Cold" },
+    { key: "5", imageSource: require("@/assets/images/cold.png"), category: "Cold" },
     {
       key: "6",
       imageSource: require("@/assets/images/device.png"),
-      text: "Devices",
+      category: "Devices",
     },
-    { key: "7", imageSource: require("@/assets/images/ear.png"), text: "Ear" },
-    { key: "8", imageSource: require("@/assets/images/eye.png"), text: "Eye" },
+    { key: "7", imageSource: require("@/assets/images/ear.png"), category: "Ear" },
+    { key: "8", imageSource: require("@/assets/images/eye.png"), category: "Eye" },
   ];
   

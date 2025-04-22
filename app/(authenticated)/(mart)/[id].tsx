@@ -65,6 +65,7 @@ const Product = () => {
       category: "GENERAL",
       tag: "POPULAR_PRODUCT",
       limit: 8,
+      page:1
     });
 
   const { data: recommendedData, isLoading: recommendedLoading } =

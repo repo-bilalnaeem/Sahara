@@ -17,6 +17,7 @@ const SaharaMart = () => {
       category: "GENERAL",
       tag: "NONE",
       limit: 8,
+      page: 1,
     });
   const [products, setProducts] = useState([]);
 

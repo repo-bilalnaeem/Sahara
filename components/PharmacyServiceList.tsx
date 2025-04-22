@@ -13,7 +13,7 @@ interface ServiceItem {
   key: string;
   screen: string;
   imageSource: any;
-  text: string;
+  category: string;
 }
 
 interface Props {
@@ -45,7 +45,7 @@ const PharmacyServiceList = ({ listData }: Props) => {
       <Text
         style={[styles.service_text, index !== 0 ? { marginRight: 10 } : null]}
       >
-        {item.text}
+        {item.category}
       </Text>
     </Pressable>
   );

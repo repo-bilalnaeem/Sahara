@@ -118,8 +118,8 @@ export const apiSlice = createApi({
 
     // Get GENEREAL Products
     getProductsByCategoryTags: builder.query({
-      query: ({ category, tag, limit }) => ({
-        url: `products?category=${category}&tag=${tag}&limit=${limit}`,
+      query: ({ category, tag, limit, page }) => ({
+        url: `products?category=${category}&tag=${tag}&limit=${limit}&page=${page}`,
       }),
     }),
 

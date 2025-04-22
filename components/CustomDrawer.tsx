@@ -27,6 +27,7 @@ import { StreamChat } from "stream-chat";
 import { apiSlice, useLazyGetLoggedUserQuery } from "@/slices/apiSlice";
 import { User } from "@/app/signin";
 import * as SecureStore from "expo-secure-store";
+import GoBack from "./GoBack";
 
 const client = StreamChat.getInstance(
   process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
@@ -250,6 +251,15 @@ const CutsomDrawer = () => {
           header: () => (
             <CustomHeader onPress={router.back} heading="Help Center" />
           ),
+        }}
+      />
+      <Drawer.Screen
+        name="[category]"
+        options={{
+          drawerItemStyle: { display: "none" },
+          swipeEnabled: false,
+          // headerLeft: () => <GoBack />,
+          header: () => <PharmacyHeader />,
         }}
       />
     </Drawer>
