@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "sahara.app"
-               BlueprintName = "sahara"
-               ReferencedContainer = "container:sahara.xcodeproj">
+               BuildableName = "Sahara.app"
+               BlueprintName = "Sahara"
+               ReferencedContainer = "container:Sahara.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "saharaTests.xctest"
-               BlueprintName = "saharaTests"
-               ReferencedContainer = "container:sahara.xcodeproj">
+               BuildableName = "SaharaTests.xctest"
+               BlueprintName = "SaharaTests"
+               ReferencedContainer = "container:Sahara.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "sahara.app"
-            BlueprintName = "sahara"
-            ReferencedContainer = "container:sahara.xcodeproj">
+            BuildableName = "Sahara.app"
+            BlueprintName = "Sahara"
+            ReferencedContainer = "container:Sahara.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "sahara.app"
-            BlueprintName = "sahara"
-            ReferencedContainer = "container:sahara.xcodeproj">
+            BuildableName = "Sahara.app"
+            BlueprintName = "Sahara"
+            ReferencedContainer = "container:Sahara.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -36,6 +36,7 @@ const Layout = () => {
         options={{
           headerShadowVisible: false,
           // headerShown: false,
+          gestureEnabled: false,
           navigationBarHidden: true,
           headerBackVisible: true,
           headerTransparent: true,

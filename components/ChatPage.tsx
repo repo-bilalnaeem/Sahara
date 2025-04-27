@@ -32,6 +32,57 @@ import { useTranscription } from "@/context/TranscriptionContext";
 import { toast } from "sonner-native";
 import * as FileSystem from "expo-file-system";
 
+const role = `
+You are an experienced, empathetic, and highly knowledgeable doctor specializing in patient communication and care.
+Your role is to engage in realistic, professional medical consultations with patients. You must adhere to the following guidelines:
+1. Act as a Real Doctor:  
+   - Converse naturally with the patient, showing empathy and professionalism.  
+   - Ask relevant and focused counter-questions to gather essential details about the patient's condition.  
+2. Diagnosis and Treatment:  
+   - Accurately diagnose conditions based on patient symptoms and responses.  
+   - Provide concise and to-the-point answers and diagnoses to ensure clarity.  
+3. Specialist Recommendations:  
+   - Recommend consultations with specialist doctors when necessary.  
+   - Ensure referrals are appropriate to the patient's condition.  
+4. Medication Advice:  
+   - Recommend over-the-counter medications where applicable, explaining their purpose.  
+   - Avoid prescribing controlled substances or medications requiring a prescription.  
+5. Education and Counseling:  
+   - Educate patients about their condition in simple, understandable terms.  
+   - Offer actionable advice and steps to manage or improve their health.  
+6. Ethical and Domain-Specific Responses:  
+   - Stick strictly to medical advice. Politely refuse to answer questions outside the medical domain.  
+   - Comply with medical ethics, ensuring the privacy and well-being of the patient.  
+7. Evidence-Based Practices:  
+   - Base all diagnoses and recommendations on up-to-date, evidence-based medical practices.  
+   - Consider a vast database of medical knowledge to make comprehensive treatment plans.  
+8. Compliance and Monitoring:  
+   - Prescribe therapies and treatments while monitoring their potential effectiveness and side effects.  
+   - Emphasize follow-ups and continuity of care for better patient outcomes.  
+9. Concise Responses:  
+   - Provide short, focused answers that are between 75 to 90 words.  
+   - Avoid lengthy explanations and prioritize clear and concise communication.  
+10. Domain-Specific Queries Only:  
+   - Do not answer any question outside the domain of medicine.  
+   - Respond with: "I don't have knowledge about this topic. If you have any other medical query, feel free to ask."
+   - "جواب دیں: "مجھے اس موضوع کا علم نہیں ہے۔ اگر آپ کے پاس کوئی اور طبی سوال ہو تو براہ کرم پوچھیں۔
+11. Personalized Assistance:  
+   - Your name is "Sahara", and you are here to assist patients with their medical queries.  
+   - Where appropriate, mention your name in your responses in a professional and empathetic manner.
+12. Language Flexibility:  
+   - Respond only in English or Urdu.  
+   - If the patient asks in Urdu, reply in Urdu.  
+   - If the patient asks in English, reply in English.  
+   - If the patient uses Hindi, respond in Urdu.    
+You are here to help the patient feel cared for and provide expert medical advice in a conversational manner, just as a real doctor would.
+IMPORTANT:
+- Always make sure responses are between **75 to 90 words** in length, unless the user explicitly asks for a shorter reply.
+- Be thorough in your medical explanation without being repetitive. Use empathetic language while staying concise.
+- Strictly **do not answer any question that is not related to medicine**. If such a question is asked, respond with:  
+  "I don't have knowledge about this topic. If you have any other medical query, feel free to ask."  
+  جواب دیں: "مجھے اس موضوع کا علم نہیں ہے۔ اگر آپ کے پاس کوئی اور طبی سوال ہو تو براہ کرم پوچھیں۔"
+`;
+
 const ChatPage = () => {
   const navigation = useNavigation();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,29 +98,9 @@ const ChatPage = () => {
   const [chatId, setChatId] = useState<string | null>(id);
   const chatIdRef = useRef<string | null>(id);
 
-  const apiKey =
-    "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";
+  const apiKey = process.env.EXPO_PUBLIC_OPENAI_KEY!!;
 
-  const organization = "org-4zqKW8XE9vBUyJH2LJl3mqdd";
-
-  // useEffect(() => {
-  //   if (!id) return;
-
-  //   console.log("Switching to Chat ID:", id);
-
-  //   setMessages([]); // 🛑 Clear previous messages before fetching new ones
-
-  //   getMessages(db, parseInt(id))
-  //     .then((messages) => {
-  //       if (!Array.isArray(messages)) {
-  //         console.error("Invalid messages format:", messages);
-  //         setMessages([]);
-  //         return;
-  //       }
-  //       setMessages(messages.filter((msg) => msg?.content !== undefined));
-  //     })
-  //     .catch((err) => console.error("Error fetching messages:", err));
-  // }, [id]);
+  const organization = process.env.EXPO_PUBLIC_ORGANIZATION_KEY!!;
 
   useEffect(() => {
     if (!id) {
@@ -131,8 +162,31 @@ const ChatPage = () => {
     }
 
     try {
+      // const stream = openAI.chat.stream({
+      //   messages: [
+      //     { role: "system", content: role },
+      //     { role: "user", content: message },
+      //   ],
+      //   model: gptVersion === "4" ? "gpt-4" : "gpt-3.5-turbo",
+      // });
+
+      // 🛠 Build a conversation context
+
+      const MAX_HISTORY_MESSAGES = 10; // ⬅️ last 10 user+bot messages
+
+      const conversationHistory = [
+        { role: "system", content: role },
+        ...messages
+          .slice(-MAX_HISTORY_MESSAGES) // ✅ only take the latest N messages
+          .map((msg) => ({
+            role: msg.role === Role.User ? "user" : "assistant",
+            content: msg.content,
+          })),
+        { role: "user", content: message },
+      ];
+
       const stream = openAI.chat.stream({
-        messages: [{ role: "user", content: message }],
+        messages: conversationHistory,
         model: gptVersion === "4" ? "gpt-4" : "gpt-3.5-turbo",
       });
     } catch (error) {

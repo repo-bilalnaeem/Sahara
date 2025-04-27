@@ -2,8 +2,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logout } from "./authSlice";
 import { jwtDecode } from "jwt-decode";
 import { secureStorage } from "@/store/secureStorage";
+import { toast } from "sonner-native";
 
-const baseUrl = "http://192.168.1.102:3001/";
+const baseUrl = "http://192.168.1.100:3001/";
 
 const baseQuery = fetchBaseQuery({
   baseUrl,
@@ -36,9 +37,14 @@ export const apiSlice = createApi({
           await secureStorage.setItem("refresh_token", data.refresh_token);
           await secureStorage.setItem("stream_token", data.stream_token);
 
-          // 🔹 Decode user and store it with exp
+          // 🔹 Decode user and check if the role is CUSTOMER
           const decodedUser = jwtDecode(data.access_token);
-          // console.log("Decoded User:", decodedUser);
+
+          if (decodedUser.role !== "CUSTOMER") {
+            throw new Error("User may not exist");
+          }
+
+          // Store decoded user with exp
           await secureStorage.setItem(
             "decoded_user",
             JSON.stringify(decodedUser)
@@ -53,6 +59,11 @@ export const apiSlice = createApi({
           );
         } catch (err) {
           console.error("Login failed: ", err);
+          // Handle unauthorized or error appropriately
+          // You can dispatch a logout action if the role is not CUSTOMER
+          dispatch(logout());
+          // Optionally, show a failure toast
+          // toast.error("Login failed: User does not exist");
         }
       },
     }),
@@ -169,6 +180,7 @@ export const apiSlice = createApi({
     getAllDoctors: builder.query({
       query: ({ page, limit, department }) => ({
         url: `doctors?department=${department}`,
+        keepUnusedDataFor: 600,
       }),
     }),
 

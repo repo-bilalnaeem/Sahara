@@ -42,7 +42,11 @@ const Layout = () => {
   return (
     <OverlayProvider>
       {/* <Chat client={client}> */}
-      <Stack>
+      <Stack
+        screenOptions={{
+          gestureEnabled: false,
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{

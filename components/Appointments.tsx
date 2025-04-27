@@ -28,8 +28,6 @@ const Appointments = () => {
   const router = useRouter();
   const { top } = useSafeAreaInsets();
 
-
-
   // console.log(JSON.stringify(data, null, 2));
   dayjs.extend(utc);
   if (isLoading)
@@ -114,6 +112,9 @@ const Appointments = () => {
                     `/(authenticated)/(schedules)/${appointment.doctorId}`
                   )
                 }
+                style={{
+                  marginBottom: 16,
+                }}
               >
                 <View
                   style={{
@@ -161,7 +162,7 @@ const Appointments = () => {
                               hour12: true,
                             }
                           )} */}
-                         {dayjs.utc(appointment.slot.time).format("hh:mm A")}
+                          {dayjs.utc(appointment.slot.time).format("hh:mm A")}
                         </Text>
                         <Text
                           style={[

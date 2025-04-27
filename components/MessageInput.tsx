@@ -121,6 +121,7 @@ const MessageInput = ({ onShouldSend }: Props) => {
           onChangeText={onChangeText}
           value={message}
           multiline
+          autoCorrect={false}
         />
         {message.length > 0 ? (
           <TouchableOpacity onPress={onSend}>
@@ -129,6 +130,7 @@ const MessageInput = ({ onShouldSend }: Props) => {
         ) : (
           <TouchableOpacity
             onPress={() => router.push("/(authenticated)/(services)/new-recording")}
+            style={{width: 30, height: 25, justifyContent:"center", alignItems:"center"}}
           >
             {/* <FontAwesome5 name="headphones" size={24} color={Colors.grey} /> */}
             <FontAwesome name="microphone" size={24} color="black" />

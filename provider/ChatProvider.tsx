@@ -3,39 +3,59 @@ import { ActivityIndicator, View } from "react-native";
 import { OverlayProvider, Chat } from "stream-chat-expo";
 import { PropsWithChildren } from "react";
 import { StreamChat } from "stream-chat";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@reduxjs/toolkit/query";
-import { User } from "@/app/signin";
 import * as SecureStore from "expo-secure-store";
+import { apiSlice, useLazyGetLoggedUserQuery } from "@/slices/apiSlice";
+import { AppDispatch } from "@/store/store";
+import { logout } from "@/slices/authSlice";
+import { router } from "expo-router";
 
 const client = StreamChat.getInstance(
   process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY!
 );
 
+interface StreamUser {
+  id: string;
+  name: string;
+  imageUrl: string;
+}
+
 const ChatProvider = ({ children }: PropsWithChildren) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [isReady, setIsReady] = useState(false);
 
-  const [userData, setUserData] = useState<User | null>(null);
+  const [userData, setUserData] = useState<StreamUser | null>(null);
+  const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const initializeUser = async () => {
+    const checkUserProfile = async () => {
       try {
-        const storedData = await SecureStore.getItemAsync("user_data");
-        if (!storedData) return;
-        // console.log(storedData);
-        const parsedUser = JSON.parse(storedData);
-        // console.log("parsed:", parsedUser);
-        setUserData(parsedUser);
-      } catch (error) {
-        console.error(error);
+        const userData = await triggerGetLoggedUser().unwrap();
+
+        if (!userData.user.Customer) {
+          dispatch(logout());
+          dispatch(apiSlice.util.resetApiState());
+          router.replace("/signin");
+        } else {
+          const formattedUser: StreamUser = {
+            id: userData?.user?.Customer?.userId,
+            name: `${userData?.user?.Customer?.firstName} ${userData?.user?.Customer?.lastName}`,
+            imageUrl: userData?.user?.Customer?.imageUrl,
+          };
+          setUserData(formattedUser);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
       }
     };
-    initializeUser();
-  }, []);
+
+    checkUserProfile();
+  }, [triggerGetLoggedUser]);
 
   useEffect(() => {
-    if (!user) {
+    if (!userData || !user) {
       return;
     }
     // console.log(user.id);
@@ -43,12 +63,12 @@ const ChatProvider = ({ children }: PropsWithChildren) => {
     const connect = async () => {
       await client.connectUser(
         {
-          id: user!.id,
+          id: userData!.id,
           name: userData?.name,
           image: userData?.imageUrl,
           // image: "https://galaxies.dev/img/meerkat_2.jpg",
         },
-        client.devToken(user!.id)
+        client.devToken(userData!.id)
       );
       setIsReady(true);
     };
@@ -60,7 +80,7 @@ const ChatProvider = ({ children }: PropsWithChildren) => {
       }
       setIsReady(false);
     };
-  }, [user]);
+  }, [userData, user]);
 
   if (!isReady) {
     return (

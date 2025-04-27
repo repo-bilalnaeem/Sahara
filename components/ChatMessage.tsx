@@ -5,126 +5,96 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Message, Role } from "@/utils/Interfaces";
 import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
-import { Audio } from "expo-av";
+import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from "expo-av";
 import axios from "axios";
 import * as Crypto from "expo-crypto";
 import { encode } from "base64-arraybuffer";
-const BASE_URL = "http://192.168.1.102:8081";
+const BASE_URL = "http://192.168.1.100:8081";
 import { toast } from "sonner-native";
 
-// const playTTSFromOpenAI = async (text: string) => {
-//   const toastId = toast.loading("Preparing audio...");
-//   let sound = null;
-//   try {
-//     const response = await fetch(`${BASE_URL}/api/text-to-speech`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ text }),
-//     });
 
-//     if (!response.ok) {
-//       throw new Error("Failed to generate TTS");
-//     }
+let currentSound: Audio.Sound | null = null;
 
-//     const arrayBuffer = await response.arrayBuffer();
-//     const base64Audio = encode(arrayBuffer);
-
-//     const fileUri = FileSystem.cacheDirectory + "openai-tts.mp3";
-//     await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
-//       encoding: FileSystem.EncodingType.Base64,
-//     });
-
-//     const fileInfo = await FileSystem.getInfoAsync(fileUri);
-//     console.log("📁 TTS file saved at:", fileUri);
-//     console.log("📦 File info:", fileInfo);
-//     console.log("🧬 Base64 snippet:", base64Audio.slice(0, 50) + "...");
-
-//     // Create and load the sound
-//     const { sound: newSound, status } = await Audio.Sound.createAsync(
-//       { uri: fileUri },
-//       { shouldPlay: true }
-//     );
-
-//     sound = newSound;
-
-//     // Add event listener to handle playback errors
-//     sound.setOnPlaybackStatusUpdate((status) => {
-//       if (status.didJustFinish) {
-//         console.log("Playback finished.");
-//         sound.unloadAsync(); // Unload when finished
-//       }
-//       if (status.error) {
-//         console.error("Error during playback:", status.error);
-//       }
-//     });
-
-//     // Wait for the sound to finish before showing success
-//     if (status.isLoaded && status.isPlaying) {
-//       toast.success("Audio is ready!", { id: toastId });
-//     } else {
-//       console.error("Audio did not load or play correctly");
-//       toast.error("Audio playback failed", { id: toastId });
-//     }
-//   } catch (error) {
-//     console.error("OpenAI TTS error:", error);
-//   }
-// };
-const playTTSFromOpenAI = async (text: string) => {
-  const toastId = toast.loading("Preparing audio...");
-  let sound: Audio.Sound | null = null;
-  try {
-    const response = await fetch(`${BASE_URL}/api/text-to-speech`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to generate TTS");
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const base64Audio = encode(arrayBuffer);
-
-    const fileUri = FileSystem.cacheDirectory + "openai-tts.mp3";
-    await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    const fileInfo = await FileSystem.getInfoAsync(fileUri);
-    console.log("📁 TTS file saved at:", fileUri);
-    console.log("📦 File info:", fileInfo);
-    console.log("🧬 Base64 snippet:", base64Audio.slice(0, 50) + "...");
-
-    const { sound: newSound, status } = await Audio.Sound.createAsync(
-      { uri: fileUri },
-      { shouldPlay: true }
-    );
-
-    sound = newSound;
-
-
-  } catch (error) {
-    console.error("OpenAI TTS error:", error);
-    toast.error("Audio playback failed", { id: toastId });
-  }
-};
+function isPlaybackSuccess(
+  status: AVPlaybackStatus
+): status is AVPlaybackStatusSuccess {
+  return status.isLoaded;
+}
 
 const ChatMessage = ({
   content,
   role,
   loading,
 }: Message & { loading?: boolean }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playTTSFromOpenAI = async (text: string) => {
+    const toastId = toast.loading("Preparing audio...");
+    setIsPlaying(true); // Disable the button when playback starts
+
+    try {
+      // 🔇 Stop and unload previous audio if playing
+      if (currentSound) {
+        await currentSound.stopAsync();
+        await currentSound.unloadAsync();
+        currentSound = null;
+      }
+
+      const response = await fetch(`${BASE_URL}/api/text-to-speech`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate TTS");
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const base64Audio = encode(arrayBuffer);
+
+      const fileUri = FileSystem.cacheDirectory + "openai-tts.mp3";
+      await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri: fileUri },
+        { shouldPlay: true }
+      );
+
+      currentSound = newSound;
+
+      currentSound.setOnPlaybackStatusUpdate(async (status) => {
+        if (isPlaybackSuccess(status)) {
+          if (status.didJustFinish) {
+            await currentSound?.unloadAsync();
+            currentSound = null;
+            setIsPlaying(false); // Enable the button again after playback finishes
+            toast.success("Audio finished playing!", { id: toastId });
+          }
+        } else {
+          console.error("Playback error:", status.error);
+          setIsPlaying(false); // Enable the button again if playback fails
+          toast.error("Audio playback failed", { id: toastId });
+        }
+      });
+
+      toast.success("Audio is playing!", { id: toastId });
+    } catch (error) {
+      console.error("OpenAI TTS error:", error);
+      setIsPlaying(false); // Enable the button if there’s an error
+      toast.error("Audio playback failed", { id: toastId });
+    }
+  };
   return (
     <View>
       <View style={styles.row}>
@@ -154,7 +124,8 @@ const ChatMessage = ({
       {role === Role.Bot && content && (
         <TouchableOpacity
           style={{ paddingHorizontal: 64 }}
-          onPress={() => playTTSFromOpenAI(content)} // Using OpenAI TTS here
+          onPress={() => !isPlaying && playTTSFromOpenAI(content)} // Using OpenAI TTS here
+          disabled={isPlaying}
         >
           <Feather name="volume-2" size={20} color="#646464" />
         </TouchableOpacity>

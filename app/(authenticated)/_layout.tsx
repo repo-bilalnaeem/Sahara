@@ -61,6 +61,7 @@ const Layout = () => {
                 <Stack
                   screenOptions={{
                     contentStyle: { backgroundColor: Colors.selected },
+                    gestureEnabled: false,
                   }}
                 >
                   <Stack.Screen
@@ -146,8 +147,8 @@ const Layout = () => {
         options={{
           headerTransparent: true,
           headerTitle: "Setup User Profile",
-          headerTitleStyle:{
-            fontSize: 20
+          headerTitleStyle: {
+            fontSize: 20,
           },
           headerRight: () => (
             <TouchableOpacity
@@ -163,6 +164,8 @@ const Layout = () => {
           ),
         }}
       />
+
+      <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
     </Stack>
   );
 };

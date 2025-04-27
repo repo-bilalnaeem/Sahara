@@ -19,6 +19,7 @@ import { useRouter } from "expo-router";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ImageView from "react-native-image-viewing";
+import * as Haptics from "expo-haptics";
 
 import { useCart } from "@/store/cartStore";
 import { StatusBar } from "expo-status-bar";
@@ -65,7 +66,7 @@ const Product = () => {
       category: "GENERAL",
       tag: "POPULAR_PRODUCT",
       limit: 8,
-      page:1
+      page: 1,
     });
 
   const { data: recommendedData, isLoading: recommendedLoading } =
@@ -162,6 +163,7 @@ const Product = () => {
           </Text>
           <TouchableWithoutFeedback
             onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
               addToCart();
             }}
           >

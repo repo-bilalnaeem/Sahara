@@ -24,7 +24,7 @@ import { apiSlice, useLazyGetLoggedUserQuery } from "@/slices/apiSlice";
 LogBox.ignoreAllLogs();
 
 SplashScreen.preventAutoHideAsync();
-
+const BASE_URL="http://192.168.1.100:3001/"
 const InitialLayout = () => {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -37,7 +37,6 @@ const InitialLayout = () => {
   );
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [triggerGetLoggedUser] = useLazyGetLoggedUserQuery();
-
 
   useEffect(() => {
     dispatch(loadToken()).finally(() => setCheckingAuth(false));
@@ -53,18 +52,7 @@ const InitialLayout = () => {
     }
   }, [loaded]);
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const userData = await triggerGetLoggedUser().unwrap();
-  //       console.log("Fetched user data:", userData.user.Customer);
-  //     } catch (error) {
-  //       console.error(error);
-  //       Alert.alert("Something went wrong!");
-  //     }
-  //   };
-  //   fetchUser();
-  // }, []);
+
 
   useEffect(() => {
     const checkUserProfile = async () => {
@@ -92,20 +80,38 @@ const InitialLayout = () => {
   }, [accessToken, checkingAuth, router, triggerGetLoggedUser]);
 
   useEffect(() => {
+    if (checkingAuth) return; // don't do anything while still checking auth
+  
+    const inAuthGroup = segments[0] === "(authenticated)";
+  
+    if (accessToken && !inAuthGroup) {
+      // User is logged in but not inside (authenticated) group
+      router.replace("/(authenticated)/(drawer)/(tabs)");
+    }
+  }, [segments, accessToken, checkingAuth]);
+  
+
+  useEffect(() => {
     const checkTokenExpiryAndRefresh = async () => {
       if (!user || !refreshToken) return;
 
       const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
 
+      console.log("user expiry is:",user.exp)
+
+
       if (user.exp < currentTime) {
         try {
-          const res = await fetch("http://192.168.1.102:3001/auth/refresh", {
+          const res = await fetch(`${BASE_URL}auth/refresh`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${refreshToken}`,
             },
           });
+
+          console.log("Response is: ", res)
+
 
           if (!res.ok) throw new Error("Failed to refresh token");
 
@@ -160,7 +166,11 @@ const InitialLayout = () => {
   }
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        gestureEnabled: false,
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{

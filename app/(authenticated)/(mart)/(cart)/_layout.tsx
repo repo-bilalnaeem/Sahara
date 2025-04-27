@@ -6,7 +6,11 @@ import { useRouter } from "expo-router";
 const Layout = () => {
   const router = useRouter();
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        gestureEnabled: false,
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{
@@ -22,7 +26,7 @@ const Layout = () => {
               }}
             >
               <TouchableOpacity
-                onPress={()=>router.dismissAll()}
+                onPress={() => router.dismissAll()}
                 style={[styles.closeButton, {}]}
               >
                 <Ionicons name="close" size={24} color={"#000000"} />

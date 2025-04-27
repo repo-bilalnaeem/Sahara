@@ -9,7 +9,11 @@ const Layout = () => {
   const router = useRouter();
   const { top } = useSafeAreaInsets();
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        gestureEnabled: false,
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{

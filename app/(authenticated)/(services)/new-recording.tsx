@@ -206,6 +206,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 20,
     zIndex: 1,
+    width: 30,
+    height: 30,
   },
   lottie: {
     width: "80%",
